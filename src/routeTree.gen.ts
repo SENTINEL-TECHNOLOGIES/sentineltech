@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PortalRouteImport } from './routes/portal'
+import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalTicketsRouteImport } from './routes/portal.tickets'
 import { Route as PortalSettingsRouteImport } from './routes/portal.settings'
@@ -21,10 +22,21 @@ import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
 import { Route as PortalBillingRouteImport } from './routes/portal.billing'
 import { Route as LoginCustomerRouteImport } from './routes/login.customer'
 import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
+import { Route as ExploreServicesRouteImport } from './routes/explore.services'
+import { Route as ExploreProposalRouteImport } from './routes/explore.proposal'
+import { Route as ExploreMeetingRouteImport } from './routes/explore.meeting'
+import { Route as ExploreHomeRouteImport } from './routes/explore.home'
+import { Route as ExploreContactRouteImport } from './routes/explore.contact'
+import { Route as ExploreCaseStudiesRouteImport } from './routes/explore.case-studies'
 
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
   path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -82,10 +94,47 @@ const LoginCorporateRoute = LoginCorporateRouteImport.update({
   path: '/login/corporate',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExploreServicesRoute = ExploreServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreProposalRoute = ExploreProposalRouteImport.update({
+  id: '/proposal',
+  path: '/proposal',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreMeetingRoute = ExploreMeetingRouteImport.update({
+  id: '/meeting',
+  path: '/meeting',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreHomeRoute = ExploreHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreContactRoute = ExploreContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreCaseStudiesRoute = ExploreCaseStudiesRouteImport.update({
+  id: '/case-studies',
+  path: '/case-studies',
+  getParentRoute: () => ExploreRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/explore': typeof ExploreRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
+  '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/contact': typeof ExploreContactRoute
+  '/explore/home': typeof ExploreHomeRoute
+  '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/proposal': typeof ExploreProposalRoute
+  '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
   '/portal/billing': typeof PortalBillingRoute
@@ -99,7 +148,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/explore': typeof ExploreRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
+  '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/contact': typeof ExploreContactRoute
+  '/explore/home': typeof ExploreHomeRoute
+  '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/proposal': typeof ExploreProposalRoute
+  '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
   '/portal/billing': typeof PortalBillingRoute
@@ -114,7 +170,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/explore': typeof ExploreRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
+  '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/contact': typeof ExploreContactRoute
+  '/explore/home': typeof ExploreHomeRoute
+  '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/proposal': typeof ExploreProposalRoute
+  '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
   '/portal/billing': typeof PortalBillingRoute
@@ -130,7 +193,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/explore'
     | '/portal'
+    | '/explore/case-studies'
+    | '/explore/contact'
+    | '/explore/home'
+    | '/explore/meeting'
+    | '/explore/proposal'
+    | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
     | '/portal/billing'
@@ -144,7 +214,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/explore'
     | '/portal'
+    | '/explore/case-studies'
+    | '/explore/contact'
+    | '/explore/home'
+    | '/explore/meeting'
+    | '/explore/proposal'
+    | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
     | '/portal/billing'
@@ -158,7 +235,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/explore'
     | '/portal'
+    | '/explore/case-studies'
+    | '/explore/contact'
+    | '/explore/home'
+    | '/explore/meeting'
+    | '/explore/proposal'
+    | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
     | '/portal/billing'
@@ -173,6 +257,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExploreRoute: typeof ExploreRouteWithChildren
   PortalRoute: typeof PortalRouteWithChildren
   LoginCorporateRoute: typeof LoginCorporateRoute
   LoginCustomerRoute: typeof LoginCustomerRoute
@@ -185,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/portal'
       fullPath: '/portal'
       preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -264,8 +356,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginCorporateRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/explore/services': {
+      id: '/explore/services'
+      path: '/services'
+      fullPath: '/explore/services'
+      preLoaderRoute: typeof ExploreServicesRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/proposal': {
+      id: '/explore/proposal'
+      path: '/proposal'
+      fullPath: '/explore/proposal'
+      preLoaderRoute: typeof ExploreProposalRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/meeting': {
+      id: '/explore/meeting'
+      path: '/meeting'
+      fullPath: '/explore/meeting'
+      preLoaderRoute: typeof ExploreMeetingRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/home': {
+      id: '/explore/home'
+      path: '/home'
+      fullPath: '/explore/home'
+      preLoaderRoute: typeof ExploreHomeRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/contact': {
+      id: '/explore/contact'
+      path: '/contact'
+      fullPath: '/explore/contact'
+      preLoaderRoute: typeof ExploreContactRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/case-studies': {
+      id: '/explore/case-studies'
+      path: '/case-studies'
+      fullPath: '/explore/case-studies'
+      preLoaderRoute: typeof ExploreCaseStudiesRouteImport
+      parentRoute: typeof ExploreRoute
+    }
   }
 }
+
+interface ExploreRouteChildren {
+  ExploreCaseStudiesRoute: typeof ExploreCaseStudiesRoute
+  ExploreContactRoute: typeof ExploreContactRoute
+  ExploreHomeRoute: typeof ExploreHomeRoute
+  ExploreMeetingRoute: typeof ExploreMeetingRoute
+  ExploreProposalRoute: typeof ExploreProposalRoute
+  ExploreServicesRoute: typeof ExploreServicesRoute
+}
+
+const ExploreRouteChildren: ExploreRouteChildren = {
+  ExploreCaseStudiesRoute: ExploreCaseStudiesRoute,
+  ExploreContactRoute: ExploreContactRoute,
+  ExploreHomeRoute: ExploreHomeRoute,
+  ExploreMeetingRoute: ExploreMeetingRoute,
+  ExploreProposalRoute: ExploreProposalRoute,
+  ExploreServicesRoute: ExploreServicesRoute,
+}
+
+const ExploreRouteWithChildren =
+  ExploreRoute._addFileChildren(ExploreRouteChildren)
 
 interface PortalRouteChildren {
   PortalBillingRoute: typeof PortalBillingRoute
@@ -294,6 +449,7 @@ const PortalRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExploreRoute: ExploreRouteWithChildren,
   PortalRoute: PortalRouteWithChildren,
   LoginCorporateRoute: LoginCorporateRoute,
   LoginCustomerRoute: LoginCustomerRoute,

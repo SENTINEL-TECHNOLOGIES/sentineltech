@@ -52,7 +52,7 @@ function Settings() {
         <Card>
           <CardHeader title="Notifications" description="Where alerts are delivered" />
           <div className="space-y-3 p-5 text-sm">
-            {["Email — ops@acme.io", "Slack — #sentinel-alerts", "PagerDuty — Primary on-call", "Webhook — siem.acme.io/in"].map((c) => (
+            {["Email — ops@acme.io", "Slack — #sentinel-alerts", "PagerDuty — Primary on-call", "Webhook — incidents.acme.io/in"].map((c) => (
               <div key={c} className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3"><span className="font-mono text-xs">{c}</span><Badge variant="success">Active</Badge></div>
             ))}
           </div>

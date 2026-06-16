@@ -19,6 +19,7 @@ import { Route as PortalProjectsRouteImport } from './routes/portal.projects'
 import { Route as PortalMonitoringRouteImport } from './routes/portal.monitoring'
 import { Route as PortalInfrastructureRouteImport } from './routes/portal.infrastructure'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
+import { Route as PortalBiometricRouteImport } from './routes/portal.biometric'
 import { Route as PortalBillingRouteImport } from './routes/portal.billing'
 import { Route as PortalAiCctvRouteImport } from './routes/portal.ai-cctv'
 import { Route as LoginCustomerRouteImport } from './routes/login.customer'
@@ -78,6 +79,11 @@ const PortalInfrastructureRoute = PortalInfrastructureRouteImport.update({
 const PortalDashboardRoute = PortalDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalBiometricRoute = PortalBiometricRouteImport.update({
+  id: '/biometric',
+  path: '/biometric',
   getParentRoute: () => PortalRoute,
 } as any)
 const PortalBillingRoute = PortalBillingRouteImport.update({
@@ -145,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/billing': typeof PortalBillingRoute
+  '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByTo {
   '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/billing': typeof PortalBillingRoute
+  '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
@@ -190,6 +198,7 @@ export interface FileRoutesById {
   '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/billing': typeof PortalBillingRoute
+  '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
@@ -214,6 +223,7 @@ export interface FileRouteTypes {
     | '/login/customer'
     | '/portal/ai-cctv'
     | '/portal/billing'
+    | '/portal/biometric'
     | '/portal/dashboard'
     | '/portal/infrastructure'
     | '/portal/monitoring'
@@ -236,6 +246,7 @@ export interface FileRouteTypes {
     | '/login/customer'
     | '/portal/ai-cctv'
     | '/portal/billing'
+    | '/portal/biometric'
     | '/portal/dashboard'
     | '/portal/infrastructure'
     | '/portal/monitoring'
@@ -258,6 +269,7 @@ export interface FileRouteTypes {
     | '/login/customer'
     | '/portal/ai-cctv'
     | '/portal/billing'
+    | '/portal/biometric'
     | '/portal/dashboard'
     | '/portal/infrastructure'
     | '/portal/monitoring'
@@ -345,6 +357,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/portal/dashboard'
       preLoaderRoute: typeof PortalDashboardRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/biometric': {
+      id: '/portal/biometric'
+      path: '/biometric'
+      fullPath: '/portal/biometric'
+      preLoaderRoute: typeof PortalBiometricRouteImport
       parentRoute: typeof PortalRoute
     }
     '/portal/billing': {
@@ -444,6 +463,7 @@ const ExploreRouteWithChildren =
 interface PortalRouteChildren {
   PortalAiCctvRoute: typeof PortalAiCctvRoute
   PortalBillingRoute: typeof PortalBillingRoute
+  PortalBiometricRoute: typeof PortalBiometricRoute
   PortalDashboardRoute: typeof PortalDashboardRoute
   PortalInfrastructureRoute: typeof PortalInfrastructureRoute
   PortalMonitoringRoute: typeof PortalMonitoringRoute
@@ -456,6 +476,7 @@ interface PortalRouteChildren {
 const PortalRouteChildren: PortalRouteChildren = {
   PortalAiCctvRoute: PortalAiCctvRoute,
   PortalBillingRoute: PortalBillingRoute,
+  PortalBiometricRoute: PortalBiometricRoute,
   PortalDashboardRoute: PortalDashboardRoute,
   PortalInfrastructureRoute: PortalInfrastructureRoute,
   PortalMonitoringRoute: PortalMonitoringRoute,

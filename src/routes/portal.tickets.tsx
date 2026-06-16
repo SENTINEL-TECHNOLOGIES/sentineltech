@@ -9,12 +9,12 @@ export const Route = createFileRoute("/portal/tickets")({
 });
 
 const tickets = [
-  { id: "#1842", title: "Firewall rule blocking VPN traffic", priority: "Critical", status: "Open", date: "Jun 15" },
-  { id: "#1841", title: "CAM-03 offline — server room floor 3", priority: "High", status: "In Progress", date: "Jun 15" },
-  { id: "#1839", title: "Access badge not responding — Gate B", priority: "Medium", status: "In Progress", date: "Jun 14" },
-  { id: "#1837", title: "Monthly report export failing (May 2026)", priority: "Low", status: "Open", date: "Jun 13" },
-  { id: "#1835", title: "SSL certificate renewal reminder", priority: "Low", status: "Open", date: "Jun 12" },
-  { id: "#1832", title: "MFA enrollment pending for 4 users", priority: "Medium", status: "Resolved", date: "Jun 11" },
+  { id: "#1842", title: "CAM-09 offline — Plant Gate 4", priority: "Critical", status: "Open", date: "Jun 15" },
+  { id: "#1841", title: "CAM-03 image drift — server room floor 3", priority: "High", status: "In Progress", date: "Jun 15" },
+  { id: "#1839", title: "Access reader not responding — Gate B", priority: "Medium", status: "In Progress", date: "Jun 14" },
+  { id: "#1837", title: "Monthly surveillance report export failing (May 2026)", priority: "Low", status: "Open", date: "Jun 13" },
+  { id: "#1835", title: "NVR storage threshold reached — Warehouse SG", priority: "Low", status: "Open", date: "Jun 12" },
+  { id: "#1832", title: "Visitor management enrollment pending for 4 users", priority: "Medium", status: "Resolved", date: "Jun 11" },
 ];
 
 function priorityClass(p: string) {

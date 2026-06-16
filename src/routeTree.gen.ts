@@ -15,11 +15,15 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalTicketsRouteImport } from './routes/portal.tickets'
 import { Route as PortalSettingsRouteImport } from './routes/portal.settings'
 import { Route as PortalReportsRouteImport } from './routes/portal.reports'
+import { Route as PortalRemoteRouteImport } from './routes/portal.remote'
 import { Route as PortalProjectsRouteImport } from './routes/portal.projects'
 import { Route as PortalMonitoringRouteImport } from './routes/portal.monitoring'
 import { Route as PortalInfrastructureRouteImport } from './routes/portal.infrastructure'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
+import { Route as PortalBiometricRouteImport } from './routes/portal.biometric'
 import { Route as PortalBillingRouteImport } from './routes/portal.billing'
+import { Route as PortalAutomationRouteImport } from './routes/portal.automation'
+import { Route as PortalAiCctvRouteImport } from './routes/portal.ai-cctv'
 import { Route as LoginCustomerRouteImport } from './routes/login.customer'
 import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
 import { Route as ExploreServicesRouteImport } from './routes/explore.services'
@@ -59,6 +63,11 @@ const PortalReportsRoute = PortalReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalRemoteRoute = PortalRemoteRouteImport.update({
+  id: '/remote',
+  path: '/remote',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalProjectsRoute = PortalProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -79,9 +88,24 @@ const PortalDashboardRoute = PortalDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalBiometricRoute = PortalBiometricRouteImport.update({
+  id: '/biometric',
+  path: '/biometric',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalBillingRoute = PortalBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAutomationRoute = PortalAutomationRouteImport.update({
+  id: '/automation',
+  path: '/automation',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalAiCctvRoute = PortalAiCctvRouteImport.update({
+  id: '/ai-cctv',
+  path: '/ai-cctv',
   getParentRoute: () => PortalRoute,
 } as any)
 const LoginCustomerRoute = LoginCustomerRouteImport.update({
@@ -137,11 +161,15 @@ export interface FileRoutesByFullPath {
   '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
+  '/portal/ai-cctv': typeof PortalAiCctvRoute
+  '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
+  '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
   '/portal/projects': typeof PortalProjectsRoute
+  '/portal/remote': typeof PortalRemoteRoute
   '/portal/reports': typeof PortalReportsRoute
   '/portal/settings': typeof PortalSettingsRoute
   '/portal/tickets': typeof PortalTicketsRoute
@@ -158,11 +186,15 @@ export interface FileRoutesByTo {
   '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
+  '/portal/ai-cctv': typeof PortalAiCctvRoute
+  '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
+  '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
   '/portal/projects': typeof PortalProjectsRoute
+  '/portal/remote': typeof PortalRemoteRoute
   '/portal/reports': typeof PortalReportsRoute
   '/portal/settings': typeof PortalSettingsRoute
   '/portal/tickets': typeof PortalTicketsRoute
@@ -180,11 +212,15 @@ export interface FileRoutesById {
   '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
+  '/portal/ai-cctv': typeof PortalAiCctvRoute
+  '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
+  '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
   '/portal/projects': typeof PortalProjectsRoute
+  '/portal/remote': typeof PortalRemoteRoute
   '/portal/reports': typeof PortalReportsRoute
   '/portal/settings': typeof PortalSettingsRoute
   '/portal/tickets': typeof PortalTicketsRoute
@@ -203,11 +239,15 @@ export interface FileRouteTypes {
     | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
+    | '/portal/ai-cctv'
+    | '/portal/automation'
     | '/portal/billing'
+    | '/portal/biometric'
     | '/portal/dashboard'
     | '/portal/infrastructure'
     | '/portal/monitoring'
     | '/portal/projects'
+    | '/portal/remote'
     | '/portal/reports'
     | '/portal/settings'
     | '/portal/tickets'
@@ -224,11 +264,15 @@ export interface FileRouteTypes {
     | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
+    | '/portal/ai-cctv'
+    | '/portal/automation'
     | '/portal/billing'
+    | '/portal/biometric'
     | '/portal/dashboard'
     | '/portal/infrastructure'
     | '/portal/monitoring'
     | '/portal/projects'
+    | '/portal/remote'
     | '/portal/reports'
     | '/portal/settings'
     | '/portal/tickets'
@@ -245,11 +289,15 @@ export interface FileRouteTypes {
     | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
+    | '/portal/ai-cctv'
+    | '/portal/automation'
     | '/portal/billing'
+    | '/portal/biometric'
     | '/portal/dashboard'
     | '/portal/infrastructure'
     | '/portal/monitoring'
     | '/portal/projects'
+    | '/portal/remote'
     | '/portal/reports'
     | '/portal/settings'
     | '/portal/tickets'
@@ -307,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalReportsRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/remote': {
+      id: '/portal/remote'
+      path: '/remote'
+      fullPath: '/portal/remote'
+      preLoaderRoute: typeof PortalRemoteRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/portal/projects': {
       id: '/portal/projects'
       path: '/projects'
@@ -335,11 +390,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalDashboardRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/biometric': {
+      id: '/portal/biometric'
+      path: '/biometric'
+      fullPath: '/portal/biometric'
+      preLoaderRoute: typeof PortalBiometricRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/portal/billing': {
       id: '/portal/billing'
       path: '/billing'
       fullPath: '/portal/billing'
       preLoaderRoute: typeof PortalBillingRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/automation': {
+      id: '/portal/automation'
+      path: '/automation'
+      fullPath: '/portal/automation'
+      preLoaderRoute: typeof PortalAutomationRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/ai-cctv': {
+      id: '/portal/ai-cctv'
+      path: '/ai-cctv'
+      fullPath: '/portal/ai-cctv'
+      preLoaderRoute: typeof PortalAiCctvRouteImport
       parentRoute: typeof PortalRoute
     }
     '/login/customer': {
@@ -423,22 +499,30 @@ const ExploreRouteWithChildren =
   ExploreRoute._addFileChildren(ExploreRouteChildren)
 
 interface PortalRouteChildren {
+  PortalAiCctvRoute: typeof PortalAiCctvRoute
+  PortalAutomationRoute: typeof PortalAutomationRoute
   PortalBillingRoute: typeof PortalBillingRoute
+  PortalBiometricRoute: typeof PortalBiometricRoute
   PortalDashboardRoute: typeof PortalDashboardRoute
   PortalInfrastructureRoute: typeof PortalInfrastructureRoute
   PortalMonitoringRoute: typeof PortalMonitoringRoute
   PortalProjectsRoute: typeof PortalProjectsRoute
+  PortalRemoteRoute: typeof PortalRemoteRoute
   PortalReportsRoute: typeof PortalReportsRoute
   PortalSettingsRoute: typeof PortalSettingsRoute
   PortalTicketsRoute: typeof PortalTicketsRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalAiCctvRoute: PortalAiCctvRoute,
+  PortalAutomationRoute: PortalAutomationRoute,
   PortalBillingRoute: PortalBillingRoute,
+  PortalBiometricRoute: PortalBiometricRoute,
   PortalDashboardRoute: PortalDashboardRoute,
   PortalInfrastructureRoute: PortalInfrastructureRoute,
   PortalMonitoringRoute: PortalMonitoringRoute,
   PortalProjectsRoute: PortalProjectsRoute,
+  PortalRemoteRoute: PortalRemoteRoute,
   PortalReportsRoute: PortalReportsRoute,
   PortalSettingsRoute: PortalSettingsRoute,
   PortalTicketsRoute: PortalTicketsRoute,

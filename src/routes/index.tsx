@@ -5,8 +5,8 @@ import { SentinelLogo } from "@/components/sentinel-logo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sentinel — Enterprise Security & Infrastructure Platform" },
-      { name: "description", content: "Choose how to access Sentinel: corporate client portal or explore our cybersecurity solutions." },
+      { title: "Sentinel — Physical Security Technology Platform" },
+      { name: "description", content: "AI-powered CCTV, biometric access, smart automation and 24/7 remote monitoring for enterprise facilities." },
     ],
   }),
   component: Entry,
@@ -22,7 +22,7 @@ function Entry() {
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-16">
         <div className="flex flex-col items-center text-center">
           <SentinelLogo size="lg" />
-          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Enterprise Security &amp; Infrastructure Platform</p>
+          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Physical Security Technology Platform</p>
           <h1 className="mt-8 max-w-3xl text-3xl md:text-5xl font-bold tracking-tight">
             How would you like to access <span className="text-gradient-blue">Sentinel?</span>
           </h1>
@@ -33,7 +33,7 @@ function Entry() {
             badge={<span className="rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success"><Lock className="mr-1 inline h-3 w-3" /> Secure Login</span>}
             icon={<Shield className="h-7 w-7 text-cyan" />}
             title="Corporate Client"
-            description="Access monitoring, projects, reports and infrastructure information."
+            description="Live cameras, access logs, monitored facilities and security operations across your estate."
             ctaText="Access Corporate Portal"
             ctaTo="/login/corporate"
             primary
@@ -42,16 +42,16 @@ function Entry() {
             badge={<span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-warning">• No account needed</span>}
             icon={<Rocket className="h-7 w-7 text-primary" />}
             title="New Customer"
-            description="Explore services, request proposals and schedule consultations."
+            description="Explore AI CCTV, biometric access, automation and remote monitoring services."
             ctaText="Explore Solutions"
             ctaTo="/login/customer"
           />
         </div>
 
         <div className="mt-16 grid w-full max-w-4xl grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat icon={<Users className="h-4 w-4" />} label="Enterprise Clients" value="500+" />
-          <Stat icon={<Activity className="h-4 w-4" />} label="Network Uptime" value="99.97%" />
-          <Stat icon={<Clock className="h-4 w-4" />} label="SOC Operations" value="24/7" />
+          <Stat icon={<Users className="h-4 w-4" />} label="Enterprise Sites" value="500+" />
+          <Stat icon={<Activity className="h-4 w-4" />} label="Cameras Managed" value="120k+" />
+          <Stat icon={<Clock className="h-4 w-4" />} label="Monitoring" value="24 / 7" />
           <Stat icon={<Award className="h-4 w-4" />} label="Certified" value="ISO 27001" />
         </div>
       </div>

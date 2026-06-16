@@ -22,7 +22,7 @@ function Entry() {
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-16">
         <div className="flex flex-col items-center text-center">
           <SentinelLogo size="lg" />
-          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Enterprise Security &amp; Infrastructure Platform</p>
+          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Physical Security Technology Platform</p>
           <h1 className="mt-8 max-w-3xl text-3xl md:text-5xl font-bold tracking-tight">
             How would you like to access <span className="text-gradient-blue">Sentinel?</span>
           </h1>

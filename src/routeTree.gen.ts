@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalTicketsRouteImport } from './routes/portal.tickets'
 import { Route as PortalSettingsRouteImport } from './routes/portal.settings'
 import { Route as PortalReportsRouteImport } from './routes/portal.reports'
+import { Route as PortalRemoteRouteImport } from './routes/portal.remote'
 import { Route as PortalProjectsRouteImport } from './routes/portal.projects'
 import { Route as PortalMonitoringRouteImport } from './routes/portal.monitoring'
 import { Route as PortalInfrastructureRouteImport } from './routes/portal.infrastructure'
@@ -60,6 +61,11 @@ const PortalSettingsRoute = PortalSettingsRouteImport.update({
 const PortalReportsRoute = PortalReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalRemoteRoute = PortalRemoteRouteImport.update({
+  id: '/remote',
+  path: '/remote',
   getParentRoute: () => PortalRoute,
 } as any)
 const PortalProjectsRoute = PortalProjectsRouteImport.update({
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
   '/portal/projects': typeof PortalProjectsRoute
+  '/portal/remote': typeof PortalRemoteRoute
   '/portal/reports': typeof PortalReportsRoute
   '/portal/settings': typeof PortalSettingsRoute
   '/portal/tickets': typeof PortalTicketsRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
   '/portal/projects': typeof PortalProjectsRoute
+  '/portal/remote': typeof PortalRemoteRoute
   '/portal/reports': typeof PortalReportsRoute
   '/portal/settings': typeof PortalSettingsRoute
   '/portal/tickets': typeof PortalTicketsRoute
@@ -212,6 +220,7 @@ export interface FileRoutesById {
   '/portal/infrastructure': typeof PortalInfrastructureRoute
   '/portal/monitoring': typeof PortalMonitoringRoute
   '/portal/projects': typeof PortalProjectsRoute
+  '/portal/remote': typeof PortalRemoteRoute
   '/portal/reports': typeof PortalReportsRoute
   '/portal/settings': typeof PortalSettingsRoute
   '/portal/tickets': typeof PortalTicketsRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/portal/infrastructure'
     | '/portal/monitoring'
     | '/portal/projects'
+    | '/portal/remote'
     | '/portal/reports'
     | '/portal/settings'
     | '/portal/tickets'
@@ -262,6 +272,7 @@ export interface FileRouteTypes {
     | '/portal/infrastructure'
     | '/portal/monitoring'
     | '/portal/projects'
+    | '/portal/remote'
     | '/portal/reports'
     | '/portal/settings'
     | '/portal/tickets'
@@ -286,6 +297,7 @@ export interface FileRouteTypes {
     | '/portal/infrastructure'
     | '/portal/monitoring'
     | '/portal/projects'
+    | '/portal/remote'
     | '/portal/reports'
     | '/portal/settings'
     | '/portal/tickets'
@@ -341,6 +353,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/portal/reports'
       preLoaderRoute: typeof PortalReportsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/remote': {
+      id: '/portal/remote'
+      path: '/remote'
+      fullPath: '/portal/remote'
+      preLoaderRoute: typeof PortalRemoteRouteImport
       parentRoute: typeof PortalRoute
     }
     '/portal/projects': {
@@ -488,6 +507,7 @@ interface PortalRouteChildren {
   PortalInfrastructureRoute: typeof PortalInfrastructureRoute
   PortalMonitoringRoute: typeof PortalMonitoringRoute
   PortalProjectsRoute: typeof PortalProjectsRoute
+  PortalRemoteRoute: typeof PortalRemoteRoute
   PortalReportsRoute: typeof PortalReportsRoute
   PortalSettingsRoute: typeof PortalSettingsRoute
   PortalTicketsRoute: typeof PortalTicketsRoute
@@ -502,6 +522,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalInfrastructureRoute: PortalInfrastructureRoute,
   PortalMonitoringRoute: PortalMonitoringRoute,
   PortalProjectsRoute: PortalProjectsRoute,
+  PortalRemoteRoute: PortalRemoteRoute,
   PortalReportsRoute: PortalReportsRoute,
   PortalSettingsRoute: PortalSettingsRoute,
   PortalTicketsRoute: PortalTicketsRoute,

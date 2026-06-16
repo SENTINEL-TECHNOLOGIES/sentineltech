@@ -8,12 +8,12 @@ export const Route = createFileRoute("/portal/projects")({
 });
 
 const projects = [
-  { id: "PRJ-204", name: "SD-WAN rollout — Phase 3", status: "In Progress", progress: 78, deadline: "Jul 18, 2026", eng: "M. Alvarez" },
-  { id: "PRJ-198", name: "Zero-Trust IAM migration", status: "In Progress", progress: 42, deadline: "Aug 02, 2026", eng: "L. Tanaka" },
-  { id: "PRJ-211", name: "SOC 2 readiness audit", status: "Review", progress: 91, deadline: "Jun 28, 2026", eng: "S. Okafor" },
-  { id: "PRJ-188", name: "Cloud workload protection", status: "In Progress", progress: 64, deadline: "Jul 30, 2026", eng: "R. Petrov" },
-  { id: "PRJ-225", name: "Branch firewall refresh — APAC", status: "Planning", progress: 12, deadline: "Sep 15, 2026", eng: "K. Park" },
-  { id: "PRJ-172", name: "DLP policy rebuild", status: "Done", progress: 100, deadline: "May 30, 2026", eng: "J. Mendes" },
+  { id: "PRJ-204", name: "AI CCTV rollout — Plant Monterrey Phase 3", status: "In Progress", progress: 78, deadline: "Jul 18, 2026", eng: "M. Alvarez" },
+  { id: "PRJ-198", name: "Biometric access migration — HQ Tower", status: "In Progress", progress: 42, deadline: "Aug 02, 2026", eng: "L. Tanaka" },
+  { id: "PRJ-211", name: "Smart automation retrofit — DC-2 Frankfurt", status: "Review", progress: 91, deadline: "Jun 28, 2026", eng: "S. Okafor" },
+  { id: "PRJ-188", name: "Perimeter thermal cameras — EnerCore substations", status: "In Progress", progress: 64, deadline: "Jul 30, 2026", eng: "R. Petrov" },
+  { id: "PRJ-225", name: "Retail CCTV refresh — APAC region", status: "Planning", progress: 12, deadline: "Sep 15, 2026", eng: "K. Park" },
+  { id: "PRJ-172", name: "Visitor management deployment — MediCore", status: "Done", progress: 100, deadline: "May 30, 2026", eng: "J. Mendes" },
 ];
 
 function statusBadge(s: string) {

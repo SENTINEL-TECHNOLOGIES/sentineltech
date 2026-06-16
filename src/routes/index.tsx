@@ -42,7 +42,7 @@ function Entry() {
             badge={<span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-warning">• No account needed</span>}
             icon={<Rocket className="h-7 w-7 text-primary" />}
             title="New Customer"
-            description="Explore services, request proposals and schedule consultations."
+            description="Explore AI CCTV, biometric access, automation and remote monitoring services."
             ctaText="Explore Solutions"
             ctaTo="/login/customer"
           />

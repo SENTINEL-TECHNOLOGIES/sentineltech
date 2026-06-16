@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginCustomerRouteImport } from './routes/login.customer'
+import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginCustomerRoute = LoginCustomerRouteImport.update({
+  id: '/login/customer',
+  path: '/login/customer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginCorporateRoute = LoginCorporateRouteImport.update({
+  id: '/login/corporate',
+  path: '/login/corporate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login/corporate': typeof LoginCorporateRoute
+  '/login/customer': typeof LoginCustomerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login/corporate': typeof LoginCorporateRoute
+  '/login/customer': typeof LoginCustomerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/login/corporate': typeof LoginCorporateRoute
+  '/login/customer': typeof LoginCustomerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/login/corporate' | '/login/customer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/login/corporate' | '/login/customer'
+  id: '__root__' | '/' | '/login/corporate' | '/login/customer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LoginCorporateRoute: typeof LoginCorporateRoute
+  LoginCustomerRoute: typeof LoginCustomerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +68,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login/customer': {
+      id: '/login/customer'
+      path: '/login/customer'
+      fullPath: '/login/customer'
+      preLoaderRoute: typeof LoginCustomerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/corporate': {
+      id: '/login/corporate'
+      path: '/login/corporate'
+      fullPath: '/login/corporate'
+      preLoaderRoute: typeof LoginCorporateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LoginCorporateRoute: LoginCorporateRoute,
+  LoginCustomerRoute: LoginCustomerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

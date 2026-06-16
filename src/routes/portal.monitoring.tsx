@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
 import { Shield, AlertTriangle, Activity, Lock, Eye, Globe } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 
 export const Route = createFileRoute("/portal/monitoring")({
   head: () => ({ meta: [{ title: "Security Operations — Sentinel" }] }),

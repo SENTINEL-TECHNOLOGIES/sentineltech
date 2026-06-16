@@ -55,10 +55,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sentinel — Enterprise Cybersecurity & Infrastructure" },
-      { name: "description", content: "Sentinel Technologies — managed cybersecurity, network infrastructure, and 24/7 SOC operations for the modern enterprise." },
-      { property: "og:title", content: "Sentinel — Enterprise Cybersecurity" },
-      { property: "og:description", content: "Managed cybersecurity, network infrastructure, and 24/7 SOC operations." },
+      { title: "Sentinel — Physical Security Technology" },
+      { name: "description", content: "Sentinel Technologies — AI-powered CCTV, biometric access control, smart automation and 24/7 remote monitoring for enterprise facilities." },
+      { property: "og:title", content: "Sentinel — Physical Security Technology" },
+      { property: "og:description", content: "AI CCTV, biometric access, smart automation and 24/7 remote monitoring for enterprise facilities." },
       { property: "og:type", content: "website" },
     ],
     links: [

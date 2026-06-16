@@ -9,28 +9,28 @@ export const Route = createFileRoute("/explore/case-studies")({
 
 const cases = [
   {
-    client: "FinTech Corp", industry: "Financial Services",
-    challenge: "Rapidly scaling fintech with 11 compliance frameworks faced 1,200+ daily security alerts and a 14-person internal SOC that couldn't keep up.",
-    solution: "Migrated to Sentinel MSSP with SIEM integration, automated tier-1 triage, and 24/7 analyst coverage from our São Paulo and Frankfurt SOCs.",
-    results: [{ k: "-73%", v: "Security incidents" }, { k: "-58%", v: "MTTR" }, { k: "$2.1M", v: "Annual savings" }],
+    client: "LogiPort SA", industry: "Logistics & Ports",
+    challenge: "Operator of 42 km² of port infrastructure with 6 access gates, vulnerable perimeter and reactive surveillance from a small in-house team.",
+    solution: "Deployed 312 AI-enabled cameras, thermal perimeter detection, biometric access at all gates, and centralized 24/7 monitoring from our SOC.",
+    results: [{ k: "42 km²", v: "Perimeter covered" }, { k: "-82%", v: "Unauthorized entries" }, { k: "3m", v: "Avg response time" }],
   },
   {
-    client: "LogiPort SA", industry: "Logistics & Transport",
-    challenge: "Operator of 42 km² of port infrastructure needed unified physical + cyber security, with zero downtime tolerance for cargo operations.",
-    solution: "Deployed AI-powered perimeter detection, integrated CCTV with SIEM, hardened OT networks with zero-trust segmentation.",
-    results: [{ k: "99.99%", v: "Port uptime" }, { k: "0", v: "Breaches in 24 mo" }, { k: "42 km²", v: "Coverage" }],
+    client: "MetroRetail Group", industry: "Retail · 240 stores",
+    challenge: "Shrinkage and after-hours intrusions across a national footprint with no centralized visibility or standardized response.",
+    solution: "Unified CCTV across all stores, behavioral analytics for theft patterns, and remote monitoring with police-dispatch coordination after hours.",
+    results: [{ k: "-68%", v: "Shrinkage incidents" }, { k: "240", v: "Sites monitored" }, { k: "$3.4M", v: "Annual loss avoided" }],
   },
   {
-    client: "MediCore Health", industry: "Healthcare",
-    challenge: "Hospital network with 38 sites needed HIPAA-compliant cloud posture and protection from rising ransomware in healthcare.",
-    solution: "Implemented CSPM across Azure + AWS, deployed EDR on 6,400 endpoints, ran tabletop ransomware exercises with executives.",
-    results: [{ k: "$4.2M", v: "Breach cost avoided" }, { k: "-91%", v: "Audit findings" }, { k: "100%", v: "HIPAA passing" }],
+    client: "MediCore Health", industry: "Healthcare · 38 sites",
+    challenge: "Hospital network needed compliant visitor flow, restricted-zone enforcement and audit-grade access logs across pharmacy and pediatric wings.",
+    solution: "Biometric + visitor management, AI cameras in restricted zones, integrated with HR for automatic provisioning and offboarding.",
+    results: [{ k: "100%", v: "Audit-ready logs" }, { k: "-91%", v: "Incident reports" }, { k: "6,400", v: "Users managed" }],
   },
   {
-    client: "EnerGrid Power", industry: "Energy & Utilities",
-    challenge: "Critical infrastructure operator targeted by nation-state actors; legacy ICS/SCADA had no visibility or segmentation.",
-    solution: "OT-aware monitoring with Sentinel ICS specialists, micro-segmentation, deception technology in substations.",
-    results: [{ k: "12", v: "APT campaigns detected" }, { k: "100%", v: "OT visibility" }, { k: "<5 min", v: "Detection time" }],
+    client: "EnerCore Utilities", industry: "Energy & Utilities",
+    challenge: "Unmanned substations across remote regions targeted by copper theft and vandalism, with patrol-based response too slow to act.",
+    solution: "Thermal AI cameras, perimeter laser detection, smart automation for lighting/sirens, and SOC-driven verified-response dispatch.",
+    results: [{ k: "100%", v: "Substations monitored" }, { k: "<2 min", v: "Detection to alert" }, { k: "-94%", v: "Theft events" }],
   },
 ];
 
@@ -39,8 +39,8 @@ function Cases() {
     <div className="space-y-6">
       <div>
         <Badge variant="info">Success Stories</Badge>
-        <h1 className="mt-3 text-3xl font-bold">Real outcomes from real customers</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Industries trust Sentinel because we ship measurable results — not slideware.</p>
+        <h1 className="mt-3 text-3xl font-bold">Real outcomes from real facilities</h1>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Enterprises trust Sentinel because we ship measurable physical security results — not slideware.</p>
       </div>
 
       <div className="space-y-5">

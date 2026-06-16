@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
-import { Activity, Shield, AlertTriangle, FileBarChart, Server, Briefcase, CheckCircle2, Network, Cpu, Wifi } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
+import { Activity, Shield, AlertTriangle, Server, Cpu, Wifi } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
 
 export const Route = createFileRoute("/portal/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Sentinel Portal" }] }),

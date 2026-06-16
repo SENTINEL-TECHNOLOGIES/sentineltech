@@ -5,8 +5,8 @@ import { SentinelLogo } from "@/components/sentinel-logo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sentinel — Enterprise Security & Infrastructure Platform" },
-      { name: "description", content: "Choose how to access Sentinel: corporate client portal or explore our cybersecurity solutions." },
+      { title: "Sentinel — Physical Security Technology Platform" },
+      { name: "description", content: "AI-powered CCTV, biometric access, smart automation and 24/7 remote monitoring for enterprise facilities." },
     ],
   }),
   component: Entry,

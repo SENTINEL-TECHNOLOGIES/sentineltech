@@ -20,6 +20,7 @@ import { Route as PortalMonitoringRouteImport } from './routes/portal.monitoring
 import { Route as PortalInfrastructureRouteImport } from './routes/portal.infrastructure'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
 import { Route as PortalBillingRouteImport } from './routes/portal.billing'
+import { Route as PortalAiCctvRouteImport } from './routes/portal.ai-cctv'
 import { Route as LoginCustomerRouteImport } from './routes/login.customer'
 import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
 import { Route as ExploreServicesRouteImport } from './routes/explore.services'
@@ -84,6 +85,11 @@ const PortalBillingRoute = PortalBillingRouteImport.update({
   path: '/billing',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalAiCctvRoute = PortalAiCctvRouteImport.update({
+  id: '/ai-cctv',
+  path: '/ai-cctv',
+  getParentRoute: () => PortalRoute,
+} as any)
 const LoginCustomerRoute = LoginCustomerRouteImport.update({
   id: '/login/customer',
   path: '/login/customer',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
+  '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/billing': typeof PortalBillingRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
+  '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/billing': typeof PortalBillingRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/explore/services': typeof ExploreServicesRoute
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
+  '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/billing': typeof PortalBillingRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/infrastructure': typeof PortalInfrastructureRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
+    | '/portal/ai-cctv'
     | '/portal/billing'
     | '/portal/dashboard'
     | '/portal/infrastructure'
@@ -224,6 +234,7 @@ export interface FileRouteTypes {
     | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
+    | '/portal/ai-cctv'
     | '/portal/billing'
     | '/portal/dashboard'
     | '/portal/infrastructure'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/explore/services'
     | '/login/corporate'
     | '/login/customer'
+    | '/portal/ai-cctv'
     | '/portal/billing'
     | '/portal/dashboard'
     | '/portal/infrastructure'
@@ -342,6 +354,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalBillingRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/ai-cctv': {
+      id: '/portal/ai-cctv'
+      path: '/ai-cctv'
+      fullPath: '/portal/ai-cctv'
+      preLoaderRoute: typeof PortalAiCctvRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/login/customer': {
       id: '/login/customer'
       path: '/login/customer'
@@ -423,6 +442,7 @@ const ExploreRouteWithChildren =
   ExploreRoute._addFileChildren(ExploreRouteChildren)
 
 interface PortalRouteChildren {
+  PortalAiCctvRoute: typeof PortalAiCctvRoute
   PortalBillingRoute: typeof PortalBillingRoute
   PortalDashboardRoute: typeof PortalDashboardRoute
   PortalInfrastructureRoute: typeof PortalInfrastructureRoute
@@ -434,6 +454,7 @@ interface PortalRouteChildren {
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalAiCctvRoute: PortalAiCctvRoute,
   PortalBillingRoute: PortalBillingRoute,
   PortalDashboardRoute: PortalDashboardRoute,
   PortalInfrastructureRoute: PortalInfrastructureRoute,

@@ -33,7 +33,7 @@ function Entry() {
             badge={<span className="rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success"><Lock className="mr-1 inline h-3 w-3" /> Secure Login</span>}
             icon={<Shield className="h-7 w-7 text-cyan" />}
             title="Corporate Client"
-            description="Access monitoring, projects, reports and infrastructure information."
+            description="Live cameras, access logs, monitored facilities and security operations across your estate."
             ctaText="Access Corporate Portal"
             ctaTo="/login/corporate"
             primary

@@ -21,6 +21,7 @@ import { Route as PortalInfrastructureRouteImport } from './routes/portal.infras
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
 import { Route as PortalBiometricRouteImport } from './routes/portal.biometric'
 import { Route as PortalBillingRouteImport } from './routes/portal.billing'
+import { Route as PortalAutomationRouteImport } from './routes/portal.automation'
 import { Route as PortalAiCctvRouteImport } from './routes/portal.ai-cctv'
 import { Route as LoginCustomerRouteImport } from './routes/login.customer'
 import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
@@ -91,6 +92,11 @@ const PortalBillingRoute = PortalBillingRouteImport.update({
   path: '/billing',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalAutomationRoute = PortalAutomationRouteImport.update({
+  id: '/automation',
+  path: '/automation',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalAiCctvRoute = PortalAiCctvRouteImport.update({
   id: '/ai-cctv',
   path: '/ai-cctv',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
+  '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
   '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
+  '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
   '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/login/corporate': typeof LoginCorporateRoute
   '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
+  '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
   '/portal/biometric': typeof PortalBiometricRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/login/corporate'
     | '/login/customer'
     | '/portal/ai-cctv'
+    | '/portal/automation'
     | '/portal/billing'
     | '/portal/biometric'
     | '/portal/dashboard'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/login/corporate'
     | '/login/customer'
     | '/portal/ai-cctv'
+    | '/portal/automation'
     | '/portal/billing'
     | '/portal/biometric'
     | '/portal/dashboard'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/login/corporate'
     | '/login/customer'
     | '/portal/ai-cctv'
+    | '/portal/automation'
     | '/portal/billing'
     | '/portal/biometric'
     | '/portal/dashboard'
@@ -373,6 +385,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalBillingRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/automation': {
+      id: '/portal/automation'
+      path: '/automation'
+      fullPath: '/portal/automation'
+      preLoaderRoute: typeof PortalAutomationRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/portal/ai-cctv': {
       id: '/portal/ai-cctv'
       path: '/ai-cctv'
@@ -462,6 +481,7 @@ const ExploreRouteWithChildren =
 
 interface PortalRouteChildren {
   PortalAiCctvRoute: typeof PortalAiCctvRoute
+  PortalAutomationRoute: typeof PortalAutomationRoute
   PortalBillingRoute: typeof PortalBillingRoute
   PortalBiometricRoute: typeof PortalBiometricRoute
   PortalDashboardRoute: typeof PortalDashboardRoute
@@ -475,6 +495,7 @@ interface PortalRouteChildren {
 
 const PortalRouteChildren: PortalRouteChildren = {
   PortalAiCctvRoute: PortalAiCctvRoute,
+  PortalAutomationRoute: PortalAutomationRoute,
   PortalBillingRoute: PortalBillingRoute,
   PortalBiometricRoute: PortalBiometricRoute,
   PortalDashboardRoute: PortalDashboardRoute,

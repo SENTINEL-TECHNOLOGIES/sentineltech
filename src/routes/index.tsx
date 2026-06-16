@@ -49,9 +49,9 @@ function Entry() {
         </div>
 
         <div className="mt-16 grid w-full max-w-4xl grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat icon={<Users className="h-4 w-4" />} label="Enterprise Clients" value="500+" />
-          <Stat icon={<Activity className="h-4 w-4" />} label="Network Uptime" value="99.97%" />
-          <Stat icon={<Clock className="h-4 w-4" />} label="SOC Operations" value="24/7" />
+          <Stat icon={<Users className="h-4 w-4" />} label="Enterprise Sites" value="500+" />
+          <Stat icon={<Activity className="h-4 w-4" />} label="Cameras Managed" value="120k+" />
+          <Stat icon={<Clock className="h-4 w-4" />} label="Monitoring" value="24 / 7" />
           <Stat icon={<Award className="h-4 w-4" />} label="Certified" value="ISO 27001" />
         </div>
       </div>

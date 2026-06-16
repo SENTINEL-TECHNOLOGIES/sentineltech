@@ -9,38 +9,276 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PortalRouteImport } from './routes/portal'
+import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortalTicketsRouteImport } from './routes/portal.tickets'
+import { Route as PortalSettingsRouteImport } from './routes/portal.settings'
+import { Route as PortalReportsRouteImport } from './routes/portal.reports'
+import { Route as PortalProjectsRouteImport } from './routes/portal.projects'
+import { Route as PortalMonitoringRouteImport } from './routes/portal.monitoring'
+import { Route as PortalInfrastructureRouteImport } from './routes/portal.infrastructure'
+import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
+import { Route as PortalBillingRouteImport } from './routes/portal.billing'
+import { Route as LoginCustomerRouteImport } from './routes/login.customer'
+import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
+import { Route as ExploreServicesRouteImport } from './routes/explore.services'
+import { Route as ExploreProposalRouteImport } from './routes/explore.proposal'
+import { Route as ExploreMeetingRouteImport } from './routes/explore.meeting'
+import { Route as ExploreHomeRouteImport } from './routes/explore.home'
+import { Route as ExploreContactRouteImport } from './routes/explore.contact'
+import { Route as ExploreCaseStudiesRouteImport } from './routes/explore.case-studies'
 
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreRoute = ExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalTicketsRoute = PortalTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalSettingsRoute = PortalSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalReportsRoute = PortalReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalProjectsRoute = PortalProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalMonitoringRoute = PortalMonitoringRouteImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalInfrastructureRoute = PortalInfrastructureRouteImport.update({
+  id: '/infrastructure',
+  path: '/infrastructure',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalDashboardRoute = PortalDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalBillingRoute = PortalBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => PortalRoute,
+} as any)
+const LoginCustomerRoute = LoginCustomerRouteImport.update({
+  id: '/login/customer',
+  path: '/login/customer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginCorporateRoute = LoginCorporateRouteImport.update({
+  id: '/login/corporate',
+  path: '/login/corporate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreServicesRoute = ExploreServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreProposalRoute = ExploreProposalRouteImport.update({
+  id: '/proposal',
+  path: '/proposal',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreMeetingRoute = ExploreMeetingRouteImport.update({
+  id: '/meeting',
+  path: '/meeting',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreHomeRoute = ExploreHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreContactRoute = ExploreContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreCaseStudiesRoute = ExploreCaseStudiesRouteImport.update({
+  id: '/case-studies',
+  path: '/case-studies',
+  getParentRoute: () => ExploreRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/explore': typeof ExploreRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
+  '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/contact': typeof ExploreContactRoute
+  '/explore/home': typeof ExploreHomeRoute
+  '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/proposal': typeof ExploreProposalRoute
+  '/explore/services': typeof ExploreServicesRoute
+  '/login/corporate': typeof LoginCorporateRoute
+  '/login/customer': typeof LoginCustomerRoute
+  '/portal/billing': typeof PortalBillingRoute
+  '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/infrastructure': typeof PortalInfrastructureRoute
+  '/portal/monitoring': typeof PortalMonitoringRoute
+  '/portal/projects': typeof PortalProjectsRoute
+  '/portal/reports': typeof PortalReportsRoute
+  '/portal/settings': typeof PortalSettingsRoute
+  '/portal/tickets': typeof PortalTicketsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/explore': typeof ExploreRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
+  '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/contact': typeof ExploreContactRoute
+  '/explore/home': typeof ExploreHomeRoute
+  '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/proposal': typeof ExploreProposalRoute
+  '/explore/services': typeof ExploreServicesRoute
+  '/login/corporate': typeof LoginCorporateRoute
+  '/login/customer': typeof LoginCustomerRoute
+  '/portal/billing': typeof PortalBillingRoute
+  '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/infrastructure': typeof PortalInfrastructureRoute
+  '/portal/monitoring': typeof PortalMonitoringRoute
+  '/portal/projects': typeof PortalProjectsRoute
+  '/portal/reports': typeof PortalReportsRoute
+  '/portal/settings': typeof PortalSettingsRoute
+  '/portal/tickets': typeof PortalTicketsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/explore': typeof ExploreRouteWithChildren
+  '/portal': typeof PortalRouteWithChildren
+  '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/contact': typeof ExploreContactRoute
+  '/explore/home': typeof ExploreHomeRoute
+  '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/proposal': typeof ExploreProposalRoute
+  '/explore/services': typeof ExploreServicesRoute
+  '/login/corporate': typeof LoginCorporateRoute
+  '/login/customer': typeof LoginCustomerRoute
+  '/portal/billing': typeof PortalBillingRoute
+  '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/infrastructure': typeof PortalInfrastructureRoute
+  '/portal/monitoring': typeof PortalMonitoringRoute
+  '/portal/projects': typeof PortalProjectsRoute
+  '/portal/reports': typeof PortalReportsRoute
+  '/portal/settings': typeof PortalSettingsRoute
+  '/portal/tickets': typeof PortalTicketsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/explore'
+    | '/portal'
+    | '/explore/case-studies'
+    | '/explore/contact'
+    | '/explore/home'
+    | '/explore/meeting'
+    | '/explore/proposal'
+    | '/explore/services'
+    | '/login/corporate'
+    | '/login/customer'
+    | '/portal/billing'
+    | '/portal/dashboard'
+    | '/portal/infrastructure'
+    | '/portal/monitoring'
+    | '/portal/projects'
+    | '/portal/reports'
+    | '/portal/settings'
+    | '/portal/tickets'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/explore'
+    | '/portal'
+    | '/explore/case-studies'
+    | '/explore/contact'
+    | '/explore/home'
+    | '/explore/meeting'
+    | '/explore/proposal'
+    | '/explore/services'
+    | '/login/corporate'
+    | '/login/customer'
+    | '/portal/billing'
+    | '/portal/dashboard'
+    | '/portal/infrastructure'
+    | '/portal/monitoring'
+    | '/portal/projects'
+    | '/portal/reports'
+    | '/portal/settings'
+    | '/portal/tickets'
+  id:
+    | '__root__'
+    | '/'
+    | '/explore'
+    | '/portal'
+    | '/explore/case-studies'
+    | '/explore/contact'
+    | '/explore/home'
+    | '/explore/meeting'
+    | '/explore/proposal'
+    | '/explore/services'
+    | '/login/corporate'
+    | '/login/customer'
+    | '/portal/billing'
+    | '/portal/dashboard'
+    | '/portal/infrastructure'
+    | '/portal/monitoring'
+    | '/portal/projects'
+    | '/portal/reports'
+    | '/portal/settings'
+    | '/portal/tickets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ExploreRoute: typeof ExploreRouteWithChildren
+  PortalRoute: typeof PortalRouteWithChildren
+  LoginCorporateRoute: typeof LoginCorporateRoute
+  LoginCustomerRoute: typeof LoginCustomerRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore': {
+      id: '/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +286,174 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/tickets': {
+      id: '/portal/tickets'
+      path: '/tickets'
+      fullPath: '/portal/tickets'
+      preLoaderRoute: typeof PortalTicketsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/settings': {
+      id: '/portal/settings'
+      path: '/settings'
+      fullPath: '/portal/settings'
+      preLoaderRoute: typeof PortalSettingsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/reports': {
+      id: '/portal/reports'
+      path: '/reports'
+      fullPath: '/portal/reports'
+      preLoaderRoute: typeof PortalReportsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/projects': {
+      id: '/portal/projects'
+      path: '/projects'
+      fullPath: '/portal/projects'
+      preLoaderRoute: typeof PortalProjectsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/monitoring': {
+      id: '/portal/monitoring'
+      path: '/monitoring'
+      fullPath: '/portal/monitoring'
+      preLoaderRoute: typeof PortalMonitoringRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/infrastructure': {
+      id: '/portal/infrastructure'
+      path: '/infrastructure'
+      fullPath: '/portal/infrastructure'
+      preLoaderRoute: typeof PortalInfrastructureRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/dashboard': {
+      id: '/portal/dashboard'
+      path: '/dashboard'
+      fullPath: '/portal/dashboard'
+      preLoaderRoute: typeof PortalDashboardRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/billing': {
+      id: '/portal/billing'
+      path: '/billing'
+      fullPath: '/portal/billing'
+      preLoaderRoute: typeof PortalBillingRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/login/customer': {
+      id: '/login/customer'
+      path: '/login/customer'
+      fullPath: '/login/customer'
+      preLoaderRoute: typeof LoginCustomerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login/corporate': {
+      id: '/login/corporate'
+      path: '/login/corporate'
+      fullPath: '/login/corporate'
+      preLoaderRoute: typeof LoginCorporateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/services': {
+      id: '/explore/services'
+      path: '/services'
+      fullPath: '/explore/services'
+      preLoaderRoute: typeof ExploreServicesRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/proposal': {
+      id: '/explore/proposal'
+      path: '/proposal'
+      fullPath: '/explore/proposal'
+      preLoaderRoute: typeof ExploreProposalRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/meeting': {
+      id: '/explore/meeting'
+      path: '/meeting'
+      fullPath: '/explore/meeting'
+      preLoaderRoute: typeof ExploreMeetingRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/home': {
+      id: '/explore/home'
+      path: '/home'
+      fullPath: '/explore/home'
+      preLoaderRoute: typeof ExploreHomeRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/contact': {
+      id: '/explore/contact'
+      path: '/contact'
+      fullPath: '/explore/contact'
+      preLoaderRoute: typeof ExploreContactRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/case-studies': {
+      id: '/explore/case-studies'
+      path: '/case-studies'
+      fullPath: '/explore/case-studies'
+      preLoaderRoute: typeof ExploreCaseStudiesRouteImport
+      parentRoute: typeof ExploreRoute
+    }
   }
 }
 
+interface ExploreRouteChildren {
+  ExploreCaseStudiesRoute: typeof ExploreCaseStudiesRoute
+  ExploreContactRoute: typeof ExploreContactRoute
+  ExploreHomeRoute: typeof ExploreHomeRoute
+  ExploreMeetingRoute: typeof ExploreMeetingRoute
+  ExploreProposalRoute: typeof ExploreProposalRoute
+  ExploreServicesRoute: typeof ExploreServicesRoute
+}
+
+const ExploreRouteChildren: ExploreRouteChildren = {
+  ExploreCaseStudiesRoute: ExploreCaseStudiesRoute,
+  ExploreContactRoute: ExploreContactRoute,
+  ExploreHomeRoute: ExploreHomeRoute,
+  ExploreMeetingRoute: ExploreMeetingRoute,
+  ExploreProposalRoute: ExploreProposalRoute,
+  ExploreServicesRoute: ExploreServicesRoute,
+}
+
+const ExploreRouteWithChildren =
+  ExploreRoute._addFileChildren(ExploreRouteChildren)
+
+interface PortalRouteChildren {
+  PortalBillingRoute: typeof PortalBillingRoute
+  PortalDashboardRoute: typeof PortalDashboardRoute
+  PortalInfrastructureRoute: typeof PortalInfrastructureRoute
+  PortalMonitoringRoute: typeof PortalMonitoringRoute
+  PortalProjectsRoute: typeof PortalProjectsRoute
+  PortalReportsRoute: typeof PortalReportsRoute
+  PortalSettingsRoute: typeof PortalSettingsRoute
+  PortalTicketsRoute: typeof PortalTicketsRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalBillingRoute: PortalBillingRoute,
+  PortalDashboardRoute: PortalDashboardRoute,
+  PortalInfrastructureRoute: PortalInfrastructureRoute,
+  PortalMonitoringRoute: PortalMonitoringRoute,
+  PortalProjectsRoute: PortalProjectsRoute,
+  PortalReportsRoute: PortalReportsRoute,
+  PortalSettingsRoute: PortalSettingsRoute,
+  PortalTicketsRoute: PortalTicketsRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ExploreRoute: ExploreRouteWithChildren,
+  PortalRoute: PortalRouteWithChildren,
+  LoginCorporateRoute: LoginCorporateRoute,
+  LoginCustomerRoute: LoginCustomerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

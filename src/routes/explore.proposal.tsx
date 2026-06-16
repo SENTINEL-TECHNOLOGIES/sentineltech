@@ -40,7 +40,7 @@ function Proposal() {
             </div>
             <Field label="Services of interest">
               <div className="mt-1 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {["MSSP / SOC", "Network", "Cloud Security", "Backup & DR", "Consulting", "Support"].map((s) => (
+                {["AI CCTV", "Biometric Access", "Smart Automation", "Remote Monitoring", "Consulting", "Integrated Project"].map((s) => (
                   <label key={s} className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-2 text-sm hover:border-primary/50"><input type="checkbox" className="accent-primary" />{s}</label>
                 ))}
               </div>

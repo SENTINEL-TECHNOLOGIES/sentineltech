@@ -4,41 +4,41 @@ import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAler
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
 
 export const Route = createFileRoute("/portal/dashboard")({
-  head: () => ({ meta: [{ title: "Operations — Sentinel Portal" }] }),
+  head: () => ({ meta: [{ title: "Operações — Portal Sentinel" }] }),
   component: Dashboard,
 });
 
 const accessFlow = Array.from({ length: 24 }, (_, i) => ({
   hour: `${String(i).padStart(2, "0")}h`,
-  entries: 20 + Math.round(Math.sin((i - 8) / 3) * 120 + Math.max(0, 200 - Math.abs(i - 9) * 22) + Math.random() * 18),
-  exits: 15 + Math.round(Math.sin((i - 17) / 3) * 110 + Math.max(0, 200 - Math.abs(i - 18) * 22) + Math.random() * 18),
+  entradas: 20 + Math.round(Math.sin((i - 8) / 3) * 120 + Math.max(0, 200 - Math.abs(i - 9) * 22) + Math.random() * 18),
+  saidas: 15 + Math.round(Math.sin((i - 17) / 3) * 110 + Math.max(0, 200 - Math.abs(i - 18) * 22) + Math.random() * 18),
 }));
 
 const eventsWeek = [
-  { day: "Mon", motion: 412, intrusion: 6, access: 1240 },
-  { day: "Tue", motion: 388, intrusion: 4, access: 1180 },
-  { day: "Wed", motion: 502, intrusion: 9, access: 1320 },
-  { day: "Thu", motion: 446, intrusion: 3, access: 1270 },
-  { day: "Fri", motion: 612, intrusion: 11, access: 1410 },
-  { day: "Sat", motion: 184, intrusion: 2, access: 420 },
-  { day: "Sun", motion: 142, intrusion: 1, access: 380 },
+  { day: "Seg", motion: 412, intrusion: 6, access: 1240 },
+  { day: "Ter", motion: 388, intrusion: 4, access: 1180 },
+  { day: "Qua", motion: 502, intrusion: 9, access: 1320 },
+  { day: "Qui", motion: 446, intrusion: 3, access: 1270 },
+  { day: "Sex", motion: 612, intrusion: 11, access: 1410 },
+  { day: "Sáb", motion: 184, intrusion: 2, access: 420 },
+  { day: "Dom", motion: 142, intrusion: 1, access: 380 },
 ];
 
 const activities = [
-  { time: "2m ago", text: "AI detection — unattended bag · Lobby Cam 03 · HQ Tower", level: "warning" as const },
-  { time: "8m ago", text: "Biometric access granted — J. Almeida · Server Room B", level: "success" as const },
-  { time: "21m ago", text: "Maintenance scheduled — Cam 14 (DC-2 perimeter) tomorrow 09:00", level: "info" as const },
-  { time: "34m ago", text: "Unauthorized access attempt blocked — Gate 4 · Warehouse SP", level: "destructive" as const },
-  { time: "1h ago", text: "Visitor check-in — 12 contractors registered at Plant 2", level: "info" as const },
-  { time: "2h ago", text: "Perimeter sweep complete — 0 anomalies across 4.8 km fence", level: "success" as const },
+  { time: "há 2min", text: "Detecção por IA — objeto abandonado · Câmera Lobby 03 · Torre Matriz", level: "warning" as const },
+  { time: "há 8min", text: "Acesso biométrico autorizado — J. Almeida · Sala de Servidores B", level: "success" as const },
+  { time: "há 21min", text: "Manutenção agendada — Câmera 14 (perímetro DC-2) amanhã 09:00", level: "info" as const },
+  { time: "há 34min", text: "Tentativa de acesso não autorizado bloqueada — Portão 4 · Galpão SP", level: "destructive" as const },
+  { time: "há 1h", text: "Check-in de visitantes — 12 prestadores registrados na Planta 2", level: "info" as const },
+  { time: "há 2h", text: "Varredura de perímetro concluída — 0 anomalias em 4,8 km de cerca", level: "success" as const },
 ];
 
 const facilities = [
-  { name: "HQ Tower — São Paulo", cameras: "128/128", health: "operational" },
+  { name: "Torre Matriz — São Paulo", cameras: "128/128", health: "operational" },
   { name: "DC-2 Frankfurt", cameras: "92/92", health: "operational" },
-  { name: "Logistics Hub — Singapore", cameras: "54/56", health: "degraded" },
-  { name: "Manufacturing Plant — Monterrey", cameras: "76/76", health: "operational" },
-  { name: "Retail Network (42 sites)", cameras: "498/504", health: "degraded" },
+  { name: "Hub Logístico — Singapura", cameras: "54/56", health: "degraded" },
+  { name: "Planta Industrial — Monterrey", cameras: "76/76", health: "operational" },
+  { name: "Rede de Varejo (42 sites)", cameras: "498/504", health: "degraded" },
 ];
 
 function Dashboard() {
@@ -46,32 +46,32 @@ function Dashboard() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Security operations — Acme Corp</h1>
-          <p className="text-sm text-muted-foreground">Live view of cameras, access control, automation and incidents across every facility.</p>
+          <h1 className="text-2xl font-bold">Operações de Segurança — Acme Corp</h1>
+          <p className="text-sm text-muted-foreground">Visão ao vivo de câmeras, controle de acesso, automação e incidentes em todas as instalações.</p>
         </div>
         <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
           <span className="h-2 w-2 animate-pulse-glow rounded-full bg-success" />
-          All sites under active surveillance
+          Todos os sites sob vigilância ativa
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Active Cameras" value="848 / 856" delta="99.1% online" deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Online Devices" value="2,184" delta="+18 this week" deltaPositive icon={<Activity className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Access Events Today" value="3,612" delta="entries + exits" icon={<Fingerprint className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Security Incidents (24h)" value="7" delta="2 unresolved" icon={<AlertTriangle className="h-5 w-5" />} accent="warning" />
+        <KpiCard label="Câmeras Ativas" value="848 / 856" delta="99,1% online" deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
+        <KpiCard label="Dispositivos Online" value="2.184" delta="+18 esta semana" deltaPositive icon={<Activity className="h-5 w-5" />} accent="cyan" />
+        <KpiCard label="Eventos de Acesso (Hoje)" value="3.612" delta="entradas + saídas" icon={<Fingerprint className="h-5 w-5" />} accent="success" />
+        <KpiCard label="Incidentes (24h)" value="7" delta="2 em aberto" icon={<AlertTriangle className="h-5 w-5" />} accent="warning" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Visitor Registrations" value="142" delta="today" icon={<Users className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Monitored Locations" value="46" delta="across 12 regions" deltaPositive icon={<MapPin className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="System Health" value="98.4%" delta="all subsystems" deltaPositive icon={<ShieldAlert className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Platform Uptime" value="99.98%" delta="last 90 days" deltaPositive icon={<Activity className="h-5 w-5" />} accent="success" />
+        <KpiCard label="Visitantes Registrados" value="142" delta="hoje" icon={<Users className="h-5 w-5" />} accent="primary" />
+        <KpiCard label="Locais Monitorados" value="46" delta="em 12 regiões" deltaPositive icon={<MapPin className="h-5 w-5" />} accent="cyan" />
+        <KpiCard label="Saúde dos Sistemas" value="98,4%" delta="todos subsistemas" deltaPositive icon={<ShieldAlert className="h-5 w-5" />} accent="success" />
+        <KpiCard label="Uptime da Plataforma" value="99,98%" delta="últimos 90 dias" deltaPositive icon={<Activity className="h-5 w-5" />} accent="success" />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="Access flow — last 24h" description="Entries vs exits across all controlled doors" action={<Badge variant="info">Live</Badge>} />
+          <CardHeader title="Fluxo de acesso — últimas 24h" description="Entradas vs saídas em todas as portas controladas" action={<Badge variant="info">Ao vivo</Badge>} />
           <div className="h-72 p-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={accessFlow}>
@@ -89,23 +89,23 @@ function Dashboard() {
                 <XAxis dataKey="hour" stroke="oklch(0.7 0.03 255)" fontSize={11} tickLine={false} axisLine={false} interval={2} />
                 <YAxis stroke="oklch(0.7 0.03 255)" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ background: "oklch(0.21 0.07 268)", border: "1px solid oklch(0.32 0.06 265)", borderRadius: 8, fontSize: 12 }} />
-                <Area type="monotone" dataKey="entries" stroke="oklch(0.62 0.21 258)" fill="url(#g1)" strokeWidth={2} />
-                <Area type="monotone" dataKey="exits" stroke="oklch(0.78 0.13 210)" fill="url(#g2)" strokeWidth={2} />
+                <Area type="monotone" dataKey="entradas" stroke="oklch(0.62 0.21 258)" fill="url(#g1)" strokeWidth={2} />
+                <Area type="monotone" dataKey="saidas" name="saídas" stroke="oklch(0.78 0.13 210)" fill="url(#g2)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
         <Card>
-          <CardHeader title="Facility overview" description="Camera health by site" />
+          <CardHeader title="Visão por instalação" description="Saúde das câmeras por site" />
           <div className="space-y-3 p-5">
             {facilities.map((s) => (
               <div key={s.name} className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <div className="truncate text-sm font-medium">{s.name}</div>
-                  <div className="text-[11px] text-muted-foreground">Cameras {s.cameras}</div>
+                  <div className="text-[11px] text-muted-foreground">Câmeras {s.cameras}</div>
                 </div>
-                {s.health === "operational" ? <Badge variant="success">● Operational</Badge> : <Badge variant="warning">● Degraded</Badge>}
+                {s.health === "operational" ? <Badge variant="success">● Operacional</Badge> : <Badge variant="warning">● Degradado</Badge>}
               </div>
             ))}
           </div>
@@ -114,7 +114,7 @@ function Dashboard() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardHeader title="Security events — last 7 days" description="Motion, intrusion and access correlations" />
+          <CardHeader title="Eventos de segurança — últimos 7 dias" description="Movimento, intrusão e correlações de acesso" />
           <div className="h-64 p-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={eventsWeek}>
@@ -123,23 +123,23 @@ function Dashboard() {
                 <YAxis stroke="oklch(0.7 0.03 255)" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={{ background: "oklch(0.21 0.07 268)", border: "1px solid oklch(0.32 0.06 265)", borderRadius: 8, fontSize: 12 }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="access" name="Access events" fill="oklch(0.62 0.21 258)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="motion" name="Motion detections" fill="oklch(0.78 0.13 210)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="intrusion" name="Intrusion alerts" fill="oklch(0.62 0.22 25)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="access" name="Eventos de acesso" fill="oklch(0.62 0.21 258)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="motion" name="Detecções de movimento" fill="oklch(0.78 0.13 210)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="intrusion" name="Alertas de intrusão" fill="oklch(0.62 0.22 25)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
         <Card>
-          <CardHeader title="Device health" description="Subsystem status" />
+          <CardHeader title="Saúde dos dispositivos" description="Status por subsistema" />
           <div className="space-y-4 p-5">
             {[
-              { name: "CCTV network", pct: 99 },
-              { name: "Access controllers", pct: 96 },
-              { name: "Biometric readers", pct: 94 },
-              { name: "Alarm sensors", pct: 88 },
-              { name: "Automation hubs", pct: 92 },
+              { name: "Rede de CFTV", pct: 99 },
+              { name: "Controladoras de acesso", pct: 96 },
+              { name: "Leitores biométricos", pct: 94 },
+              { name: "Sensores de alarme", pct: 88 },
+              { name: "Hubs de automação", pct: 92 },
             ].map((p) => (
               <div key={p.name}>
                 <div className="flex justify-between text-xs">
@@ -157,13 +157,13 @@ function Dashboard() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card>
-          <CardHeader title="Maintenance alerts" description="Scheduled & required interventions" action={<Badge variant="warning">3 open</Badge>} />
+          <CardHeader title="Alertas de manutenção" description="Intervenções agendadas e necessárias" action={<Badge variant="warning">3 abertos</Badge>} />
           <div className="divide-y divide-border">
             {[
-              { device: "Cam 14 · DC-2 Perimeter", issue: "Lens calibration drift", eta: "Tomorrow 09:00" },
-              { device: "Reader BR-04 · Gate 2", issue: "Fingerprint sensor wear", eta: "Friday 14:00" },
-              { device: "Hub AUT-21 · HQ Floor 7", issue: "Firmware update pending", eta: "This weekend" },
-              { device: "Cam 88 · Retail SP-12", issue: "Connectivity intermittent", eta: "Dispatched" },
+              { device: "Câmera 14 · Perímetro DC-2", issue: "Calibração de lente", eta: "Amanhã 09:00" },
+              { device: "Leitor BR-04 · Portão 2", issue: "Desgaste no sensor de digital", eta: "Sexta 14:00" },
+              { device: "Hub AUT-21 · Andar 7 Matriz", issue: "Atualização de firmware pendente", eta: "Este fim de semana" },
+              { device: "Câmera 88 · Varejo SP-12", issue: "Conectividade intermitente", eta: "Equipe deslocada" },
             ].map((m) => (
               <div key={m.device} className="flex items-start gap-3 p-4">
                 <Wrench className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
@@ -178,7 +178,7 @@ function Dashboard() {
         </Card>
 
         <Card className="lg:col-span-2">
-          <CardHeader title="Recent activity" description="Cross-facility security feed" />
+          <CardHeader title="Atividade recente" description="Feed de segurança entre instalações" />
           <div className="divide-y divide-border">
             {activities.map((a, i) => (
               <div key={i} className="flex items-start gap-3 p-4">

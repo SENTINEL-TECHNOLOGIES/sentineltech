@@ -4,7 +4,7 @@ import { MessageCircle, Mail, Phone, MapPin, Calendar } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/explore/contact")({
-  head: () => ({ meta: [{ title: "Contact — Sentinel" }] }),
+  head: () => ({ meta: [{ title: "Contato — Sentinel" }] }),
   component: Contact,
 });
 
@@ -12,44 +12,44 @@ function Contact() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Get in touch</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Talk to sales, support or our 24/7 SOC desk — whichever you need.</p>
+        <h1 className="text-3xl font-bold">Fale com a gente</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Converse com vendas, suporte ou a nossa central 24/7 — o que você precisar.</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <Card>
-          <CardHeader title="Send us a message" />
-          <form className="space-y-4 p-6" onSubmit={(e) => { e.preventDefault(); toast.success("Message sent — we'll reply within 24h"); }}>
+          <CardHeader title="Envie uma mensagem" />
+          <form className="space-y-4 p-6" onSubmit={(e) => { e.preventDefault(); toast.success("Mensagem enviada — respondemos em até 24h"); }}>
             <div className="grid gap-4 md:grid-cols-2">
-              <input placeholder="Full name" className={inputCls} />
-              <input placeholder="Email" type="email" className={inputCls} />
-              <input placeholder="Company" className={inputCls} />
-              <input placeholder="Phone" className={inputCls} />
+              <input placeholder="Nome completo" className={inputCls} />
+              <input placeholder="E-mail" type="email" className={inputCls} />
+              <input placeholder="Empresa" className={inputCls} />
+              <input placeholder="Telefone" className={inputCls} />
             </div>
             <select className={inputCls}>
-              <option>I'd like to talk about... Sales</option>
-              <option>Support</option>
-              <option>Partnership</option>
-              <option>Media / Press</option>
+              <option>Quero falar sobre... Vendas</option>
+              <option>Suporte</option>
+              <option>Parcerias</option>
+              <option>Imprensa</option>
             </select>
-            <textarea rows={5} placeholder="How can we help?" className={inputCls} />
-            <button className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90">Send message</button>
+            <textarea rows={5} placeholder="Como podemos ajudar?" className={inputCls} />
+            <button className="w-full rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90">Enviar mensagem</button>
           </form>
         </Card>
 
         <div className="space-y-4">
-          <ContactItem icon={<MessageCircle className="h-5 w-5" />} title="WhatsApp" subtitle="+1 (415) 555-0142" cta="Open chat" href="https://wa.me/14155550142" accent="success" />
-          <ContactItem icon={<Mail className="h-5 w-5" />} title="Email" subtitle="hello@sentinel.tech" cta="Send email" href="mailto:hello@sentinel.tech" accent="primary" />
-          <ContactItem icon={<Phone className="h-5 w-5" />} title="Phone — Global" subtitle="+1 (415) 555-0199" cta="Call now" href="tel:+14155550199" accent="cyan" />
-          <ContactItem icon={<Calendar className="h-5 w-5" />} title="Book a meeting" subtitle="30-min consultation" cta="Schedule" href="/explore/meeting" accent="warning" />
+          <ContactItem icon={<MessageCircle className="h-5 w-5" />} title="WhatsApp" subtitle="+55 (11) 4002-8922" cta="Abrir chat" href="https://wa.me/551140028922" accent="success" />
+          <ContactItem icon={<Mail className="h-5 w-5" />} title="E-mail" subtitle="contato@sentinel.tech" cta="Enviar e-mail" href="mailto:contato@sentinel.tech" accent="primary" />
+          <ContactItem icon={<Phone className="h-5 w-5" />} title="Telefone — Global" subtitle="+55 (11) 4000-0199" cta="Ligar agora" href="tel:+551140000199" accent="cyan" />
+          <ContactItem icon={<Calendar className="h-5 w-5" />} title="Agendar reunião" subtitle="Consultoria de 30 min" cta="Agendar" href="/explore/meeting" accent="warning" />
 
           <Card className="p-5">
             <div className="flex items-start gap-3">
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary"><MapPin className="h-5 w-5" /></div>
               <div className="min-w-0">
-                <div className="font-semibold">Headquarters</div>
-                <div className="mt-1 text-sm text-muted-foreground">350 Mission St, Floor 32<br />San Francisco, CA 94105</div>
-                <div className="mt-3 text-xs text-muted-foreground">SOC locations · São Paulo · Frankfurt · Singapore · Toronto</div>
+                <div className="font-semibold">Sede</div>
+                <div className="mt-1 text-sm text-muted-foreground">Av. Brigadeiro Faria Lima, 3500<br />Itaim Bibi · São Paulo, SP</div>
+                <div className="mt-3 text-xs text-muted-foreground">Centrais de Operação · São Paulo · Rio de Janeiro · Curitiba · Recife</div>
               </div>
             </div>
           </Card>

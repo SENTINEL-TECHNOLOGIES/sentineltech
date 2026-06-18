@@ -3,39 +3,39 @@ import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
 import { Building, Camera, MapPin, Activity, Fingerprint } from "lucide-react";
 
 export const Route = createFileRoute("/portal/infrastructure")({
-  head: () => ({ meta: [{ title: "Facilities — Sentinel" }] }),
+  head: () => ({ meta: [{ title: "Instalações — Sentinel" }] }),
   component: Infra,
 });
 
 const sites = [
-  { name: "HQ Tower · São Paulo", region: "BR-SP", cameras: 128, doors: 84, status: "healthy", load: 62 },
-  { name: "DC-2 · Frankfurt", region: "EU-DE", cameras: 92, doors: 46, status: "healthy", load: 48 },
-  { name: "Logistics Hub · Singapore", region: "AP-SG", cameras: 54, doors: 28, status: "degraded", load: 81 },
-  { name: "Manufacturing Plant · Monterrey", region: "MX-NL", cameras: 76, doors: 32, status: "healthy", load: 55 },
-  { name: "Retail Network · Brazil-South", region: "BR-RS", cameras: 124, doors: 62, status: "healthy", load: 39 },
+  { name: "Torre Matriz · São Paulo", region: "BR-SP", cameras: 128, doors: 84, status: "saudável", load: 62 },
+  { name: "DC-2 · Frankfurt", region: "EU-DE", cameras: 92, doors: 46, status: "saudável", load: 48 },
+  { name: "Hub Logístico · Singapura", region: "AP-SG", cameras: 54, doors: 28, status: "degradado", load: 81 },
+  { name: "Planta Industrial · Monterrey", region: "MX-NL", cameras: 76, doors: 32, status: "saudável", load: 55 },
+  { name: "Rede de Varejo · Sul do Brasil", region: "BR-RS", cameras: 124, doors: 62, status: "saudável", load: 39 },
 ];
 
 function Infra() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Facilities</h1>
-        <p className="text-sm text-muted-foreground">Sites, monitored locations and managed security assets across the estate.</p>
+        <h1 className="text-2xl font-bold">Instalações</h1>
+        <p className="text-sm text-muted-foreground">Sites, locais monitorados e ativos de segurança gerenciados em todo o parque.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Monitored Facilities" value="46" icon={<Building className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Total Cameras" value="856" icon={<Camera className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Access Points" value="384" icon={<Fingerprint className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Avg System Load" value="57%" icon={<Activity className="h-5 w-5" />} accent="warning" />
+        <KpiCard label="Instalações Monitoradas" value="46" icon={<Building className="h-5 w-5" />} accent="primary" />
+        <KpiCard label="Total de Câmeras" value="856" icon={<Camera className="h-5 w-5" />} accent="cyan" />
+        <KpiCard label="Pontos de Acesso" value="384" icon={<Fingerprint className="h-5 w-5" />} accent="success" />
+        <KpiCard label="Carga Média" value="57%" icon={<Activity className="h-5 w-5" />} accent="warning" />
       </div>
 
       <Card>
-        <CardHeader title="Sites & regions" description="Health and capacity across managed locations" />
+        <CardHeader title="Sites e regiões" description="Saúde e capacidade nas instalações gerenciadas" />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
-              <tr><th className="px-5 py-3 font-medium">Location</th><th className="px-5 py-3 font-medium">Region</th><th className="px-5 py-3 font-medium">Cameras</th><th className="px-5 py-3 font-medium">Doors</th><th className="px-5 py-3 font-medium">Load</th><th className="px-5 py-3 font-medium">Status</th></tr>
+              <tr><th className="px-5 py-3 font-medium">Local</th><th className="px-5 py-3 font-medium">Região</th><th className="px-5 py-3 font-medium">Câmeras</th><th className="px-5 py-3 font-medium">Portas</th><th className="px-5 py-3 font-medium">Carga</th><th className="px-5 py-3 font-medium">Status</th></tr>
             </thead>
             <tbody>
               {sites.map((s) => (
@@ -52,7 +52,7 @@ function Infra() {
                       <span className="font-mono text-xs">{s.load}%</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3">{s.status === "healthy" ? <Badge variant="success">● Healthy</Badge> : <Badge variant="warning">● Degraded</Badge>}</td>
+                  <td className="px-5 py-3">{s.status === "saudável" ? <Badge variant="success">● Saudável</Badge> : <Badge variant="warning">● Degradado</Badge>}</td>
                 </tr>
               ))}
             </tbody>
@@ -62,13 +62,13 @@ function Infra() {
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
-          <CardHeader title="Top facilities by activity" />
+          <CardHeader title="Instalações mais ativas" />
           <div className="space-y-3 p-5">
             {[
-              { id: "HQ-SP", t: "HQ Tower São Paulo", v: 92 },
-              { id: "PLT-MTY", t: "Plant Monterrey", v: 78 },
-              { id: "DC2-FRA", t: "Datacenter Frankfurt", v: 71 },
-              { id: "WHS-SG", t: "Warehouse Singapore", v: 64 },
+              { id: "HQ-SP", t: "Torre Matriz São Paulo", v: 92 },
+              { id: "PLT-MTY", t: "Planta Monterrey", v: 78 },
+              { id: "DC2-FRA", t: "Data Center Frankfurt", v: 71 },
+              { id: "WHS-SG", t: "Galpão Singapura", v: 64 },
             ].map((d) => (
               <div key={d.id} className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 p-3">
                 <MapPin className="h-4 w-4 text-cyan" />
@@ -82,13 +82,13 @@ function Infra() {
           </div>
         </Card>
         <Card>
-          <CardHeader title="Capacity forecast" description="30-day projection" />
+          <CardHeader title="Previsão de capacidade" description="Projeção de 30 dias" />
           <div className="space-y-4 p-5">
             {[
-              { label: "Camera storage", val: 68, hint: "NVR pool" },
-              { label: "Access controllers", val: 74, hint: "Door count" },
-              { label: "Network bandwidth", val: 42, hint: "Site uplinks" },
-              { label: "Operator queue", val: 55, hint: "SOC capacity" },
+              { label: "Armazenamento de câmeras", val: 68, hint: "Pool NVR" },
+              { label: "Controladoras de acesso", val: 74, hint: "Nº de portas" },
+              { label: "Banda de rede", val: 42, hint: "Uplinks de site" },
+              { label: "Fila de operadores", val: 55, hint: "Capacidade da central" },
             ].map((r) => (
               <div key={r.label}>
                 <div className="flex justify-between text-xs"><span className="font-medium">{r.label}</span><span className="text-muted-foreground">{r.hint} · <span className="font-mono text-foreground">{r.val}%</span></span></div>

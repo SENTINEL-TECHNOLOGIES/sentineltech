@@ -2,6 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LoginForm } from "@/components/login-form";
 
 export const Route = createFileRoute("/login/customer")({
-  head: () => ({ meta: [{ title: "Explore Sentinel — Login" }] }),
-  component: () => <LoginForm role="customer" accent="Discovery Portal" title="Explore Sentinel" subtitle="Browse services, request proposals and schedule a consultation." redirectTo="/explore/home" />,
+  head: () => ({ meta: [{ title: "Conheça a Sentinel — Acesso" }] }),
+  component: () => <LoginForm role="customer" accent="Portal de Descoberta" title="Conheça a Sentinel" subtitle="Navegue por serviços, solicite propostas e agende uma consultoria." redirectTo="/explore/home" />,
 });

@@ -5,8 +5,8 @@ import { SentinelLogo } from "@/components/sentinel-logo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sentinel — Physical Security Technology Platform" },
-      { name: "description", content: "AI-powered CCTV, biometric access, smart automation and 24/7 remote monitoring for enterprise facilities." },
+      { title: "Sentinel — Plataforma de Tecnologia em Segurança Física" },
+      { name: "description", content: "CFTV com IA, controle de acesso biométrico, automação predial e monitoramento remoto 24/7 para instalações corporativas." },
     ],
   }),
   component: Entry,
@@ -22,37 +22,37 @@ function Entry() {
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-16">
         <div className="flex flex-col items-center text-center">
           <SentinelLogo size="lg" />
-          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Physical Security Technology Platform</p>
+          <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Plataforma de Tecnologia em Segurança Física</p>
           <h1 className="mt-8 max-w-3xl text-3xl md:text-5xl font-bold tracking-tight">
-            How would you like to access <span className="text-gradient-blue">Sentinel?</span>
+            Como você quer acessar a <span className="text-gradient-blue">Sentinel?</span>
           </h1>
         </div>
 
         <div className="mt-14 grid w-full max-w-5xl gap-6 md:grid-cols-2">
           <AccessCard
-            badge={<span className="rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success"><Lock className="mr-1 inline h-3 w-3" /> Secure Login</span>}
+            badge={<span className="rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success"><Lock className="mr-1 inline h-3 w-3" /> Acesso Seguro</span>}
             icon={<Shield className="h-7 w-7 text-cyan" />}
-            title="Corporate Client"
-            description="Live cameras, access logs, monitored facilities and security operations across your estate."
-            ctaText="Access Corporate Portal"
+            title="Cliente Corporativo"
+            description="Câmeras ao vivo, registros de acesso, instalações monitoradas e operações de segurança em todo o seu parque."
+            ctaText="Acessar Portal Corporativo"
             ctaTo="/login/corporate"
             primary
           />
           <AccessCard
-            badge={<span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-warning">• No account needed</span>}
+            badge={<span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-warning">• Sem cadastro</span>}
             icon={<Rocket className="h-7 w-7 text-primary" />}
-            title="New Customer"
-            description="Explore AI CCTV, biometric access, automation and remote monitoring services."
-            ctaText="Explore Solutions"
+            title="Novo Cliente"
+            description="Conheça nossos serviços de CFTV com IA, biometria, automação e monitoramento remoto."
+            ctaText="Explorar Soluções"
             ctaTo="/login/customer"
           />
         </div>
 
         <div className="mt-16 grid w-full max-w-4xl grid-cols-2 gap-6 md:grid-cols-4">
-          <Stat icon={<Users className="h-4 w-4" />} label="Enterprise Sites" value="500+" />
-          <Stat icon={<Activity className="h-4 w-4" />} label="Cameras Managed" value="120k+" />
-          <Stat icon={<Clock className="h-4 w-4" />} label="Monitoring" value="24 / 7" />
-          <Stat icon={<Award className="h-4 w-4" />} label="Certified" value="ISO 27001" />
+          <Stat icon={<Users className="h-4 w-4" />} label="Sites Corporativos" value="500+" />
+          <Stat icon={<Activity className="h-4 w-4" />} label="Câmeras Gerenciadas" value="120k+" />
+          <Stat icon={<Clock className="h-4 w-4" />} label="Monitoramento" value="24 / 7" />
+          <Stat icon={<Award className="h-4 w-4" />} label="Certificação" value="ISO 27001" />
         </div>
       </div>
     </div>

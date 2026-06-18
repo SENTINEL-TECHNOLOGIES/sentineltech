@@ -2,24 +2,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardHeader, Badge } from "@/components/ui-bits";
 
 export const Route = createFileRoute("/portal/settings")({
-  head: () => ({ meta: [{ title: "Settings — Sentinel" }] }),
+  head: () => ({ meta: [{ title: "Configurações — Sentinel" }] }),
   component: Settings,
 });
 
 function Settings() {
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <h1 className="text-2xl font-bold">Configurações</h1>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader title="Organization" />
+          <CardHeader title="Organização" />
           <div className="space-y-4 p-5">
             {[
-              { l: "Company name", v: "Acme Corporation" },
-              { l: "Tax ID", v: "00.000.000/0001-00" },
-              { l: "Primary contact", v: "ops@acme.io" },
-              { l: "Region", v: "Americas" },
+              { l: "Razão social", v: "Acme Corporation Ltda." },
+              { l: "CNPJ", v: "00.000.000/0001-00" },
+              { l: "Contato principal", v: "operacoes@acme.com.br" },
+              { l: "Região", v: "Brasil" },
             ].map((r) => (
               <div key={r.l} className="grid grid-cols-[180px_1fr] items-center gap-3">
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">{r.l}</div>
@@ -30,14 +30,14 @@ function Settings() {
         </Card>
 
         <Card>
-          <CardHeader title="Security preferences" />
+          <CardHeader title="Preferências de segurança" />
           <div className="space-y-4 p-5">
             {[
-              { l: "Enforce MFA", v: true },
+              { l: "Exigir MFA", v: true },
               { l: "Single Sign-On (SAML)", v: true },
-              { l: "IP allow-list", v: false },
-              { l: "Session recording", v: true },
-              { l: "Alerts to mobile", v: true },
+              { l: "Lista de IPs permitidos", v: false },
+              { l: "Gravação de sessão", v: true },
+              { l: "Alertas no celular", v: true },
             ].map((r) => (
               <div key={r.l} className="flex items-center justify-between">
                 <div className="text-sm">{r.l}</div>
@@ -50,23 +50,23 @@ function Settings() {
         </Card>
 
         <Card>
-          <CardHeader title="Notifications" description="Where alerts are delivered" />
+          <CardHeader title="Notificações" description="Para onde os alertas são enviados" />
           <div className="space-y-3 p-5 text-sm">
-            {["Email — ops@acme.io", "Slack — #sentinel-alerts", "PagerDuty — Primary on-call", "Webhook — incidents.acme.io/in"].map((c) => (
-              <div key={c} className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3"><span className="font-mono text-xs">{c}</span><Badge variant="success">Active</Badge></div>
+            {["E-mail — operacoes@acme.com.br", "Slack — #sentinel-alertas", "PagerDuty — Plantão Principal", "Webhook — incidentes.acme.com.br/in"].map((c) => (
+              <div key={c} className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3"><span className="font-mono text-xs">{c}</span><Badge variant="success">Ativo</Badge></div>
             ))}
           </div>
         </Card>
 
         <Card>
-          <CardHeader title="API & Integrations" />
+          <CardHeader title="API e Integrações" />
           <div className="space-y-3 p-5">
             <div className="rounded-lg border border-border bg-secondary/30 p-3">
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">API Key</div>
+              <div className="text-xs uppercase tracking-wider text-muted-foreground">Chave da API</div>
               <div className="mt-1 font-mono text-xs">sk_live_•••••••••••••••••• 8c4f</div>
             </div>
             {["Splunk", "Datadog", "ServiceNow", "Microsoft Sentinel"].map((c) => (
-              <div key={c} className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3"><span className="text-sm font-medium">{c}</span><Badge variant="info">Connected</Badge></div>
+              <div key={c} className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3"><span className="text-sm font-medium">{c}</span><Badge variant="info">Conectado</Badge></div>
             ))}
           </div>
         </Card>

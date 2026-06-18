@@ -18,10 +18,10 @@ export function LoginForm({ role, title, subtitle, redirectTo, accent }: { role:
     setLoading(true);
     setTimeout(() => {
       if (login(role, email, password)) {
-        toast.success("Authenticated. Redirecting...");
+        toast.success("Autenticado. Redirecionando...");
         navigate({ to: redirectTo });
       } else {
-        toast.error("Invalid credentials");
+        toast.error("Credenciais inválidas");
         setLoading(false);
       }
     }, 500);
@@ -35,7 +35,7 @@ export function LoginForm({ role, title, subtitle, redirectTo, accent }: { role:
 
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-10">
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to access
+          <ArrowLeft className="h-4 w-4" /> Voltar para acesso
         </Link>
         <SentinelLogo size="md" subtitle={accent} />
 
@@ -45,11 +45,11 @@ export function LoginForm({ role, title, subtitle, redirectTo, accent }: { role:
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">E-mail</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1.5 w-full rounded-lg border border-border bg-input/60 px-4 py-2.5 text-sm outline-none ring-primary/40 transition focus:border-primary focus:ring-2" />
             </div>
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Password</label>
+              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Senha</label>
               <div className="relative mt-1.5">
                 <input type={show ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full rounded-lg border border-border bg-input/60 px-4 py-2.5 pr-10 text-sm outline-none ring-primary/40 transition focus:border-primary focus:ring-2" />
                 <button type="button" onClick={() => setShow(!show)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -59,12 +59,12 @@ export function LoginForm({ role, title, subtitle, redirectTo, accent }: { role:
             </div>
 
             <button type="submit" disabled={loading} className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition hover:bg-primary/90 disabled:opacity-60">
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Sign in securely
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Entrar com segurança
             </button>
           </form>
 
           <div className="mt-6 rounded-lg border border-border/50 bg-secondary/40 p-3 text-xs">
-            <div className="font-semibold text-muted-foreground">Demo credentials (auto-filled)</div>
+            <div className="font-semibold text-muted-foreground">Credenciais de demonstração (preenchidas)</div>
             <div className="mt-1 font-mono text-[11px] text-foreground/80">{creds.email}</div>
             <div className="font-mono text-[11px] text-foreground/80">{creds.password}</div>
           </div>

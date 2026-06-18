@@ -3,27 +3,27 @@ import { Card, CardHeader, Badge } from "@/components/ui-bits";
 import { Download, FileBarChart } from "lucide-react";
 
 export const Route = createFileRoute("/portal/reports")({
-  head: () => ({ meta: [{ title: "Reports — Sentinel" }] }),
+  head: () => ({ meta: [{ title: "Relatórios — Sentinel" }] }),
   component: Reports,
 });
 
 const reports = [
-  { id: "RPT-2026-06", title: "Monthly Security Posture — June 2026", type: "Security", date: "Jun 01, 2026", size: "4.2 MB" },
-  { id: "RPT-2026-05", title: "Monthly Security Posture — May 2026", type: "Security", date: "May 01, 2026", size: "3.9 MB" },
-  { id: "RPT-Q2-26", title: "Q2 SLA Performance Review", type: "SLA", date: "Apr 03, 2026", size: "1.8 MB" },
-  { id: "RPT-PEN-12", title: "External Pentest Findings v12", type: "Audit", date: "Mar 22, 2026", size: "6.1 MB" },
-  { id: "RPT-SOC-04", title: "SOC Operations Summary — Q1", type: "Ops", date: "Apr 10, 2026", size: "2.3 MB" },
+  { id: "RPT-2026-06", title: "Postura de Segurança — Junho 2026", type: "Segurança", date: "01 Jun 2026", size: "4,2 MB" },
+  { id: "RPT-2026-05", title: "Postura de Segurança — Maio 2026", type: "Segurança", date: "01 Mai 2026", size: "3,9 MB" },
+  { id: "RPT-Q2-26", title: "Revisão de SLA — 2º Trimestre", type: "SLA", date: "03 Abr 2026", size: "1,8 MB" },
+  { id: "RPT-PEN-12", title: "Achados de Pentest Externo v12", type: "Auditoria", date: "22 Mar 2026", size: "6,1 MB" },
+  { id: "RPT-SOC-04", title: "Resumo da Central — 1º Trimestre", type: "Operações", date: "10 Abr 2026", size: "2,3 MB" },
 ];
 
 function Reports() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Reports</h1>
-        <p className="text-sm text-muted-foreground">Compliance, SLA, security posture and operational reports.</p>
+        <h1 className="text-2xl font-bold">Relatórios</h1>
+        <p className="text-sm text-muted-foreground">Compliance, SLA, postura de segurança e relatórios operacionais.</p>
       </div>
       <Card>
-        <CardHeader title="Available reports" action={<Badge variant="info">PDF / CSV</Badge>} />
+        <CardHeader title="Relatórios disponíveis" action={<Badge variant="info">PDF / CSV</Badge>} />
         <div className="divide-y divide-border">
           {reports.map((r) => (
             <div key={r.id} className="flex items-center gap-4 p-4 hover:bg-accent/30">
@@ -35,7 +35,7 @@ function Reports() {
                 </div>
               </div>
               <button className="inline-flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-1.5 text-xs font-semibold hover:bg-accent">
-                <Download className="h-3.5 w-3.5" /> Download
+                <Download className="h-3.5 w-3.5" /> Baixar
               </button>
             </div>
           ))}

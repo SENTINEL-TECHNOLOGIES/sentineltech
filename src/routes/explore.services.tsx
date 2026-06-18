@@ -3,58 +3,58 @@ import { Card, Badge } from "@/components/ui-bits";
 import { Camera, Fingerprint, Building2, Globe, Lightbulb, Layers, ArrowRight, Check } from "lucide-react";
 
 export const Route = createFileRoute("/explore/services")({
-  head: () => ({ meta: [{ title: "Services — Sentinel" }] }),
+  head: () => ({ meta: [{ title: "Serviços — Sentinel" }] }),
   component: Services,
 });
 
 const services = [
   {
-    icon: <Camera className="h-6 w-6" />, title: "AI CCTV Solutions",
-    desc: "Intelligent surveillance cameras with on-device and on-prem AI analytics.",
-    benefits: ["Object & human detection", "License plate recognition", "Behavior & loitering analytics"],
-    features: ["4K · low-light · thermal", "Edge AI inference", "Existing-CCTV upgrade kits"],
-    install: ["Site survey (1 day)", "Cabling & camera install (2-5 days)", "VMS + AI calibration (1 day)"],
-    value: "Stop incidents before they escalate. Cut investigation time by 70%.",
+    icon: <Camera className="h-6 w-6" />, title: "Soluções de CFTV com IA",
+    desc: "Câmeras de vigilância inteligentes com analítica de IA on-device e on-premise.",
+    benefits: ["Detecção de pessoas e objetos", "Reconhecimento de placas (LPR)", "Analítica de comportamento e permanência"],
+    features: ["4K · pouca luz · térmica", "Inferência de IA na borda", "Kits para atualizar CFTV existente"],
+    install: ["Levantamento (1 dia)", "Cabeamento e instalação (2-5 dias)", "VMS + calibração de IA (1 dia)"],
+    value: "Pare incidentes antes que escalem. Reduza o tempo de investigação em 70%.",
   },
   {
-    icon: <Fingerprint className="h-6 w-6" />, title: "Biometric Access Control",
-    desc: "Face, fingerprint, card, mobile and visitor passes — unified across every door.",
-    benefits: ["Multi-factor at the door", "Visitor & contractor flows", "Centralized user management"],
-    features: ["Anti-spoofing biometrics", "Mustering & evacuation", "ERP / HR integration"],
-    install: ["Door audit (1 day)", "Controllers & readers (3-7 days)", "User onboarding (ongoing)"],
-    value: "Know who is in your building right now. End shared badges and tailgating.",
+    icon: <Fingerprint className="h-6 w-6" />, title: "Controle de Acesso Biométrico",
+    desc: "Face, digital, cartão, mobile e crachás de visitante — unificados em todas as portas.",
+    benefits: ["Multifator na porta", "Fluxo de visitantes e prestadores", "Gestão centralizada de usuários"],
+    features: ["Biometria anti-fraude", "Mustering e evacuação", "Integração com ERP / RH"],
+    install: ["Auditoria de portas (1 dia)", "Controladoras e leitores (3-7 dias)", "Onboarding de usuários (contínuo)"],
+    value: "Saiba quem está no seu prédio agora. Acabe com crachás compartilhados e caronas.",
   },
   {
-    icon: <Building2 className="h-6 w-6" />, title: "Smart Building Automation",
-    desc: "Lighting, gates, alarms, HVAC and environmental sensors orchestrated as one.",
-    benefits: ["Energy savings 15-30%", "Rule-based automations", "Fire & life-safety integration"],
-    features: ["BACnet / Modbus / KNX", "Mobile control app", "Open API integrations"],
-    install: ["Building scan & BIM map", "Hub & sensor install (5-10 days)", "Rule design workshop"],
-    value: "Lower opex while raising comfort and safety. One pane of glass for facilities.",
+    icon: <Building2 className="h-6 w-6" />, title: "Automação Predial Inteligente",
+    desc: "Iluminação, portões, alarmes, HVAC e sensores ambientais orquestrados como um só.",
+    benefits: ["Economia de energia 15-30%", "Automações por regras", "Integração com combate a incêndio"],
+    features: ["BACnet / Modbus / KNX", "App de controle móvel", "API aberta para integrações"],
+    install: ["Scan do prédio e BIM", "Hub e sensores (5-10 dias)", "Workshop de regras"],
+    value: "Reduza opex elevando conforto e segurança. Um painel único para facilities.",
   },
   {
-    icon: <Globe className="h-6 w-6" />, title: "Remote Monitoring 24/7",
-    desc: "Trained operators watch your facilities around the clock from our SOC.",
-    benefits: ["3-min avg response", "Live verification of alarms", "Police & dispatch coordination"],
-    features: ["Bilingual operators", "Video verification", "Monthly executive report"],
-    install: ["Site & camera onboarding", "Runbook & escalation design", "Go-live within 14 days"],
-    value: "Replace passive cameras with active prevention. SLA-backed peace of mind.",
+    icon: <Globe className="h-6 w-6" />, title: "Monitoramento Remoto 24/7",
+    desc: "Operadores treinados acompanham suas instalações 24h por dia direto da nossa central.",
+    benefits: ["Resposta média de 3 min", "Verificação ao vivo de alarmes", "Coordenação com polícia e despacho"],
+    features: ["Operadores bilíngues", "Verificação por vídeo", "Relatório executivo mensal"],
+    install: ["Onboarding de sites e câmeras", "Desenho de runbook e escalonamento", "Go-live em até 14 dias"],
+    value: "Troque câmeras passivas por prevenção ativa. Tranquilidade com SLA.",
   },
   {
-    icon: <Lightbulb className="h-6 w-6" />, title: "Security Consulting",
-    desc: "Risk assessment, master planning and vendor-neutral design for your estate.",
-    benefits: ["Threat & vulnerability assessment", "Master security plan", "Audit & certification support"],
-    features: ["ISO / ONVIF / NDAA aligned", "Insurance-friendly designs", "Vendor-neutral specs"],
-    install: ["Stakeholder workshops", "Site assessment & report", "Roadmap delivered in 4-6 weeks"],
-    value: "Spend security budget where it actually reduces risk — backed by data.",
+    icon: <Lightbulb className="h-6 w-6" />, title: "Consultoria em Segurança",
+    desc: "Análise de risco, master plan e design vendor-neutral para o seu parque.",
+    benefits: ["Avaliação de ameaças e vulnerabilidades", "Master plan de segurança", "Apoio a auditorias e certificações"],
+    features: ["Alinhado a ISO / ONVIF / NDAA", "Projetos amigáveis ao seguro", "Especificações vendor-neutral"],
+    install: ["Workshops com stakeholders", "Avaliação e relatório", "Roadmap em 4-6 semanas"],
+    value: "Invista o orçamento de segurança onde ele realmente reduz risco — com dados.",
   },
   {
-    icon: <Layers className="h-6 w-6" />, title: "Integrated Security Projects",
-    desc: "Turnkey delivery for new sites: CCTV, access, automation, SOC — one contract.",
-    benefits: ["Single accountable partner", "Predictable budget", "Faster time to operations"],
-    features: ["Civil + low voltage + IT", "OEM partnerships", "Lifecycle maintenance plans"],
-    install: ["Design-build-operate model", "Phased commissioning", "5-year service plan available"],
-    value: "Open a new facility fully secured from day one. No vendor finger-pointing.",
+    icon: <Layers className="h-6 w-6" />, title: "Projetos Integrados de Segurança",
+    desc: "Entrega turnkey para novos sites: CFTV, acesso, automação e SOC — em um único contrato.",
+    benefits: ["Parceiro único responsável", "Orçamento previsível", "Operação no ar mais rápido"],
+    features: ["Civil + baixa tensão + TI", "Parcerias com fabricantes (OEM)", "Planos de manutenção do ciclo de vida"],
+    install: ["Modelo design-build-operate", "Comissionamento em fases", "Plano de serviço de 5 anos opcional"],
+    value: "Abra uma nova unidade 100% segura desde o primeiro dia. Sem disputas entre fornecedores.",
   },
 ];
 
@@ -62,9 +62,9 @@ function Services() {
   return (
     <div className="space-y-6">
       <div>
-        <Badge variant="info">Service Catalog</Badge>
-        <h1 className="mt-3 text-3xl font-bold">Physical security, end to end</h1>
-        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Six integrated practices, one accountable team. Designed, installed and operated by Sentinel.</p>
+        <Badge variant="info">Catálogo de Serviços</Badge>
+        <h1 className="mt-3 text-3xl font-bold">Segurança física, de ponta a ponta</h1>
+        <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Seis práticas integradas, um único time responsável. Projetadas, instaladas e operadas pela Sentinel.</p>
       </div>
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {services.map((s) => (
@@ -73,35 +73,34 @@ function Services() {
             <h3 className="mt-4 text-lg font-bold">{s.title}</h3>
             <p className="mt-1.5 text-sm text-muted-foreground">{s.desc}</p>
 
-            <Section title="Benefits" items={s.benefits} />
-            <Section title="Features" items={s.features} />
-            <Section title="Installation" items={s.install} />
+            <Section title="Benefícios" items={s.benefits} />
+            <Section title="Recursos" items={s.features} />
+            <Section title="Instalação" items={s.install} />
 
             <div className="mt-5 rounded-lg border border-primary/30 bg-primary/5 p-3">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-primary">Business value</div>
+              <div className="text-[10px] font-mono uppercase tracking-widest text-primary">Valor para o negócio</div>
               <p className="mt-1 text-xs text-foreground/90">{s.value}</p>
             </div>
 
-            <Link to="/explore/proposal" className="mt-5 inline-flex items-center justify-center gap-2 rounded-lg border border-primary/50 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10">Request Proposal <ArrowRight className="h-3.5 w-3.5" /></Link>
+            <Link to="/explore/proposal" className="mt-5 inline-flex items-center justify-center gap-2 rounded-lg border border-primary/50 px-4 py-2 text-sm font-semibold text-primary hover:bg-primary/10">Solicitar Proposta <ArrowRight className="h-3.5 w-3.5" /></Link>
           </Card>
         ))}
       </div>
 
-      {/* Engagement packages */}
       <div className="pt-6 text-center">
-        <div className="text-xs font-mono uppercase tracking-[0.3em] text-primary">Engagement models</div>
-        <h2 className="mt-2 text-3xl font-bold">Built for your scale</h2>
+        <div className="text-xs font-mono uppercase tracking-[0.3em] text-primary">Modelos de contratação</div>
+        <h2 className="mt-2 text-3xl font-bold">Sob medida para sua escala</h2>
       </div>
       <div className="grid gap-5 md:grid-cols-3">
         {[
-          { name: "Single Site", price: "From $4,900", popular: false, items: ["Up to 32 cameras", "Up to 12 doors", "8×5 monitoring", "Quarterly review", "Local field support"], cta: "Get Started" },
-          { name: "Multi-Site", price: "From $14,900", popular: true, items: ["Up to 250 cameras", "Up to 80 doors", "24/7 monitoring", "Dedicated operator pool", "Monthly review", "Priority field dispatch"], cta: "Most Popular" },
-          { name: "Enterprise Program", price: "Custom", popular: false, items: ["Unlimited cameras & doors", "24/7 monitoring + dispatch", "Master security plan", "Named account team", "On-site engineer (option)", "Custom integrations"], cta: "Contact Sales" },
+          { name: "Site Único", price: "A partir de R$ 4.900", popular: false, items: ["Até 32 câmeras", "Até 12 portas", "Monitoramento 8×5", "Revisão trimestral", "Suporte de campo local"], cta: "Começar" },
+          { name: "Multi-Site", price: "A partir de R$ 14.900", popular: true, items: ["Até 250 câmeras", "Até 80 portas", "Monitoramento 24/7", "Time dedicado de operadores", "Revisão mensal", "Despacho prioritário em campo"], cta: "Mais Popular" },
+          { name: "Programa Enterprise", price: "Sob consulta", popular: false, items: ["Câmeras e portas ilimitadas", "Monitoramento 24/7 + despacho", "Master plan de segurança", "Time de conta nomeado", "Engenheiro on-site (opcional)", "Integrações customizadas"], cta: "Falar com Vendas" },
         ].map((p) => (
           <Card key={p.name} className={`relative p-7 ${p.popular ? "border-primary/60 ring-1 ring-primary/30" : ""}`}>
-            {p.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-primary-foreground shadow-lg shadow-primary/40">Most Popular</div>}
+            {p.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[11px] font-bold text-primary-foreground shadow-lg shadow-primary/40">Mais Popular</div>}
             <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground">{p.name}</div>
-            <div className="mt-3 font-mono text-3xl font-bold">{p.price}{p.price !== "Custom" && <span className="text-base font-normal text-muted-foreground"> / mo</span>}</div>
+            <div className="mt-3 font-mono text-3xl font-bold">{p.price}{p.price !== "Sob consulta" && <span className="text-base font-normal text-muted-foreground"> / mês</span>}</div>
             <div className="mt-6 space-y-2.5">
               {p.items.map((i) => <div key={i} className="flex items-center gap-2 text-sm"><Check className="h-3.5 w-3.5 text-cyan" />{i}</div>)}
             </div>

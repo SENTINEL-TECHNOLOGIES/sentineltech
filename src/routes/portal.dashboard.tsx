@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
-import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench } from "lucide-react";
+import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench, Trash2 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
+import { AddDeviceButton } from "@/components/add-device-modal";
+import { useDevices, DEVICE_TYPE_LABELS } from "@/lib/devices";
 
 export const Route = createFileRoute("/portal/dashboard")({
   head: () => ({ meta: [{ title: "Operações — Portal Sentinel" }] }),
@@ -42,6 +44,7 @@ const facilities = [
 ];
 
 function Dashboard() {
+  const { devices, removeDevice, updateStatus } = useDevices();
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -49,9 +52,12 @@ function Dashboard() {
           <h1 className="text-2xl font-bold">Operações de Segurança — Acme Corp</h1>
           <p className="text-sm text-muted-foreground">Visão ao vivo de câmeras, controle de acesso, automação e incidentes em todas as instalações.</p>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
-          <span className="h-2 w-2 animate-pulse-glow rounded-full bg-success" />
-          Todos os sites sob vigilância ativa
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
+            <span className="h-2 w-2 animate-pulse-glow rounded-full bg-success" />
+            Todos os sites sob vigilância ativa
+          </div>
+          <AddDeviceButton />
         </div>
       </div>
 
@@ -194,6 +200,51 @@ function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader title="Meus dispositivos provisionados" description="Inventário de equipamentos de segurança gerenciados" action={<Badge variant="info">{devices.length} ativos</Badge>} />
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="border-b border-border bg-secondary/30 text-left text-[11px] uppercase tracking-wider text-muted-foreground">
+              <tr>
+                <th className="px-5 py-3">Dispositivo</th>
+                <th className="px-5 py-3">Tipo</th>
+                <th className="px-5 py-3">Local</th>
+                <th className="px-5 py-3">Status</th>
+                <th className="px-5 py-3 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {devices.length === 0 && (
+                <tr><td colSpan={5} className="px-5 py-8 text-center text-muted-foreground">Nenhum dispositivo. Clique em "Adicionar Dispositivo" no topo.</td></tr>
+              )}
+              {devices.map((d) => (
+                <tr key={d.id} className="hover:bg-accent/30">
+                  <td className="px-5 py-3 font-medium">{d.name}</td>
+                  <td className="px-5 py-3 text-muted-foreground">{DEVICE_TYPE_LABELS[d.type]}</td>
+                  <td className="px-5 py-3 text-muted-foreground">{d.location}</td>
+                  <td className="px-5 py-3">
+                    <select
+                      value={d.status}
+                      onChange={(e) => updateStatus(d.id, e.target.value as typeof d.status)}
+                      className="rounded-md border border-border bg-input/50 px-2 py-1 text-xs"
+                    >
+                      <option value="online">● Online</option>
+                      <option value="maintenance">● Manutenção</option>
+                      <option value="offline">● Offline</option>
+                    </select>
+                  </td>
+                  <td className="px-5 py-3 text-right">
+                    <button onClick={() => removeDevice(d.id)} className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-xs text-muted-foreground hover:border-destructive hover:text-destructive">
+                      <Trash2 className="h-3 w-3" /> Remover
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
     </div>
   );
 }

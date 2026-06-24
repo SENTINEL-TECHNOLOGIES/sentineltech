@@ -44,6 +44,7 @@ const facilities = [
 ];
 
 function Dashboard() {
+  const { devices, removeDevice, updateStatus } = useDevices();
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -51,9 +52,12 @@ function Dashboard() {
           <h1 className="text-2xl font-bold">Operações de Segurança — Acme Corp</h1>
           <p className="text-sm text-muted-foreground">Visão ao vivo de câmeras, controle de acesso, automação e incidentes em todas as instalações.</p>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
-          <span className="h-2 w-2 animate-pulse-glow rounded-full bg-success" />
-          Todos os sites sob vigilância ativa
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
+            <span className="h-2 w-2 animate-pulse-glow rounded-full bg-success" />
+            Todos os sites sob vigilância ativa
+          </div>
+          <AddDeviceButton />
         </div>
       </div>
 

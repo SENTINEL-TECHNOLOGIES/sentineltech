@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
-import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench } from "lucide-react";
+import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench, Trash2 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
+import { AddDeviceButton } from "@/components/add-device-modal";
+import { useDevices, DEVICE_TYPE_LABELS } from "@/lib/devices";
 
 export const Route = createFileRoute("/portal/dashboard")({
   head: () => ({ meta: [{ title: "Operações — Portal Sentinel" }] }),

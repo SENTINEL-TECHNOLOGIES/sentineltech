@@ -63,12 +63,12 @@ export function DashboardMockup({ className = "" }: { className?: string }) {
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Alertas em tempo real</div>
           <div className="mt-2 space-y-1.5">
             {[
-              ["12:04", "Pessoa em área restrita — Doca 3", "destructive"],
-              ["11:52", "Veículo não autorizado — Portaria", "warning"],
-              ["11:31", "Acesso biométrico validado — Bloco B", "success"],
+              ["12:04", "Pessoa em área restrita — Doca 3", "bg-destructive"],
+              ["11:52", "Veículo não autorizado — Portaria", "bg-warning"],
+              ["11:31", "Acesso biométrico validado — Bloco B", "bg-success"],
             ].map(([t, txt, tone]) => (
               <div key={t as string} className="flex items-center gap-2.5 rounded border border-border/60 bg-background/40 px-2.5 py-1.5">
-                <span className={`h-1.5 w-1.5 shrink-0 rounded-full bg-${tone}`} />
+                <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${tone}`} />
                 <span className="font-mono text-[10px] text-muted-foreground">{t}</span>
                 <span className="truncate text-[11px]">{txt}</span>
               </div>

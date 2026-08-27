@@ -37,7 +37,7 @@ export function LoginForm({ role, title, subtitle, redirectTo, accent }: { role:
         <Link to="/" className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Voltar para acesso
         </Link>
-        <SentinelLogo size="md" subtitle={accent} />
+        <SentinelLogo size="lg" variant="horizontal" onBackground="dark" subtitle={accent} />
 
         <div className="mt-10 rounded-2xl border border-border bg-card/70 p-8 backdrop-blur-sm">
           <h1 className="text-2xl font-bold">{title}</h1>

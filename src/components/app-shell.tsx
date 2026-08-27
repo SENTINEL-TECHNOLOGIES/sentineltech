@@ -80,7 +80,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
 
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border px-5">
-          <SentinelLogo size="sm" subtitle={portalLabel} />
+          <SentinelLogo size="sm" variant="horizontal" onBackground="dark" subtitle={portalLabel === "Sentinel" ? undefined : portalLabel} />
           <button className="lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
         </div>
 

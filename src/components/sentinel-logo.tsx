@@ -1,23 +1,51 @@
-export function SentinelLogo({ size = "md", subtitle }: { size?: "sm" | "md" | "lg"; subtitle?: string }) {
-  const dims = size === "sm" ? "h-8 w-8" : size === "lg" ? "h-12 w-12" : "h-10 w-10";
-  const text = size === "sm" ? "text-sm" : size === "lg" ? "text-2xl" : "text-lg";
-  const sub = size === "sm" ? "text-[9px]" : "text-[10px]";
+import horizontal from "@/assets/logo-horizontal.png.asset.json";
+import horizontalWhite from "@/assets/logo-horizontal-white.png.asset.json";
+import stacked from "@/assets/logo-stacked.png.asset.json";
+import stackedWhite from "@/assets/logo-stacked-white.png.asset.json";
+import mark from "@/assets/logo-mark.png.asset.json";
+import markWhite from "@/assets/logo-mark-white.png.asset.json";
+
+type Size = "sm" | "md" | "lg";
+type Variant = "horizontal" | "stacked" | "mark";
+/** "dark" = fundo escuro (usa a logo branca) | "light" = fundo claro (usa a logo original) */
+type OnBackground = "dark" | "light";
+
+const HEIGHTS: Record<Variant, Record<Size, string>> = {
+  horizontal: { sm: "h-6 md:h-7", md: "h-8 md:h-9", lg: "h-10 md:h-12" },
+  stacked: { sm: "h-10 md:h-12", md: "h-14 md:h-16", lg: "h-20 md:h-24" },
+  mark: { sm: "h-7 md:h-8", md: "h-9 md:h-10", lg: "h-12 md:h-14" },
+};
+
+const SOURCES: Record<Variant, Record<OnBackground, string>> = {
+  horizontal: { light: horizontal.url, dark: horizontalWhite.url },
+  stacked: { light: stacked.url, dark: stackedWhite.url },
+  mark: { light: mark.url, dark: markWhite.url },
+};
+
+export function SentinelLogo({
+  size = "md",
+  subtitle,
+  variant = "horizontal",
+  onBackground = "dark",
+  className = "",
+}: {
+  size?: Size;
+  subtitle?: string;
+  variant?: Variant;
+  onBackground?: OnBackground;
+  className?: string;
+}) {
+  const sub = size === "sm" ? "text-[9px]" : size === "lg" ? "text-[11px]" : "text-[10px]";
   return (
-    <div className="flex items-center gap-3">
-      <div className={`${dims} relative grid place-items-center rounded-xl bg-gradient-to-br from-primary via-primary to-cyan shadow-lg shadow-primary/40 ring-1 ring-cyan/40`}>
-        {/* Sentinel mark: shield + camera aperture */}
-        <svg viewBox="0 0 32 32" className="h-[62%] w-[62%]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M16 2.8 L27 6.5 V16 c0 7-5 12-11 13.2 C10 28 5 23 5 16 V6.5 Z" className="text-primary-foreground" fill="currentColor" fillOpacity="0.12" />
-          <circle cx="16" cy="15" r="4.2" className="text-primary-foreground" />
-          <circle cx="16" cy="15" r="1.4" className="text-cyan" fill="currentColor" stroke="none" />
-          <path d="M16 10.8 V8.5 M20.2 15 H22.5 M16 19.2 V21.5 M11.8 15 H9.5" className="text-primary-foreground" />
-        </svg>
-        <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-success ring-2 ring-background animate-pulse-glow" />
-      </div>
-      <div className="leading-tight">
-        <div className={`${text} font-bold tracking-tight font-mono`}>SENTINEL</div>
-        {subtitle && <div className={`${sub} uppercase tracking-[0.22em] text-muted-foreground`}>{subtitle}</div>}
-      </div>
+    <div className={`flex ${variant === "stacked" ? "flex-col items-center gap-2" : "items-center gap-3"} ${className}`}>
+      <img
+        src={SOURCES[variant][onBackground]}
+        alt="Sentinel Technologies"
+        className={`${HEIGHTS[variant][size]} w-auto shrink-0 object-contain`}
+      />
+      {subtitle && (
+        <span className={`${sub} uppercase tracking-[0.22em] text-muted-foreground`}>{subtitle}</span>
+      )}
     </div>
   );
 }

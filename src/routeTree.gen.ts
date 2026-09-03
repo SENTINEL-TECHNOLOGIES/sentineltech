@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LoginCorporateRouteImport } from './routes/login-corporate'
+import { Route as LoginCustomerRouteImport } from './routes/login-customer'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as ExploreAboutRouteImport } from './routes/explore.about'
@@ -23,8 +25,6 @@ import { Route as ExploreIndustriesRouteImport } from './routes/explore.industri
 import { Route as ExploreMeetingRouteImport } from './routes/explore.meeting'
 import { Route as ExploreProposalRouteImport } from './routes/explore.proposal'
 import { Route as ExploreServicesRouteImport } from './routes/explore.services'
-import { Route as LoginCorporateRouteImport } from './routes/login.corporate'
-import { Route as LoginCustomerRouteImport } from './routes/login.customer'
 import { Route as PortalAiCctvRouteImport } from './routes/portal.ai-cctv'
 import { Route as PortalAutomationRouteImport } from './routes/portal.automation'
 import { Route as PortalBillingRouteImport } from './routes/portal.billing'
@@ -56,6 +56,16 @@ const ExploreRoute = ExploreRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginCorporateRoute = LoginCorporateRouteImport.update({
+  id: '/login-corporate',
+  path: '/login-corporate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginCustomerRoute = LoginCustomerRouteImport.update({
+  id: '/login-customer',
+  path: '/login-customer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalRoute = PortalRouteImport.update({
@@ -107,16 +117,6 @@ const ExploreServicesRoute = ExploreServicesRouteImport.update({
   id: '/services',
   path: '/services',
   getParentRoute: () => ExploreRoute,
-} as any)
-const LoginCorporateRoute = LoginCorporateRouteImport.update({
-  id: '/corporate',
-  path: '/corporate',
-  getParentRoute: () => LoginRoute,
-} as any)
-const LoginCustomerRoute = LoginCustomerRouteImport.update({
-  id: '/customer',
-  path: '/customer',
-  getParentRoute: () => LoginRoute,
 } as any)
 const PortalAiCctvRoute = PortalAiCctvRouteImport.update({
   id: '/ai-cctv',
@@ -183,7 +183,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/explore': typeof ExploreRouteWithChildren
-  '/login': typeof LoginRouteWithChildren
+  '/login': typeof LoginRoute
+  '/login-corporate': typeof LoginCorporateRoute
+  '/login-customer': typeof LoginCustomerRoute
   '/portal': typeof PortalRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/explore/about': typeof ExploreAboutRoute
@@ -194,8 +196,6 @@ export interface FileRoutesByFullPath {
   '/explore/meeting': typeof ExploreMeetingRoute
   '/explore/proposal': typeof ExploreProposalRoute
   '/explore/services': typeof ExploreServicesRoute
-  '/login/corporate': typeof LoginCorporateRoute
-  '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
@@ -213,7 +213,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/explore': typeof ExploreRouteWithChildren
-  '/login': typeof LoginRouteWithChildren
+  '/login': typeof LoginRoute
+  '/login-corporate': typeof LoginCorporateRoute
+  '/login-customer': typeof LoginCustomerRoute
   '/portal': typeof PortalRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/explore/about': typeof ExploreAboutRoute
@@ -224,8 +226,6 @@ export interface FileRoutesByTo {
   '/explore/meeting': typeof ExploreMeetingRoute
   '/explore/proposal': typeof ExploreProposalRoute
   '/explore/services': typeof ExploreServicesRoute
-  '/login/corporate': typeof LoginCorporateRoute
-  '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
@@ -244,7 +244,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/cadastro': typeof CadastroRoute
   '/explore': typeof ExploreRouteWithChildren
-  '/login': typeof LoginRouteWithChildren
+  '/login': typeof LoginRoute
+  '/login-corporate': typeof LoginCorporateRoute
+  '/login-customer': typeof LoginCustomerRoute
   '/portal': typeof PortalRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/explore/about': typeof ExploreAboutRoute
@@ -255,8 +257,6 @@ export interface FileRoutesById {
   '/explore/meeting': typeof ExploreMeetingRoute
   '/explore/proposal': typeof ExploreProposalRoute
   '/explore/services': typeof ExploreServicesRoute
-  '/login/corporate': typeof LoginCorporateRoute
-  '/login/customer': typeof LoginCustomerRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
   '/portal/automation': typeof PortalAutomationRoute
   '/portal/billing': typeof PortalBillingRoute
@@ -277,6 +277,8 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/explore'
     | '/login'
+    | '/login-corporate'
+    | '/login-customer'
     | '/portal'
     | '/recuperar-senha'
     | '/explore/about'
@@ -287,8 +289,6 @@ export interface FileRouteTypes {
     | '/explore/meeting'
     | '/explore/proposal'
     | '/explore/services'
-    | '/login/corporate'
-    | '/login/customer'
     | '/portal/ai-cctv'
     | '/portal/automation'
     | '/portal/billing'
@@ -307,6 +307,8 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/explore'
     | '/login'
+    | '/login-corporate'
+    | '/login-customer'
     | '/portal'
     | '/recuperar-senha'
     | '/explore/about'
@@ -317,8 +319,6 @@ export interface FileRouteTypes {
     | '/explore/meeting'
     | '/explore/proposal'
     | '/explore/services'
-    | '/login/corporate'
-    | '/login/customer'
     | '/portal/ai-cctv'
     | '/portal/automation'
     | '/portal/billing'
@@ -337,6 +337,8 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/explore'
     | '/login'
+    | '/login-corporate'
+    | '/login-customer'
     | '/portal'
     | '/recuperar-senha'
     | '/explore/about'
@@ -347,8 +349,6 @@ export interface FileRouteTypes {
     | '/explore/meeting'
     | '/explore/proposal'
     | '/explore/services'
-    | '/login/corporate'
-    | '/login/customer'
     | '/portal/ai-cctv'
     | '/portal/automation'
     | '/portal/billing'
@@ -367,7 +367,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CadastroRoute: typeof CadastroRoute
   ExploreRoute: typeof ExploreRouteWithChildren
-  LoginRoute: typeof LoginRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  LoginCorporateRoute: typeof LoginCorporateRoute
+  LoginCustomerRoute: typeof LoginCustomerRoute
   PortalRoute: typeof PortalRouteWithChildren
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
 }
@@ -400,6 +402,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login-corporate': {
+      id: '/login-corporate'
+      path: '/login-corporate'
+      fullPath: '/login-corporate'
+      preLoaderRoute: typeof LoginCorporateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login-customer': {
+      id: '/login-customer'
+      path: '/login-customer'
+      fullPath: '/login-customer'
+      preLoaderRoute: typeof LoginCustomerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal': {
@@ -471,20 +487,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/explore/services'
       preLoaderRoute: typeof ExploreServicesRouteImport
       parentRoute: typeof ExploreRoute
-    }
-    '/login/corporate': {
-      id: '/login/corporate'
-      path: '/corporate'
-      fullPath: '/login/corporate'
-      preLoaderRoute: typeof LoginCorporateRouteImport
-      parentRoute: typeof LoginRoute
-    }
-    '/login/customer': {
-      id: '/login/customer'
-      path: '/customer'
-      fullPath: '/login/customer'
-      preLoaderRoute: typeof LoginCustomerRouteImport
-      parentRoute: typeof LoginRoute
     }
     '/portal/ai-cctv': {
       id: '/portal/ai-cctv'
@@ -598,18 +600,6 @@ const ExploreRouteChildren: ExploreRouteChildren = {
 const ExploreRouteWithChildren =
   ExploreRoute._addFileChildren(ExploreRouteChildren)
 
-interface LoginRouteChildren {
-  LoginCorporateRoute: typeof LoginCorporateRoute
-  LoginCustomerRoute: typeof LoginCustomerRoute
-}
-
-const LoginRouteChildren: LoginRouteChildren = {
-  LoginCorporateRoute: LoginCorporateRoute,
-  LoginCustomerRoute: LoginCustomerRoute,
-}
-
-const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
-
 interface PortalRouteChildren {
   PortalAiCctvRoute: typeof PortalAiCctvRoute
   PortalAutomationRoute: typeof PortalAutomationRoute
@@ -647,7 +637,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CadastroRoute: CadastroRoute,
   ExploreRoute: ExploreRouteWithChildren,
-  LoginRoute: LoginRouteWithChildren,
+  LoginRoute: LoginRoute,
+  LoginCorporateRoute: LoginCorporateRoute,
+  LoginCustomerRoute: LoginCustomerRoute,
   PortalRoute: PortalRouteWithChildren,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
 }

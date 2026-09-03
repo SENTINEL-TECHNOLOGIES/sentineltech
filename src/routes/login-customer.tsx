@@ -5,11 +5,15 @@ export const Route = createFileRoute("/login/customer")({
   head: () => ({
     meta: [{ title: "Acesso do Cliente — Sentinel" }],
   }),
-  component: () => (
+  component: CustomerLogin,
+});
+
+function CustomerLogin() {
+  return (
     <LoginForm
       title="Conheça a Sentinel"
       subtitle="Navegue por serviços, solicite propostas e agende uma consultoria."
       redirectTo="/explore/home"
     />
-  ),
-});
+  );
+}

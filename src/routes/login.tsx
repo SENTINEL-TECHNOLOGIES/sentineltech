@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { Building2, UserRound, ArrowRight } from "lucide-react";
 import { AuthShell } from "@/components/auth-shell";
 
@@ -17,7 +17,7 @@ function LoginChoice() {
     >
       <div className="mt-6 space-y-3">
         <Link
-          to="/login/corporate"
+          to="/login-corporate"
           className="group flex items-center gap-4 rounded-xl border border-border bg-secondary/30 p-4 transition hover:border-primary/60 hover:bg-primary/5"
         >
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -35,7 +35,7 @@ function LoginChoice() {
         </Link>
 
         <Link
-          to="/login/customer"
+          to="/login-customer"
           className="group flex items-center gap-4 rounded-xl border border-border bg-secondary/30 p-4 transition hover:border-cyan/60 hover:bg-cyan/5"
         >
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-cyan/10 text-cyan">

@@ -4,6 +4,7 @@ import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAler
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
 import { AddDeviceButton } from "@/components/add-device-modal";
 import { useDevices, DEVICE_TYPE_LABELS } from "@/lib/devices";
+import { useSession } from "@/hooks/use-session";
 
 export const Route = createFileRoute("/portal/dashboard")({
   head: () => ({ meta: [{ title: "Operações — Portal Sentinel" }] }),
@@ -45,11 +46,13 @@ const facilities = [
 
 function Dashboard() {
   const { devices, removeDevice, updateStatus } = useDevices();
+  const { firstName } = useSession();
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Operações de Segurança — Acme Corp</h1>
+          <h1 className="text-2xl font-bold">{firstName ? `Olá, ${firstName}` : "Operações de Segurança"}</h1>
+          <p className="text-xs font-semibold uppercase tracking-wider text-cyan">Operações de Segurança — Acme Corp</p>
           <p className="text-sm text-muted-foreground">Visão ao vivo de câmeras, controle de acesso, automação e incidentes em todas as instalações.</p>
         </div>
         <div className="flex items-center gap-2">

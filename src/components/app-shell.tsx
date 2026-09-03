@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Bell, Search, ChevronRight, LogOut, HelpCircle, Menu, X, User, Settings as SettingsIcon, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { SentinelLogo } from "./sentinel-logo";
 import { getSession, logout, type Role } from "@/lib/auth";
+import { useSession } from "@/hooks/use-session";
 
 export interface NavItem { to: string; label: string; icon: ReactNode; }
 
@@ -26,6 +27,8 @@ const INITIAL_NOTIFS: NotificationItem[] = [
 
 export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: { role: Role; items: NavItem[]; portalLabel: string; userLabel: string; userSubtitle: string }) {
   const navigate = useNavigate();
+  const { session } = useSession();
+  const displayName = session?.name?.trim() || userLabel;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -80,7 +83,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
 
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border px-5">
-          <SentinelLogo size="sm" variant="horizontal" onBackground="dark" subtitle={portalLabel === "Sentinel" ? undefined : portalLabel} />
+          <SentinelLogo size="sm" variant="mark" onBackground="dark" subtitle={portalLabel === "Sentinel" ? undefined : portalLabel} />
           <button className="lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
         </div>
 
@@ -102,10 +105,10 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
         <div className="shrink-0 border-t border-sidebar-border p-3">
           <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/40 p-3">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-xs font-bold text-primary-foreground">
-              {userLabel.slice(0, 2).toUpperCase()}
+              {displayName.slice(0, 2).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="truncate text-sm font-semibold">{userLabel}</div>
+              <div className="truncate text-sm font-semibold">{displayName}</div>
               <div className="truncate text-[11px] text-muted-foreground">{userSubtitle}</div>
             </div>
             <button onClick={handleLogout} className="text-muted-foreground hover:text-destructive" title="Sair">
@@ -201,14 +204,14 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
             {/* Account */}
             <div ref={accountRef} className="relative">
               <button onClick={() => { setAccountOpen((v) => !v); setNotifOpen(false); }} className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-xs font-bold text-primary-foreground ring-2 ring-transparent transition hover:ring-primary/40" title="Minha conta">
-                {userLabel.slice(0, 2).toUpperCase()}
+                {displayName.slice(0, 2).toUpperCase()}
               </button>
               {accountOpen && (
                 <div className="absolute right-0 top-full mt-2 w-72 overflow-hidden rounded-lg border border-border bg-card shadow-2xl">
                   <div className="flex items-center gap-3 border-b border-border p-4">
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-sm font-bold text-primary-foreground">{userLabel.slice(0, 2).toUpperCase()}</div>
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-sm font-bold text-primary-foreground">{displayName.slice(0, 2).toUpperCase()}</div>
                     <div className="min-w-0">
-                      <div className="truncate text-sm font-semibold">{userLabel}</div>
+                      <div className="truncate text-sm font-semibold">{displayName}</div>
                       <div className="truncate text-[11px] text-muted-foreground">{userSubtitle}</div>
                       <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-success"><CheckCircle2 className="h-3 w-3" /> Sessão verificada</div>
                     </div>

@@ -35,7 +35,7 @@ function Entry() {
             title="Cliente Corporativo"
             description="Câmeras ao vivo, registros de acesso, instalações monitoradas e operações de segurança em todo o seu parque."
             ctaText="Acessar Portal Corporativo"
-            ctaTo="/login/corporate"
+            ctaTo="/login"
             primary
           />
           <AccessCard
@@ -44,7 +44,7 @@ function Entry() {
             title="Novo Cliente"
             description="Conheça nossos serviços de CFTV com IA, biometria, automação e monitoramento remoto."
             ctaText="Explorar Soluções"
-            ctaTo="/login/customer"
+            ctaTo="/login"
           />
         </div>
 

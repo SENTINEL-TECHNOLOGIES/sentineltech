@@ -1,7 +1,8 @@
-// Frontend-only demo auth
+// Autenticação demo (somente frontend, persistida em localStorage)
 export type Role = "corporate" | "customer";
 
 const KEY = "sentinel_auth";
+const USERS_KEY = "sentinel_users";
 
 export const CREDENTIALS = {
   corporate: { email: "empresa@sentinel-demo.com", password: "Sentinel2026!" },
@@ -20,16 +21,78 @@ export function isPasswordValid(v: string) {
   return PASSWORD_RULES.every((r) => r.test(v));
 }
 
-export function login(role: Role, email: string, password: string, name?: string): boolean {
-  const c = CREDENTIALS[role];
-  if (email.trim().toLowerCase() === c.email && password === c.password) {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(KEY, JSON.stringify({ role, email, name: name?.trim() || "", ts: Date.now() }));
-      window.dispatchEvent(new Event("sentinel-auth-change"));
-    }
-    return true;
+export function isEmailValid(v: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+
+type StoredUser = { name: string; email: string; password: string; role: Role };
+
+function readUsers(): StoredUser[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  } catch {
+    return [];
   }
-  return false;
+}
+
+function writeUsers(users: StoredUser[]) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function persistSession(session: { role: Role; email: string; name: string }) {
+  localStorage.setItem(KEY, JSON.stringify({ ...session, ts: Date.now() }));
+  window.dispatchEvent(new Event("sentinel-auth-change"));
+}
+
+/** Cadastro de novo usuário. */
+export function register(
+  name: string,
+  email: string,
+  password: string,
+  role: Role = "corporate",
+): { ok: true } | { ok: false; error: string } {
+  const mail = email.trim().toLowerCase();
+  if (name.trim().length < 2) return { ok: false, error: "Informe seu nome completo." };
+  if (!isEmailValid(mail)) return { ok: false, error: "E-mail inválido." };
+  if (!isPasswordValid(password)) return { ok: false, error: "A senha não atende aos requisitos de segurança." };
+
+  const users = readUsers();
+  if (users.some((u) => u.email === mail) || Object.values(CREDENTIALS).some((c) => c.email === mail)) {
+    return { ok: false, error: "Já existe uma conta com este e-mail." };
+  }
+  users.push({ name: name.trim(), email: mail, password, role });
+  writeUsers(users);
+  persistSession({ role, email: mail, name: name.trim() });
+  return { ok: true };
+}
+
+/** Login por e-mail e senha (usuários cadastrados ou credenciais de demonstração). */
+export function login(email: string, password: string): { ok: true; role: Role } | { ok: false; error: string } {
+  const mail = email.trim().toLowerCase();
+  if (!isEmailValid(mail)) return { ok: false, error: "E-mail inválido." };
+  if (!password) return { ok: false, error: "Informe sua senha." };
+
+  for (const [role, c] of Object.entries(CREDENTIALS) as [Role, { email: string; password: string }][]) {
+    if (mail === c.email && password === c.password) {
+      persistSession({ role, email: mail, name: role === "corporate" ? "Equipe Sentinel" : "Visitante" });
+      return { ok: true, role };
+    }
+  }
+
+  const user = readUsers().find((u) => u.email === mail);
+  if (!user) return { ok: false, error: "Conta não encontrada. Verifique o e-mail ou cadastre-se." };
+  if (user.password !== password) return { ok: false, error: "Senha incorreta." };
+
+  persistSession({ role: user.role, email: user.email, name: user.name });
+  return { ok: true, role: user.role };
+}
+
+/** Recuperação de senha (simulada). */
+export function requestPasswordReset(email: string): { ok: true } | { ok: false; error: string } {
+  const mail = email.trim().toLowerCase();
+  if (!isEmailValid(mail)) return { ok: false, error: "E-mail inválido." };
+  return { ok: true };
 }
 
 export function logout() {

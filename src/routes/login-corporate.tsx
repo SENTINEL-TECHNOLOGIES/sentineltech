@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LoginForm } from "@/components/login-form";
 
-export const Route = createFileRoute("/login/corporate")({
+export const Route = createFileRoute("/login-corporate")({
   head: () => ({
     meta: [{ title: "Acesso Corporativo — Sentinel" }],
   }),

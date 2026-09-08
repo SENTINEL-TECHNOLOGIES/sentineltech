@@ -26,7 +26,7 @@ const services = [
 
 function Services() {
   return (
-    <div className="space-y-20 pb-12">
+    <div className="mx-auto w-full max-w-6xl space-y-20 px-5 py-8 pb-12 sm:px-8 md:py-12 lg:px-10">
       <header className="mx-auto max-w-2xl text-center">
         <Badge variant="info">A plataforma</Badge>
         <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">Uma tela para toda a operação</h1>

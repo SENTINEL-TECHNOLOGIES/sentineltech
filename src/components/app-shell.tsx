@@ -42,7 +42,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
 
   useEffect(() => {
     const s = getSession();
-    if (!s || s.role !== role) navigate({ to: role === "corporate" ? "/login/corporate" : "/login/customer" });
+    if (!s || s.role !== role) navigate({ to: role === "corporate" ? "/login-corporate" : "/login-customer" });
   }, [role, navigate]);
 
   useEffect(() => {
@@ -82,18 +82,18 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
       {sidebarOpen && <div className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border px-5">
-          <SentinelLogo size="sm" variant="mark" onBackground="dark" subtitle={portalLabel === "Sentinel" ? undefined : portalLabel} />
+        <div className="flex h-20 shrink-0 items-center justify-center border-b border-sidebar-border px-5">
+          <SentinelLogo size="lg" variant="mark" onBackground="dark" />
           <button className="lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-3 [scrollbar-width:thin]">
+        <nav className="sidebar-scroll flex-1 overflow-y-auto p-3">
           <div className="flex flex-col gap-1">
             {items.map((it) => {
               const active = pathname === it.to;
               return (
-                <Link key={it.to} to={it.to} onClick={() => setSidebarOpen(false)} className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${active ? "bg-primary/15 text-foreground shadow-inner shadow-primary/10 ring-1 ring-primary/30" : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-foreground"}`}>
-                  <span className={active ? "text-primary" : "text-muted-foreground group-hover:text-cyan"}>{it.icon}</span>
+                <Link key={it.to} to={it.to} onClick={() => setSidebarOpen(false)} className={`group flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${active ? "bg-primary/15 text-foreground shadow-inner shadow-primary/10 ring-1 ring-primary/30" : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-foreground"}`}>
+                  <span className={`flex w-5 shrink-0 items-center justify-center ${active ? "text-primary" : "text-muted-foreground group-hover:text-cyan"}`}>{it.icon}</span>
                   <span className="font-medium">{it.label}</span>
                   {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />}
                 </Link>
@@ -199,7 +199,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
               )}
             </div>
 
-            <button className="hidden sm:grid h-9 w-9 place-items-center rounded-lg border border-border bg-card hover:bg-accent" title="Ajuda"><HelpCircle className="h-4 w-4" /></button>
+            <button onClick={() => navigate({ to: "/explore/contact" })} className="hidden sm:grid h-9 w-9 place-items-center rounded-lg border border-border bg-card hover:bg-accent" title="Ajuda" aria-label="Abrir ajuda e contato"><HelpCircle className="h-4 w-4" /></button>
 
             {/* Account */}
             <div ref={accountRef} className="relative">

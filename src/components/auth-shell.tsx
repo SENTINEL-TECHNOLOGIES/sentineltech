@@ -25,7 +25,7 @@ export function AuthShell({
         </Link>
 
         <div className="flex justify-center">
-          <SentinelLogo size="lg" variant="mark" onBackground="dark" />
+          <SentinelLogo size="lg" variant="stacked" onBackground="dark" />
         </div>
 
         <div className="mt-8 rounded-2xl border border-border bg-card/70 p-6 backdrop-blur-sm sm:p-8">
@@ -42,17 +42,26 @@ export function AuthShell({
 
 export function Field({
   label,
+  required = false,
+  optional = false,
+  hint,
   error,
   children,
 }: {
   label: string;
+  required?: boolean;
+  optional?: boolean;
+  hint?: string;
   error?: string | null;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</label>
+      <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label} {required ? <span className="text-primary" aria-label="obrigatório">*</span> : optional ? <span className="font-normal normal-case tracking-normal">(opcional)</span> : null}
+      </label>
       <div className="mt-1.5">{children}</div>
+      {hint && !error ? <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p> : null}
       {error ? <p className="mt-1 text-[11px] text-destructive">{error}</p> : null}
     </div>
   );

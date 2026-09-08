@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, CardHeader } from "@/components/ui-bits";
 import { MessageCircle, Mail, Phone, MapPin, Calendar } from "lucide-react";
 import { toast } from "sonner";
@@ -41,7 +41,7 @@ function Contact() {
           <ContactItem icon={<MessageCircle className="h-5 w-5" />} title="WhatsApp" subtitle="+55 (11) 4002-8922" cta="Abrir chat" href="https://wa.me/551140028922" accent="success" />
           <ContactItem icon={<Mail className="h-5 w-5" />} title="E-mail" subtitle="contato@sentinel.tech" cta="Enviar e-mail" href="mailto:contato@sentinel.tech" accent="primary" />
           <ContactItem icon={<Phone className="h-5 w-5" />} title="Telefone — Global" subtitle="+55 (11) 4000-0199" cta="Ligar agora" href="tel:+551140000199" accent="cyan" />
-          <ContactItem icon={<Calendar className="h-5 w-5" />} title="Agendar reunião" subtitle="Consultoria de 30 min" cta="Agendar" href="/explore/meeting" accent="warning" />
+          <ContactItem icon={<Calendar className="h-5 w-5" />} title="Agendar reunião" subtitle="Consultoria de 30 min" cta="Agendar" href="/explore/meeting" accent="warning" internal />
 
           <Card className="p-5">
             <div className="flex items-start gap-3">
@@ -61,7 +61,7 @@ function Contact() {
 
 const inputCls = "w-full rounded-lg border border-border bg-input/60 px-3 py-2.5 text-sm outline-none focus:border-primary";
 
-function ContactItem({ icon, title, subtitle, cta, href, accent }: { icon: React.ReactNode; title: string; subtitle: string; cta: string; href: string; accent: string }) {
+function ContactItem({ icon, title, subtitle, cta, href, accent, internal }: { icon: React.ReactNode; title: string; subtitle: string; cta: string; href: string; accent: string; internal?: boolean }) {
   const map: Record<string, string> = { primary: "text-primary bg-primary/15", cyan: "text-cyan bg-cyan/15", success: "text-success bg-success/15", warning: "text-warning bg-warning/15" };
   return (
     <Card className="flex items-center gap-4 p-5 transition hover:border-primary/50">
@@ -70,7 +70,7 @@ function ContactItem({ icon, title, subtitle, cta, href, accent }: { icon: React
         <div className="font-semibold">{title}</div>
         <div className="truncate text-xs text-muted-foreground">{subtitle}</div>
       </div>
-      <a href={href} className="shrink-0 text-xs font-semibold text-primary hover:underline">{cta} →</a>
+      {internal ? <Link to={href} className="shrink-0 text-xs font-semibold text-primary hover:underline">{cta} →</Link> : <a href={href} className="shrink-0 text-xs font-semibold text-primary hover:underline">{cta} →</a>}
     </Card>
   );
 }

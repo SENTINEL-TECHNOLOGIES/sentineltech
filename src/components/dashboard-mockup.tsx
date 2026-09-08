@@ -49,13 +49,46 @@ export function DashboardMockup({ className = "" }: { className?: string }) {
           <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Feeds</div>
           <div className="mt-3 grid grid-cols-2 gap-1.5">
             {["Portaria", "Pátio", "Doca 3", "Perímetro"].map((c, i) => (
-              <div key={c} className="relative aspect-video overflow-hidden rounded bg-gradient-to-br from-primary/25 via-secondary to-background">
-                <div className="absolute inset-0 bg-grid-sm opacity-40" />
-                <span className="absolute bottom-1 left-1 font-mono text-[8px] text-foreground/80">{c}</span>
-                {i === 1 && <span className="absolute right-1 top-1 h-1.5 w-1.5 animate-pulse rounded-full bg-destructive" />}
+              <div key={c} className="relative aspect-video overflow-hidden rounded bg-black">
+                {/* Fundo de vigilância com scanlines */}
+                <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-black to-black" />
+                <div className="absolute inset-0 animate-pulse bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.1),transparent)]" />
+                
+                {/* Scanlines animadas */}
+                <div className="absolute inset-0 opacity-20 pointer-events-none">
+                  <div className="absolute inset-0 bg-[repeating-linear-gradient(0deg,transparent,transparent_2px,rgb(34,197,94)_2px,rgb(34,197,94)_4px)] animate-[scan_8s_linear_infinite]" />
+                </div>
+                
+                {/* Movimento de câmera */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute w-full h-full bg-[radial-gradient(ellipse_at_50%_30%,rgba(34,197,94,0.3),transparent_70%)] animate-[pan_6s_ease-in-out_infinite]" />
+                </div>
+                
+                {/* Pontos de movimento */}
+                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-green-400 rounded-full opacity-60 animate-[pulse_2s_ease-in-out_infinite]" />
+                <div className="absolute top-2/3 right-1/3 w-1.5 h-1.5 bg-green-500 rounded-full opacity-50 animate-[pulse_3s_ease-in-out_2s_infinite]" />
+                
+                {/* Label */}
+                <span className="absolute bottom-1 left-1 font-mono text-[8px] text-green-400 drop-shadow-lg z-10">{c}</span>
+                
+                {/* Indicador de alerta (apenas no segundo feed) */}
+                {i === 1 && <span className="absolute right-1 top-1 h-1.5 w-1.5 animate-pulse rounded-full bg-destructive z-10" />}
               </div>
             ))}
           </div>
+          
+          <style>{`
+            @keyframes scan {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(4px); }
+            }
+            @keyframes pan {
+              0%, 100% { transform: translate(0, 0); }
+              25% { transform: translate(20px, -15px); }
+              50% { transform: translate(-15px, 10px); }
+              75% { transform: translate(10px, -20px); }
+            }
+          `}</style>
         </div>
 
         {/* alert feed */}

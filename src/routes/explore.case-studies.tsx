@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card, Badge } from "@/components/ui-bits";
 import { ArrowRight } from "lucide-react";
 
@@ -68,7 +68,7 @@ function Cases() {
                   <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground">Setor</div>
                   <div className="mt-1 text-lg font-bold">{c.industry}</div>
                 </div>
-                <a className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">Ler case completo <ArrowRight className="h-3.5 w-3.5" /></a>
+                <Link to="/explore/meeting" className="relative inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">Conversar sobre este case <ArrowRight className="h-3.5 w-3.5" /></Link>
               </div>
             </div>
           </Card>

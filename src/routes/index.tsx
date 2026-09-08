@@ -21,7 +21,7 @@ function Entry() {
 
       <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 py-16">
         <div className="flex flex-col items-center text-center">
-          <SentinelLogo size="lg" variant="stacked" onBackground="dark" />
+          <SentinelLogo size="xl" variant="stacked" onBackground="dark" />
           <p className="mt-4 text-sm uppercase tracking-[0.3em] text-cyan">Plataforma de Tecnologia em Segurança Física</p>
           <h1 className="mt-8 max-w-3xl text-3xl md:text-5xl font-bold tracking-tight">
             Como você quer acessar a <span className="text-gradient-blue">Sentinel?</span>
@@ -44,7 +44,7 @@ function Entry() {
             title="Novo Cliente"
             description="Conheça nossos serviços de CFTV com IA, biometria, automação e monitoramento remoto."
             ctaText="Explorar Soluções"
-            ctaTo="/login"
+            ctaTo="/explore/home"
           />
         </div>
 

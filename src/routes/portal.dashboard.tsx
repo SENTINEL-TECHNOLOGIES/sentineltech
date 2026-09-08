@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
 import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench, Trash2 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
 import { AddDeviceButton } from "@/components/add-device-modal";
 import { useDevices, DEVICE_TYPE_LABELS } from "@/lib/devices";
 import { useSession } from "@/hooks/use-session";
+import { CREDENTIALS } from "@/lib/auth";
 
 export const Route = createFileRoute("/portal/dashboard")({
   head: () => ({ meta: [{ title: "Operações — Portal Sentinel" }] }),
@@ -36,6 +38,13 @@ const activities = [
   { time: "há 2h", text: "Varredura de perímetro concluída — 0 anomalias em 4,8 km de cerca", level: "success" as const },
 ];
 
+const randomEvents = [
+  { text: "Pessoa detectada", level: "warning" as const },
+  { text: "Movimento detectado", level: "info" as const },
+  { text: "Veículo identificado", level: "success" as const },
+  { text: "Acesso autorizado", level: "success" as const },
+];
+
 const facilities = [
   { name: "Torre Matriz — São Paulo", cameras: "128/128", health: "operational" },
   { name: "DC-2 Frankfurt", cameras: "92/92", health: "operational" },
@@ -46,14 +55,38 @@ const facilities = [
 
 function Dashboard() {
   const { devices, removeDevice, updateStatus } = useDevices();
-  const { firstName } = useSession();
+  const { firstName, session } = useSession();
+  const [liveEvents, setLiveEvents] = useState<typeof activities>([]);
+  const hasDevices = devices.length > 0;
+  const isDemoAccount = session?.email?.trim().toLowerCase() === CREDENTIALS.corporate.email;
+
+  useEffect(() => {
+    if (!hasDevices || isDemoAccount) {
+      setLiveEvents([]);
+      return;
+    }
+
+    function addRandomEvent() {
+      const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
+      const device = devices[Math.floor(Math.random() * devices.length)];
+      setLiveEvents((current) => [
+        { ...event, text: `${event.text} — ${device.name} · ${device.location}`, time: "agora", },
+        ...current,
+      ].slice(0, 6));
+    }
+
+    addRandomEvent();
+    const interval = window.setInterval(addRandomEvent, 12000);
+    return () => window.clearInterval(interval);
+  }, [devices, hasDevices, isDemoAccount]);
+
+  const currentActivities = [...liveEvents, ...activities].slice(0, 6);
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">{firstName ? `Olá, ${firstName}` : "Operações de Segurança"}</h1>
-          <p className="text-xs font-semibold uppercase tracking-wider text-cyan">Operações de Segurança — Acme Corp</p>
-          <p className="text-sm text-muted-foreground">Visão ao vivo de câmeras, controle de acesso, automação e incidentes em todas as instalações.</p>
+          <h1 className="text-2xl font-bold">{firstName ? `Olá, ${firstName}` : "Olá"}</h1>
+          <p className="text-sm text-muted-foreground">{hasDevices ? "Visão ao vivo dos seus dispositivos e eventos de segurança." : "Adicione seu primeiro dispositivo para começar a monitorar sua operação."}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 rounded-lg border border-success/30 bg-success/10 px-3 py-1.5 text-xs font-semibold text-success">
@@ -64,6 +97,16 @@ function Dashboard() {
         </div>
       </div>
 
+      {!hasDevices ? (
+        <Card className="border-dashed">
+          <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+            <Camera className="h-10 w-10 text-cyan" />
+            <h2 className="mt-4 text-lg font-semibold">Sua operação ainda está vazia</h2>
+            <p className="mt-2 max-w-md text-sm text-muted-foreground">Quando você cadastrar um dispositivo, os eventos e indicadores aparecerão aqui em tempo real.</p>
+            <AddDeviceButton className="mt-6" />
+          </div>
+        </Card>
+      ) : <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="Câmeras Ativas" value="848 / 856" delta="99,1% online" deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
         <KpiCard label="Dispositivos Online" value="2.184" delta="+18 esta semana" deltaPositive icon={<Activity className="h-5 w-5" />} accent="cyan" />
@@ -189,7 +232,7 @@ function Dashboard() {
         <Card className="lg:col-span-2">
           <CardHeader title="Atividade recente" description="Feed de segurança entre instalações" />
           <div className="divide-y divide-border">
-            {activities.map((a, i) => (
+            {currentActivities.map((a, i) => (
               <div key={i} className="flex items-start gap-3 p-4">
                 <div className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
                   a.level === "success" ? "bg-success" : a.level === "warning" ? "bg-warning" : a.level === "destructive" ? "bg-destructive" : "bg-primary"
@@ -203,6 +246,7 @@ function Dashboard() {
           </div>
         </Card>
       </div>
+      </>}
 
       <Card>
         <CardHeader title="Meus dispositivos provisionados" description="Inventário de equipamentos de segurança gerenciados" action={<Badge variant="info">{devices.length} ativos</Badge>} />

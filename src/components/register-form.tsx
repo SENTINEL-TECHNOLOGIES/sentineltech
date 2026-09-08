@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
-import { Eye, EyeOff, Loader2, Check, X } from "lucide-react";
+import { Eye, EyeOff, Loader2, Check, X, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { register, PASSWORD_RULES, isPasswordValid, isEmailValid } from "@/lib/auth";
 import { AuthShell, Field, inputClass } from "./auth-shell";
@@ -11,6 +11,7 @@ export function RegisterForm() {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [touchedPwd, setTouchedPwd] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export function RegisterForm() {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setSubmitted(true);
     if (!formValid) {
       setTouchedPwd(true);
       setError("Verifique os campos destacados antes de continuar.");
@@ -30,10 +32,10 @@ export function RegisterForm() {
     }
     setLoading(true);
     setTimeout(() => {
-      const result = register(name, email, password);
+      const result = register(name, email, password, "customer");
       if (result.ok) {
         toast.success(`Conta criada com sucesso. Bem-vindo, ${name.trim().split(" ")[0]}!`);
-        navigate({ to: "/portal/dashboard" });
+        navigate({ to: "/explore/home" });
       } else {
         setError(result.error);
         toast.error(result.error);
@@ -44,8 +46,8 @@ export function RegisterForm() {
 
   return (
     <AuthShell
-      title="Criar sua conta"
-      subtitle="Cadastre-se para acompanhar suas operações de segurança."
+      title="Criar conta de cliente"
+      subtitle="Tenha acesso a serviços, propostas e consultoria da Sentinel."
       footer={
         <>
           Já tem uma conta?{" "}
@@ -55,20 +57,26 @@ export function RegisterForm() {
         </>
       }
     >
-      <form onSubmit={onSubmit} className="mt-6 space-y-4" noValidate>
-        <Field label="Nome" error={name.length > 0 && !nameValid ? "Informe pelo menos 2 caracteres." : null}>
+      <div className="mt-6 flex items-center gap-2 rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2.5 text-xs text-cyan">
+        <UserRound className="h-4 w-4 shrink-0" />
+        <span>Você está criando uma conta como <strong>cliente</strong>.</span>
+      </div>
+
+      <form onSubmit={onSubmit} className="mt-5 space-y-4" noValidate>
+        <Field label="Nome completo" required hint="Como devemos chamar você?" error={(submitted || name.length > 0) && !nameValid ? "Informe pelo menos 2 caracteres." : null}>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Seu nome completo"
+            placeholder="Ex.: Caio Gabriel"
             maxLength={80}
             autoComplete="name"
+            aria-invalid={(submitted || name.length > 0) && !nameValid}
             className={inputClass}
           />
         </Field>
 
-        <Field label="E-mail" error={email.length > 0 && !emailValid ? "E-mail inválido." : null}>
+        <Field label="E-mail" required hint="Use um endereço que você acompanha." error={(submitted || email.length > 0) && !emailValid ? "Digite um e-mail válido, como voce@empresa.com." : null}>
           <input
             type="email"
             value={email}
@@ -76,11 +84,12 @@ export function RegisterForm() {
             placeholder="voce@empresa.com"
             maxLength={255}
             autoComplete="email"
+            aria-invalid={(submitted || email.length > 0) && !emailValid}
             className={inputClass}
           />
         </Field>
 
-        <Field label="Senha">
+        <Field label="Senha" required hint="Crie uma senha para entrar na sua conta.">
           <div className="relative">
             <input
               type={show ? "text" : "password"}
@@ -90,8 +99,9 @@ export function RegisterForm() {
                 setTouchedPwd(true);
               }}
               onFocus={() => setTouchedPwd(true)}
-              placeholder="Crie uma senha segura"
+              placeholder="Digite uma senha segura"
               autoComplete="new-password"
+              aria-invalid={touchedPwd && !pwdValid}
               className={`${inputClass} pr-10`}
             />
             <button
@@ -104,7 +114,7 @@ export function RegisterForm() {
             </button>
           </div>
           {touchedPwd ? (
-            <ul className="mt-3 space-y-1.5 rounded-lg border border-border/50 bg-secondary/30 p-3">
+            <ul aria-label="Requisitos da senha" className="mt-3 space-y-1.5 rounded-lg border border-border/50 bg-secondary/30 p-3">
               {PASSWORD_RULES.map((r) => {
                 const ok = r.test(password);
                 return (
@@ -119,7 +129,7 @@ export function RegisterForm() {
         </Field>
 
         {error ? (
-          <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{error}</div>
+          <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{error}</div>
         ) : null}
 
         <button
@@ -127,7 +137,7 @@ export function RegisterForm() {
           disabled={loading}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Criar conta
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Criar conta de cliente
         </button>
       </form>
     </AuthShell>

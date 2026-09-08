@@ -18,5 +18,5 @@ const items: NavItem[] = [
 ];
 
 export const Route = createFileRoute("/portal")({
-  component: () => <AppShell role="corporate" items={items} portalLabel="Operações de Segurança" userLabel="Acme Corp" userSubtitle="Cliente Corporativo" />,
+  component: () => <AppShell role="portal" items={items} portalLabel="Operações de Segurança" userLabel="Acme Corp" userSubtitle="Cliente Sentinel" />,
 });

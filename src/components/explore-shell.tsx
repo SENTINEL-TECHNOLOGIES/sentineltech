@@ -38,9 +38,9 @@ export function ExploreShell({ items }: { items: NavItem[] }) {
       {sidebarOpen && <div className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-sidebar-border px-5">
-          <SentinelLogo size="sm" variant="stacked" onBackground="dark" />
-          <button className="lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
+        <div className="relative flex h-20 shrink-0 items-center justify-center border-b border-sidebar-border px-5">
+          <SentinelLogo size="lg" variant="horizontal" onBackground="dark" />
+          <button className="absolute right-4 lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
         </div>
 
         <nav className="sidebar-scroll flex-1 overflow-y-auto p-3">

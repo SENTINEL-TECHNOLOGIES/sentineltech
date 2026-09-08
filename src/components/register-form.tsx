@@ -1,145 +1,60 @@
 import { useMemo, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
-import { Eye, EyeOff, Loader2, Check, X, UserRound } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Eye, EyeOff, Loader2, UserRound } from "lucide-react";
 import { toast } from "sonner";
-import { register, PASSWORD_RULES, isPasswordValid, isEmailValid } from "@/lib/auth";
+import { register, PASSWORD_RULES, isEmailValid, isPasswordValid } from "@/lib/auth";
+import { saveAccountProfile, type AccountProfile } from "@/lib/account";
 import { AuthShell, Field, inputClass } from "./auth-shell";
 
+const steps = ["Dados pessoais", "Contato", "Segurança", "Endereço", "Revisão"];
+const emptyForm: AccountProfile & { password: string; confirmPassword: string } = {
+  fullName: "", username: "", email: "", phone: "", recoveryEmail: "",
+  address: { zip: "", state: "", city: "", neighborhood: "", street: "", number: "", complement: "" }, password: "", confirmPassword: "",
+};
+function onlyDigits(value: string) { return value.replace(/\D/g, ""); }
+function formatPhone(value: string) { const digits = onlyDigits(value).slice(0, 11); if (digits.length <= 2) return digits ? `(${digits}` : ""; if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`; return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`; }
+function formatZip(value: string) { const digits = onlyDigits(value).slice(0, 8); return digits.length > 5 ? `${digits.slice(0, 5)}-${digits.slice(5)}` : digits; }
+function usernameSuggestion(name: string) { return name.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, ".").replace(/^\.|\.$/g, ""); }
+
 export function RegisterForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [show, setShow] = useState(false);
-  const [touchedPwd, setTouchedPwd] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [step, setStep] = useState(0);
+  const [attempted, setAttempted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const passwordValid = useMemo(() => isPasswordValid(form.password), [form.password]);
+  const update = (patch: Partial<typeof form>) => setForm((current) => ({ ...current, ...patch }));
+  const updateAddress = (patch: Partial<AccountProfile["address"]>) => setForm((current) => ({ ...current, address: { ...current.address, ...patch } }));
 
-  const nameValid = name.trim().length >= 2;
-  const emailValid = isEmailValid(email);
-  const pwdValid = useMemo(() => isPasswordValid(password), [password]);
-  const formValid = nameValid && emailValid && pwdValid;
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSubmitted(true);
-    if (!formValid) {
-      setTouchedPwd(true);
-      setError("Verifique os campos destacados antes de continuar.");
-      return;
-    }
-    setLoading(true);
-    setTimeout(() => {
-      const result = register(name, email, password, "customer");
-      if (result.ok) {
-        toast.success(`Conta criada com sucesso. Bem-vindo, ${name.trim().split(" ")[0]}!`);
-        navigate({ to: "/explore/home" });
-      } else {
-        setError(result.error);
-        toast.error(result.error);
-        setLoading(false);
-      }
-    }, 600);
+  function validate(currentStep = step) {
+    if (currentStep === 0 && (!form.fullName.trim() || !form.username.trim())) return "Informe seu nome completo e nome de usuário.";
+    if (currentStep === 1 && (!isEmailValid(form.email) || onlyDigits(form.phone).length < 10)) return "Informe um e-mail e telefone válidos.";
+    if (currentStep === 2 && (!passwordValid || form.password !== form.confirmPassword || (form.recoveryEmail && (!isEmailValid(form.recoveryEmail) || form.recoveryEmail.trim().toLowerCase() === form.email.trim().toLowerCase())))) return "Revise a senha, a confirmação e o e-mail de recuperação.";
+    if (currentStep === 3 && (!/^\d{5}-?\d{3}$/.test(form.address.zip) || !form.address.state || !form.address.city || !form.address.neighborhood || !form.address.street || !form.address.number)) return "Preencha o endereço obrigatório e informe um CEP válido.";
+    return null;
   }
+  function continueStep() { setAttempted(true); const message = validate(); if (message) { setError(message); return; } setError(null); if (step < steps.length - 1) setStep((current) => current + 1); }
+  function finish() {
+    setAttempted(true);
+    for (let index = 0; index < 4; index += 1) { const message = validate(index); if (message) { setError(message); setStep(index); return; } }
+    setLoading(true);
+    setTimeout(() => { const result = register(form.fullName, form.email, form.password, "customer"); if (!result.ok) { setError(result.error); toast.error(result.error); setLoading(false); return; } saveAccountProfile(form); toast.success("Conta criada com sucesso."); navigate({ to: "/explore/services" }); }, 700);
+  }
+  const invalid = attempted ? validate() : null;
 
-  return (
-    <AuthShell
-      title="Criar conta de cliente"
-      subtitle="Tenha acesso a serviços, propostas e consultoria da Sentinel."
-      footer={
-        <>
-          Já tem uma conta?{" "}
-          <Link to="/login" className="font-semibold text-primary hover:underline">
-            Entrar
-          </Link>
-        </>
-      }
-    >
-      <div className="mt-6 flex items-center gap-2 rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2.5 text-xs text-cyan">
-        <UserRound className="h-4 w-4 shrink-0" />
-        <span>Você está criando uma conta como <strong>cliente</strong>.</span>
-      </div>
-
-      <form onSubmit={onSubmit} className="mt-5 space-y-4" noValidate>
-        <Field label="Nome completo" required hint="Como devemos chamar você?" error={(submitted || name.length > 0) && !nameValid ? "Informe pelo menos 2 caracteres." : null}>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ex.: Caio Gabriel"
-            maxLength={80}
-            autoComplete="name"
-            aria-invalid={(submitted || name.length > 0) && !nameValid}
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label="E-mail" required hint="Use um endereço que você acompanha." error={(submitted || email.length > 0) && !emailValid ? "Digite um e-mail válido, como voce@empresa.com." : null}>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="voce@empresa.com"
-            maxLength={255}
-            autoComplete="email"
-            aria-invalid={(submitted || email.length > 0) && !emailValid}
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label="Senha" required hint="Crie uma senha para entrar na sua conta.">
-          <div className="relative">
-            <input
-              type={show ? "text" : "password"}
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setTouchedPwd(true);
-              }}
-              onFocus={() => setTouchedPwd(true)}
-              placeholder="Digite uma senha segura"
-              autoComplete="new-password"
-              aria-invalid={touchedPwd && !pwdValid}
-              className={`${inputClass} pr-10`}
-            />
-            <button
-              type="button"
-              onClick={() => setShow(!show)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              aria-label={show ? "Ocultar senha" : "Mostrar senha"}
-            >
-              {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-          </div>
-          {touchedPwd ? (
-            <ul aria-label="Requisitos da senha" className="mt-3 space-y-1.5 rounded-lg border border-border/50 bg-secondary/30 p-3">
-              {PASSWORD_RULES.map((r) => {
-                const ok = r.test(password);
-                return (
-                  <li key={r.id} className={`flex items-center gap-2 text-[11px] ${ok ? "text-success" : "text-muted-foreground"}`}>
-                    {ok ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
-                    {r.label}
-                  </li>
-                );
-              })}
-            </ul>
-          ) : null}
-        </Field>
-
-        {error ? (
-          <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{error}</div>
-        ) : null}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Criar conta de cliente
-        </button>
-      </form>
-    </AuthShell>
-  );
+  return <AuthShell title="Criar conta de cliente" subtitle="Configure sua conta em poucos passos e escolha os serviços da Sentinel." footer={<><span>Já tem uma conta? </span><Link to="/login" className="font-semibold text-primary hover:underline">Entrar</Link></>}>
+    <div className="mt-6 flex items-center gap-2 rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2.5 text-xs text-cyan"><UserRound className="h-4 w-4 shrink-0" /><span>Cadastro de cliente com dados fictícios.</span></div>
+    <div className="mt-6 grid grid-cols-5 gap-1.5" aria-label="Progresso do cadastro">{steps.map((label, index) => <button key={label} type="button" onClick={() => index <= step && setStep(index)} className={`min-w-0 text-center ${index <= step ? "text-primary" : "text-muted-foreground"}`}><span className={`mx-auto grid h-7 w-7 place-items-center rounded-full border text-xs font-semibold ${index <= step ? "border-primary bg-primary/15" : "border-border"}`}>{index < step ? <Check className="h-3.5 w-3.5" /> : index + 1}</span><span className="mt-1 hidden truncate text-[10px] sm:block">{label}</span></button>)}</div>
+    <div className="mt-6 min-h-[300px]">
+      {step === 0 && <section className="space-y-4"><Field label="Nome completo" required error={attempted && !form.fullName.trim() ? "Informe seu nome completo." : null}><input className={inputClass} value={form.fullName} onChange={(event) => update({ fullName: event.target.value, username: form.username || usernameSuggestion(event.target.value) })} placeholder="Ex.: Caio Gabriel" autoComplete="name" /></Field><Field label="Nome de usuário" required hint="Você poderá usar este nome para identificar sua conta." error={attempted && !form.username.trim() ? "Informe um nome de usuário." : null}><input className={inputClass} value={form.username} onChange={(event) => update({ username: event.target.value.replace(/\s/g, ".") })} placeholder="caio.gabriel" autoComplete="username" /></Field></section>}
+      {step === 1 && <section className="space-y-4"><Field label="E-mail principal" required error={attempted && !isEmailValid(form.email) ? "Digite um e-mail válido." : null}><input className={inputClass} type="email" value={form.email} onChange={(event) => update({ email: event.target.value })} placeholder="voce@empresa.com" autoComplete="email" /></Field><Field label="Telefone" required error={attempted && onlyDigits(form.phone).length < 10 ? "Informe um telefone válido." : null}><input className={inputClass} value={form.phone} onChange={(event) => update({ phone: formatPhone(event.target.value) })} placeholder="(11) 99999-9999" inputMode="tel" autoComplete="tel" /></Field></section>}
+      {step === 2 && <section className="space-y-4"><Field label="Senha" required hint="Use pelo menos 8 caracteres, maiúscula, minúscula, número e símbolo."><div className="relative"><input className={`${inputClass} pr-10`} type={showPassword ? "text" : "password"} value={form.password} onChange={(event) => update({ password: event.target.value })} autoComplete="new-password" /><button type="button" onClick={() => setShowPassword((current) => !current)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div></Field><ul className="grid gap-1 rounded-lg border border-border/50 bg-secondary/30 p-3 sm:grid-cols-2">{PASSWORD_RULES.map((rule) => <li key={rule.id} className={`flex items-center gap-2 text-[11px] ${rule.test(form.password) ? "text-success" : "text-muted-foreground"}`}><Check className="h-3 w-3" />{rule.label}</li>)}</ul><Field label="Confirmar senha" required error={attempted && form.password !== form.confirmPassword ? "As senhas não coincidem." : null}><input className={inputClass} type="password" value={form.confirmPassword} onChange={(event) => update({ confirmPassword: event.target.value })} autoComplete="new-password" /></Field><Field label="E-mail de recuperação" hint="Opcional e diferente do e-mail principal."><input className={inputClass} type="email" value={form.recoveryEmail} onChange={(event) => update({ recoveryEmail: event.target.value })} placeholder="recuperacao@exemplo.com" /></Field></section>}
+      {step === 3 && <section className="space-y-4"><Field label="CEP" required error={attempted && !/^\d{5}-?\d{3}$/.test(form.address.zip) ? "Informe um CEP válido." : null}><input className={inputClass} value={form.address.zip} onChange={(event) => { const zip = formatZip(event.target.value); updateAddress({ zip }); if (onlyDigits(zip).length === 8) updateAddress({ state: "SP", city: "São Paulo", neighborhood: "Bela Vista", street: "Avenida Paulista" }); }} placeholder="00000-000" inputMode="numeric" /></Field><div className="grid gap-4 sm:grid-cols-2"><Field label="Estado" required><input className={inputClass} value={form.address.state} onChange={(event) => updateAddress({ state: event.target.value })} placeholder="SP" /></Field><Field label="Cidade" required><input className={inputClass} value={form.address.city} onChange={(event) => updateAddress({ city: event.target.value })} placeholder="São Paulo" /></Field></div><div className="grid gap-4 sm:grid-cols-2"><Field label="Bairro" required><input className={inputClass} value={form.address.neighborhood} onChange={(event) => updateAddress({ neighborhood: event.target.value })} /></Field><Field label="Rua" required><input className={inputClass} value={form.address.street} onChange={(event) => updateAddress({ street: event.target.value })} /></Field></div><div className="grid gap-4 sm:grid-cols-[120px_1fr]"><Field label="Número" required><input className={inputClass} value={form.address.number} onChange={(event) => updateAddress({ number: event.target.value })} /></Field><Field label="Complemento"><input className={inputClass} value={form.address.complement} onChange={(event) => updateAddress({ complement: event.target.value })} /></Field></div></section>}
+      {step === 4 && <section className="space-y-3">{[{ title: "Dados pessoais", values: [form.fullName, `@${form.username}`], index: 0 }, { title: "Contato", values: [form.email, form.phone], index: 1 }, { title: "Segurança", values: ["Senha configurada", form.recoveryEmail || "Sem e-mail de recuperação"], index: 2 }, { title: "Endereço", values: [`${form.address.street}, ${form.address.number}`, `${form.address.city} - ${form.address.state} · ${form.address.zip}`], index: 3 }].map((section) => <div key={section.title} className="rounded-lg border border-border bg-secondary/20 p-4"><div className="flex items-start justify-between gap-3"><div><h3 className="text-sm font-semibold">{section.title}</h3>{section.values.map((value) => <p key={value} className="mt-1 text-xs text-muted-foreground">{value}</p>)}</div><button type="button" onClick={() => setStep(section.index)} className="text-xs font-semibold text-primary hover:underline">Editar</button></div></div>)}<p className="pt-2 text-xs text-muted-foreground">Ao finalizar, sua conta será criada e você poderá escolher um serviço para ativar a dashboard.</p></section>}
+    </div>
+    {(invalid || error) && <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{error || invalid}</div>}
+    <div className="mt-6 flex justify-between gap-3"><button type="button" disabled={step === 0 || loading} onClick={() => { setAttempted(false); setError(null); setStep((current) => current - 1); }} className="inline-flex items-center gap-1 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold hover:bg-accent disabled:invisible"><ChevronLeft className="h-4 w-4" /> Voltar</button>{step < steps.length - 1 ? <button type="button" onClick={continueStep} className="ml-auto inline-flex items-center gap-1 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Continuar <ChevronRight className="h-4 w-4" /></button> : <button type="button" onClick={finish} disabled={loading} className="ml-auto inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-60">{loading && <Loader2 className="h-4 w-4 animate-spin" />} Finalizar</button>}</div>
+  </AuthShell>;
 }

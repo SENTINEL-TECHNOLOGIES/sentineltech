@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
 import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench, Trash2 } from "lucide-react";
@@ -7,6 +7,8 @@ import { AddDeviceButton } from "@/components/add-device-modal";
 import { useDevices, DEVICE_TYPE_LABELS } from "@/lib/devices";
 import { useSession } from "@/hooks/use-session";
 import { CREDENTIALS } from "@/lib/auth";
+import { getActiveServices } from "@/lib/account";
+import type { SecurityDevice } from "@/lib/devices";
 
 export const Route = createFileRoute("/portal/dashboard")({
   head: () => ({ meta: [{ title: "Operações — Portal Sentinel" }] }),
@@ -38,13 +40,6 @@ const activities = [
   { time: "há 2h", text: "Varredura de perímetro concluída — 0 anomalias em 4,8 km de cerca", level: "success" as const },
 ];
 
-const randomEvents = [
-  { text: "Pessoa detectada", level: "warning" as const },
-  { text: "Movimento detectado", level: "info" as const },
-  { text: "Veículo identificado", level: "success" as const },
-  { text: "Acesso autorizado", level: "success" as const },
-];
-
 const facilities = [
   { name: "Torre Matriz — São Paulo", cameras: "128/128", health: "operational" },
   { name: "DC-2 Frankfurt", cameras: "92/92", health: "operational" },
@@ -59,6 +54,8 @@ function Dashboard() {
   const [liveEvents, setLiveEvents] = useState<typeof activities>([]);
   const hasDevices = devices.length > 0;
   const isDemoAccount = session?.email?.trim().toLowerCase() === CREDENTIALS.corporate.email;
+  const hasActiveService = isDemoAccount || getActiveServices().length > 0;
+  const [selectedDevice, setSelectedDevice] = useState<SecurityDevice | null>(null);
 
   useEffect(() => {
     if (!hasDevices || isDemoAccount) {
@@ -66,21 +63,42 @@ function Dashboard() {
       return;
     }
 
-    function addRandomEvent() {
-      const event = randomEvents[Math.floor(Math.random() * randomEvents.length)];
-      const device = devices[Math.floor(Math.random() * devices.length)];
+    const timers: number[] = [];
+    function addRandomEvent(device: SecurityDevice) {
+      const normal = Math.random() < 0.75;
+      const event = device.type === "camera"
+        ? normal ? { text: "Movimento detectado", level: "info" as const } : { text: "Pessoa detectada em área monitorada", level: "warning" as const }
+        : device.type === "biometric"
+          ? normal ? { text: "Acesso autorizado", level: "success" as const } : { text: "Tentativa de acesso bloqueada", level: "destructive" as const }
+          : device.type === "alarm"
+            ? normal ? { text: "Sistema de alarme em funcionamento normal", level: "success" as const } : { text: "Alerta de segurança acionado", level: "destructive" as const }
+            : device.type === "automation"
+              ? normal ? { text: "Automação executada", level: "info" as const } : { text: "Falha de comunicação", level: "warning" as const }
+              : normal ? { text: "Temperatura dentro do padrão", level: "success" as const } : { text: "Temperatura elevada detectada", level: "warning" as const };
+
+      if (event.text === "Falha de comunicação" || event.text === "Alerta de segurança acionado") updateStatus(device.id, "offline");
+      if (event.text === "Acesso autorizado" || event.text === "Sistema de alarme em funcionamento normal") updateStatus(device.id, "online");
       setLiveEvents((current) => [
         { ...event, text: `${event.text} — ${device.name} · ${device.location}`, time: "agora", },
         ...current,
       ].slice(0, 6));
     }
 
-    addRandomEvent();
-    const interval = window.setInterval(addRandomEvent, 12000);
-    return () => window.clearInterval(interval);
+    devices.forEach((device) => {
+      const timer = window.setTimeout(() => {
+        addRandomEvent(device);
+        const repeat = window.setInterval(() => addRandomEvent(device), 15000 + Math.floor(Math.random() * 45000));
+        timers.push(repeat);
+      }, 15000 + Math.floor(Math.random() * 45000));
+      timers.push(timer);
+    });
+    return () => timers.forEach((timer) => { window.clearTimeout(timer); window.clearInterval(timer); });
   }, [devices, hasDevices, isDemoAccount]);
 
   const currentActivities = [...liveEvents, ...activities].slice(0, 6);
+  if (!hasActiveService) {
+    return <Card className="mx-auto max-w-2xl border-dashed"><div className="flex flex-col items-center px-6 py-16 text-center"><ShieldAlert className="h-10 w-10 text-cyan" /><h1 className="mt-4 text-2xl font-bold">Ative um serviço para acessar sua dashboard</h1><p className="mt-2 max-w-md text-sm text-muted-foreground">Escolha um serviço Sentinel para liberar o monitoramento, o cadastro de equipamentos e os eventos da sua conta.</p><Link to="/explore/services" className="mt-6 inline-flex items-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90">Conhecer serviços</Link></div></Card>;
+  }
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -108,10 +126,10 @@ function Dashboard() {
         </Card>
       ) : <>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Câmeras Ativas" value="848 / 856" delta="99,1% online" deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Dispositivos Online" value="2.184" delta="+18 esta semana" deltaPositive icon={<Activity className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Eventos de Acesso (Hoje)" value="3.612" delta="entradas + saídas" icon={<Fingerprint className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Incidentes (24h)" value="7" delta="2 em aberto" icon={<AlertTriangle className="h-5 w-5" />} accent="warning" />
+        <KpiCard label="Câmeras Ativas" value={isDemoAccount ? "848 / 856" : `${devices.filter((device) => device.type === "camera" && device.status === "online").length} / ${devices.filter((device) => device.type === "camera").length}`} delta={isDemoAccount ? "99,1% online" : "dispositivos cadastrados"} deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
+        <KpiCard label="Dispositivos Online" value={isDemoAccount ? "2.184" : String(devices.filter((device) => device.status === "online").length)} delta={isDemoAccount ? "+18 esta semana" : `${devices.length} no inventário`} deltaPositive icon={<Activity className="h-5 w-5" />} accent="cyan" />
+        <KpiCard label="Eventos de Acesso (Hoje)" value={isDemoAccount ? "3.612" : String(liveEvents.length)} delta={isDemoAccount ? "entradas + saídas" : "eventos simulados"} icon={<Fingerprint className="h-5 w-5" />} accent="success" />
+        <KpiCard label="Incidentes (24h)" value={isDemoAccount ? "7" : String(liveEvents.filter((event) => event.level === "warning" || event.level === "destructive").length)} delta={isDemoAccount ? "2 em aberto" : "alertas ativos"} icon={<AlertTriangle className="h-5 w-5" />} accent="warning" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -163,6 +181,18 @@ function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader title="Localização dos equipamentos" description="Mapa operacional mockado · selecione um marcador para ver detalhes" action={<Badge variant="info">{devices.length} equipamentos</Badge>} />
+        <div className="grid gap-4 p-4 lg:grid-cols-[1fr_280px]">
+          <div className="relative min-h-72 overflow-hidden rounded-lg border border-border bg-secondary/20 bg-grid-sm">
+            <div className="absolute left-[12%] top-[18%] h-24 w-36 rounded-lg border border-primary/40 bg-primary/10" /><div className="absolute right-[15%] top-[30%] h-32 w-40 rounded-lg border border-cyan/40 bg-cyan/10" /><div className="absolute bottom-[12%] left-[35%] h-20 w-56 rounded-lg border border-success/40 bg-success/10" />
+            {devices.map((device, index) => <button key={device.id} type="button" onClick={() => setSelectedDevice(device)} className={`absolute grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 text-xs shadow-lg transition hover:scale-110 ${device.status === "online" ? "border-success bg-success/20 text-success" : device.status === "offline" ? "border-destructive bg-destructive/20 text-destructive" : "border-warning bg-warning/20 text-warning"}`} style={{ left: `${18 + (index * 23) % 68}%`, top: `${25 + (index * 31) % 58}%` }} title={device.name}><MapPin className="h-4 w-4" /></button>)}
+            {devices.length === 0 && <div className="absolute inset-0 grid place-items-center text-center text-sm text-muted-foreground">Cadastre um dispositivo para posicioná-lo no mapa.</div>}
+          </div>
+          <div className="rounded-lg border border-border bg-secondary/20 p-4">{selectedDevice ? <><div className="flex items-start justify-between gap-3"><div><h3 className="font-semibold">{selectedDevice.name}</h3><p className="mt-1 text-xs text-muted-foreground">{DEVICE_TYPE_LABELS[selectedDevice.type]}</p></div><Badge variant={selectedDevice.status === "online" ? "success" : selectedDevice.status === "offline" ? "destructive" : "warning"}>{selectedDevice.status}</Badge></div><dl className="mt-5 space-y-3 text-sm"><div><dt className="text-xs text-muted-foreground">Localização</dt><dd>{selectedDevice.location}</dd></div><div><dt className="text-xs text-muted-foreground">Última atividade</dt><dd>{liveEvents.find((event) => event.text.includes(selectedDevice.name))?.time || "aguardando evento"}</dd></div></dl></> : <div className="flex h-full min-h-40 items-center justify-center text-center text-sm text-muted-foreground">Selecione um marcador para consultar o equipamento.</div>}</div>
+        </div>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">

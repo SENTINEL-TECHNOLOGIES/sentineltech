@@ -25,7 +25,7 @@ const INITIAL_NOTIFS: NotificationItem[] = [
   { id: "n4", title: "Novo visitante registrado · J. Almeida", time: "há 2 h", level: "info", read: true },
 ];
 
-export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: { role: Role; items: NavItem[]; portalLabel: string; userLabel: string; userSubtitle: string }) {
+export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: { role: Role | "portal"; items: NavItem[]; portalLabel: string; userLabel: string; userSubtitle: string }) {
   const navigate = useNavigate();
   const { session } = useSession();
   const displayName = session?.name?.trim() || userLabel;
@@ -42,7 +42,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
 
   useEffect(() => {
     const s = getSession();
-    if (!s || s.role !== role) navigate({ to: role === "corporate" ? "/login-corporate" : "/login-customer" });
+    if (!s || (role !== "portal" && s.role !== role)) navigate({ to: role === "corporate" ? "/login-corporate" : "/login-customer" });
   }, [role, navigate]);
 
   useEffect(() => {
@@ -82,9 +82,9 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
       {sidebarOpen && <div className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />}
 
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-        <div className="flex h-20 shrink-0 items-center justify-center border-b border-sidebar-border px-5">
+        <div className="relative flex h-20 shrink-0 items-center justify-center border-b border-sidebar-border px-5">
           <SentinelLogo size="lg" variant="mark" onBackground="dark" />
-          <button className="lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
+          <button className="absolute right-4 lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
         </div>
 
         <nav className="sidebar-scroll flex-1 overflow-y-auto p-3">

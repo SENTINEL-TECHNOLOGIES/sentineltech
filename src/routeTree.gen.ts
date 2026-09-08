@@ -19,6 +19,7 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
 import { Route as ExploreAboutRouteImport } from './routes/explore.about'
 import { Route as ExploreCaseStudiesRouteImport } from './routes/explore.case-studies'
+import { Route as ExploreCheckoutRouteImport } from './routes/explore.checkout'
 import { Route as ExploreContactRouteImport } from './routes/explore.contact'
 import { Route as ExploreHomeRouteImport } from './routes/explore.home'
 import { Route as ExploreIndustriesRouteImport } from './routes/explore.industries'
@@ -86,6 +87,11 @@ const ExploreAboutRoute = ExploreAboutRouteImport.update({
 const ExploreCaseStudiesRoute = ExploreCaseStudiesRouteImport.update({
   id: '/case-studies',
   path: '/case-studies',
+  getParentRoute: () => ExploreRoute,
+} as any)
+const ExploreCheckoutRoute = ExploreCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
   getParentRoute: () => ExploreRoute,
 } as any)
 const ExploreContactRoute = ExploreContactRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/explore/about': typeof ExploreAboutRoute
   '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/checkout': typeof ExploreCheckoutRoute
   '/explore/contact': typeof ExploreContactRoute
   '/explore/home': typeof ExploreHomeRoute
   '/explore/industries': typeof ExploreIndustriesRoute
@@ -220,6 +227,7 @@ export interface FileRoutesByTo {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/explore/about': typeof ExploreAboutRoute
   '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/checkout': typeof ExploreCheckoutRoute
   '/explore/contact': typeof ExploreContactRoute
   '/explore/home': typeof ExploreHomeRoute
   '/explore/industries': typeof ExploreIndustriesRoute
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/recuperar-senha': typeof RecuperarSenhaRoute
   '/explore/about': typeof ExploreAboutRoute
   '/explore/case-studies': typeof ExploreCaseStudiesRoute
+  '/explore/checkout': typeof ExploreCheckoutRoute
   '/explore/contact': typeof ExploreContactRoute
   '/explore/home': typeof ExploreHomeRoute
   '/explore/industries': typeof ExploreIndustriesRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/explore/about'
     | '/explore/case-studies'
+    | '/explore/checkout'
     | '/explore/contact'
     | '/explore/home'
     | '/explore/industries'
@@ -313,6 +323,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/explore/about'
     | '/explore/case-studies'
+    | '/explore/checkout'
     | '/explore/contact'
     | '/explore/home'
     | '/explore/industries'
@@ -343,6 +354,7 @@ export interface FileRouteTypes {
     | '/recuperar-senha'
     | '/explore/about'
     | '/explore/case-studies'
+    | '/explore/checkout'
     | '/explore/contact'
     | '/explore/home'
     | '/explore/industries'
@@ -444,6 +456,13 @@ declare module '@tanstack/react-router' {
       path: '/case-studies'
       fullPath: '/explore/case-studies'
       preLoaderRoute: typeof ExploreCaseStudiesRouteImport
+      parentRoute: typeof ExploreRoute
+    }
+    '/explore/checkout': {
+      id: '/explore/checkout'
+      path: '/checkout'
+      fullPath: '/explore/checkout'
+      preLoaderRoute: typeof ExploreCheckoutRouteImport
       parentRoute: typeof ExploreRoute
     }
     '/explore/contact': {
@@ -578,6 +597,7 @@ declare module '@tanstack/react-router' {
 interface ExploreRouteChildren {
   ExploreAboutRoute: typeof ExploreAboutRoute
   ExploreCaseStudiesRoute: typeof ExploreCaseStudiesRoute
+  ExploreCheckoutRoute: typeof ExploreCheckoutRoute
   ExploreContactRoute: typeof ExploreContactRoute
   ExploreHomeRoute: typeof ExploreHomeRoute
   ExploreIndustriesRoute: typeof ExploreIndustriesRoute
@@ -589,6 +609,7 @@ interface ExploreRouteChildren {
 const ExploreRouteChildren: ExploreRouteChildren = {
   ExploreAboutRoute: ExploreAboutRoute,
   ExploreCaseStudiesRoute: ExploreCaseStudiesRoute,
+  ExploreCheckoutRoute: ExploreCheckoutRoute,
   ExploreContactRoute: ExploreContactRoute,
   ExploreHomeRoute: ExploreHomeRoute,
   ExploreIndustriesRoute: ExploreIndustriesRoute,

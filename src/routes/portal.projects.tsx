@@ -30,57 +30,21 @@ function Projects() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Projetos</h1>
-        <p className="text-sm text-muted-foreground">Frentes ativas com o seu time de entrega Sentinel.</p>
+        <p className="text-sm text-muted-foreground">Este menu foi zerado. Para popular os projetos, edite o array `projects` desta rota.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Projetos Ativos" value="6" icon={<Briefcase className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="No Prazo" value="4" icon={<CheckCircle2 className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Em Risco" value="1" icon={<AlertCircle className="h-5 w-5" />} accent="warning" />
-        <KpiCard label="Entrega Média" value="92%" delta="No prazo" deltaPositive icon={<Clock className="h-5 w-5" />} accent="cyan" />
-      </div>
+      <Card className="border-dashed">
+        <div className="flex flex-col gap-4 p-6">
+          <Badge variant="outline">Área vazia</Badge>
+          <div>
+            <h2 className="text-xl font-bold">Nenhum item cadastrado neste menu</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Use `projects` para adicionar projetos com id, nome, status, progresso, prazo e responsável.</p>
+          </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {projects.map((p) => (
-          <Card key={p.id} className="p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="font-mono text-[11px] text-cyan">{p.id}</div>
-                <div className="mt-1 truncate text-base font-semibold">{p.name}</div>
-              </div>
-              {statusBadge(p.status)}
-            </div>
-            <div className="mt-5 space-y-1.5">
-              <div className="flex justify-between text-xs"><span className="text-muted-foreground">Progresso</span><span className="font-mono">{p.progress}%</span></div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-gradient-to-r from-primary to-cyan" style={{ width: `${p.progress}%` }} /></div>
-            </div>
-            <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
-              <div><div className="text-muted-foreground">Prazo</div><div className="mt-0.5 font-medium">{p.deadline}</div></div>
-              <div><div className="text-muted-foreground">Engenheiro Líder</div><div className="mt-0.5 font-medium">{p.eng}</div></div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      <Card>
-        <CardHeader title="Todos os projetos" />
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
-              <tr><th className="px-5 py-3 font-medium">Projeto</th><th className="px-5 py-3 font-medium">Status</th><th className="px-5 py-3 font-medium">Progresso</th><th className="px-5 py-3 font-medium">Prazo</th><th className="px-5 py-3 font-medium">Engenheiro</th></tr>
-            </thead>
-            <tbody>
-              {projects.map((p) => (
-                <tr key={p.id} className="border-t border-border hover:bg-accent/30">
-                  <td className="px-5 py-3"><div className="font-mono text-[11px] text-cyan">{p.id}</div><div className="font-medium">{p.name}</div></td>
-                  <td className="px-5 py-3">{statusBadge(p.status)}</td>
-                  <td className="px-5 py-3"><div className="flex items-center gap-2"><div className="h-1.5 w-28 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-gradient-to-r from-primary to-cyan" style={{ width: `${p.progress}%` }} /></div><span className="font-mono text-xs">{p.progress}%</span></div></td>
-                  <td className="px-5 py-3 text-muted-foreground">{p.deadline}</td>
-                  <td className="px-5 py-3">{p.eng}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+            <span className="font-semibold text-foreground">Como adicionar um projeto</span>
+            <p className="mt-1 text-muted-foreground">Insira objetos no array `projects`. Cada item precisa de `id`, `name`, `status`, `progress`, `deadline` e `eng`.</p>
+          </div>
         </div>
       </Card>
     </div>

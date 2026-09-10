@@ -22,11 +22,41 @@ export function RegisterForm() {
   const [attempted, setAttempted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [addressLoading, setAddressLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const passwordValid = useMemo(() => isPasswordValid(form.password), [form.password]);
   const update = (patch: Partial<typeof form>) => setForm((current) => ({ ...current, ...patch }));
   const updateAddress = (patch: Partial<AccountProfile["address"]>) => setForm((current) => ({ ...current, address: { ...current.address, ...patch } }));
+
+  async function fetchAddressByZip(zip: string) {
+    if (zip.length !== 8) return;
+    setAddressLoading(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${zip}/json/`);
+      const data = await response.json() as { erro?: boolean; logradouro?: string; bairro?: string; localidade?: string; uf?: string; complemento?: string; };
+
+      if (!response.ok || data.erro) {
+        throw new Error("CEP não encontrado ou indisponível no momento.");
+      }
+
+      updateAddress({
+        zip: formatZip(zip),
+        state: data.uf ?? "",
+        city: data.localidade ?? "",
+        neighborhood: data.bairro ?? "",
+        street: data.logradouro ?? "",
+        complement: data.complemento ?? "",
+      });
+      setError(null);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Não foi possível buscar o endereço.";
+      setError(message);
+      toast.error(message);
+    } finally {
+      setAddressLoading(false);
+    }
+  }
 
   function validate(currentStep = step) {
     if (currentStep === 0 && (!form.fullName.trim() || !form.username.trim())) return "Informe seu nome completo e nome de usuário.";
@@ -51,7 +81,7 @@ export function RegisterForm() {
       {step === 0 && <section className="space-y-4"><Field label="Nome completo" required error={attempted && !form.fullName.trim() ? "Informe seu nome completo." : null}><input className={inputClass} value={form.fullName} onChange={(event) => update({ fullName: event.target.value, username: form.username || usernameSuggestion(event.target.value) })} placeholder="Ex.: Caio Gabriel" autoComplete="name" /></Field><Field label="Nome de usuário" required hint="Você poderá usar este nome para identificar sua conta." error={attempted && !form.username.trim() ? "Informe um nome de usuário." : null}><input className={inputClass} value={form.username} onChange={(event) => update({ username: event.target.value.replace(/\s/g, ".") })} placeholder="caio.gabriel" autoComplete="username" /></Field></section>}
       {step === 1 && <section className="space-y-4"><Field label="E-mail principal" required error={attempted && !isEmailValid(form.email) ? "Digite um e-mail válido." : null}><input className={inputClass} type="email" value={form.email} onChange={(event) => update({ email: event.target.value })} placeholder="voce@empresa.com" autoComplete="email" /></Field><Field label="Telefone" required error={attempted && onlyDigits(form.phone).length < 10 ? "Informe um telefone válido." : null}><input className={inputClass} value={form.phone} onChange={(event) => update({ phone: formatPhone(event.target.value) })} placeholder="(11) 99999-9999" inputMode="tel" autoComplete="tel" /></Field></section>}
       {step === 2 && <section className="space-y-4"><Field label="Senha" required hint="Use pelo menos 8 caracteres, maiúscula, minúscula, número e símbolo."><div className="relative"><input className={`${inputClass} pr-10`} type={showPassword ? "text" : "password"} value={form.password} onChange={(event) => update({ password: event.target.value })} autoComplete="new-password" /><button type="button" onClick={() => setShowPassword((current) => !current)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div></Field><ul className="grid gap-1 rounded-lg border border-border/50 bg-secondary/30 p-3 sm:grid-cols-2">{PASSWORD_RULES.map((rule) => <li key={rule.id} className={`flex items-center gap-2 text-[11px] ${rule.test(form.password) ? "text-success" : "text-muted-foreground"}`}><Check className="h-3 w-3" />{rule.label}</li>)}</ul><Field label="Confirmar senha" required error={attempted && form.password !== form.confirmPassword ? "As senhas não coincidem." : null}><input className={inputClass} type="password" value={form.confirmPassword} onChange={(event) => update({ confirmPassword: event.target.value })} autoComplete="new-password" /></Field><Field label="E-mail de recuperação" hint="Opcional e diferente do e-mail principal."><input className={inputClass} type="email" value={form.recoveryEmail} onChange={(event) => update({ recoveryEmail: event.target.value })} placeholder="recuperacao@exemplo.com" /></Field></section>}
-      {step === 3 && <section className="space-y-4"><Field label="CEP" required error={attempted && !/^\d{5}-?\d{3}$/.test(form.address.zip) ? "Informe um CEP válido." : null}><input className={inputClass} value={form.address.zip} onChange={(event) => { const zip = formatZip(event.target.value); updateAddress({ zip }); if (onlyDigits(zip).length === 8) updateAddress({ state: "SP", city: "São Paulo", neighborhood: "Bela Vista", street: "Avenida Paulista" }); }} placeholder="00000-000" inputMode="numeric" /></Field><div className="grid gap-4 sm:grid-cols-2"><Field label="Estado" required><input className={inputClass} value={form.address.state} onChange={(event) => updateAddress({ state: event.target.value })} placeholder="SP" /></Field><Field label="Cidade" required><input className={inputClass} value={form.address.city} onChange={(event) => updateAddress({ city: event.target.value })} placeholder="São Paulo" /></Field></div><div className="grid gap-4 sm:grid-cols-2"><Field label="Bairro" required><input className={inputClass} value={form.address.neighborhood} onChange={(event) => updateAddress({ neighborhood: event.target.value })} /></Field><Field label="Rua" required><input className={inputClass} value={form.address.street} onChange={(event) => updateAddress({ street: event.target.value })} /></Field></div><div className="grid gap-4 sm:grid-cols-[120px_1fr]"><Field label="Número" required><input className={inputClass} value={form.address.number} onChange={(event) => updateAddress({ number: event.target.value })} /></Field><Field label="Complemento"><input className={inputClass} value={form.address.complement} onChange={(event) => updateAddress({ complement: event.target.value })} /></Field></div></section>}
+      {step === 3 && <section className="space-y-4"><Field label="CEP" required hint={addressLoading ? "Buscando endereço..." : "Digite o CEP e os campos de endereço serão preenchidos automaticamente."} error={attempted && !/^\d{5}-?\d{3}$/.test(form.address.zip) ? "Informe um CEP válido." : null}><div className="relative"><input className={`${inputClass} pr-10`} value={form.address.zip} onChange={(event) => { const zip = formatZip(event.target.value); updateAddress({ zip }); if (onlyDigits(zip).length === 8) { void fetchAddressByZip(onlyDigits(zip)); } }} placeholder="00000-000" inputMode="numeric" autoComplete="postal-code" />{addressLoading && <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />}</div></Field><div className="grid gap-4 sm:grid-cols-2"><Field label="Estado" required><input className={inputClass} value={form.address.state} onChange={(event) => updateAddress({ state: event.target.value })} placeholder="SP" /></Field><Field label="Cidade" required><input className={inputClass} value={form.address.city} onChange={(event) => updateAddress({ city: event.target.value })} placeholder="São Paulo" /></Field></div><div className="grid gap-4 sm:grid-cols-2"><Field label="Bairro" required><input className={inputClass} value={form.address.neighborhood} onChange={(event) => updateAddress({ neighborhood: event.target.value })} /></Field><Field label="Rua" required><input className={inputClass} value={form.address.street} onChange={(event) => updateAddress({ street: event.target.value })} /></Field></div><div className="grid gap-4 sm:grid-cols-[120px_1fr]"><Field label="Número" required><input className={inputClass} value={form.address.number} onChange={(event) => updateAddress({ number: event.target.value })} /></Field><Field label="Complemento"><input className={inputClass} value={form.address.complement} onChange={(event) => updateAddress({ complement: event.target.value })} /></Field></div></section>}
       {step === 4 && <section className="space-y-3">{[{ title: "Dados pessoais", values: [form.fullName, `@${form.username}`], index: 0 }, { title: "Contato", values: [form.email, form.phone], index: 1 }, { title: "Segurança", values: ["Senha configurada", form.recoveryEmail || "Sem e-mail de recuperação"], index: 2 }, { title: "Endereço", values: [`${form.address.street}, ${form.address.number}`, `${form.address.city} - ${form.address.state} · ${form.address.zip}`], index: 3 }].map((section) => <div key={section.title} className="rounded-lg border border-border bg-secondary/20 p-4"><div className="flex items-start justify-between gap-3"><div><h3 className="text-sm font-semibold">{section.title}</h3>{section.values.map((value) => <p key={value} className="mt-1 text-xs text-muted-foreground">{value}</p>)}</div><button type="button" onClick={() => setStep(section.index)} className="text-xs font-semibold text-primary hover:underline">Editar</button></div></div>)}<p className="pt-2 text-xs text-muted-foreground">Ao finalizar, sua conta será criada e você poderá escolher um serviço para ativar a dashboard.</p></section>}
     </div>
     {(invalid || error) && <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{error || invalid}</div>}

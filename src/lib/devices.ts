@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CREDENTIALS, getSession } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 export type DeviceType = "camera" | "biometric" | "alarm" | "automation" | "sensor";
 export interface SecurityDevice {
@@ -16,23 +16,8 @@ function getKey() {
   return email ? `sentinel:devices:${email}` : "sentinel:devices";
 }
 
-function isDemoAccount() {
-  return getSession()?.email?.trim().toLowerCase() === CREDENTIALS.corporate.email;
-}
-
-const SEED: SecurityDevice[] = [
-  { id: "dev-001", name: "Câmera Lobby 03", type: "camera", location: "Torre Matriz — SP", status: "online", createdAt: Date.now() - 86400000 * 12 },
-  { id: "dev-002", name: "Leitor Biométrico BR-04", type: "biometric", location: "Portão 2 — Galpão SP", status: "online", createdAt: Date.now() - 86400000 * 8 },
-  { id: "dev-003", name: "Hub Automação AUT-21", type: "automation", location: "Andar 7 — Matriz", status: "maintenance", createdAt: Date.now() - 86400000 * 4 },
-];
-
 function read(): SecurityDevice[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = window.localStorage.getItem(getKey());
-    if (!raw) return isDemoAccount() ? SEED : [];
-    return JSON.parse(raw) as SecurityDevice[];
-  } catch { return isDemoAccount() ? SEED : []; }
+  return [];
 }
 
 function write(list: SecurityDevice[]) {

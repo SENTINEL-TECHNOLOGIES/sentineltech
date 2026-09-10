@@ -4,7 +4,7 @@ import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
 import { Camera, Fingerprint, AlertTriangle, Users, MapPin, Activity, ShieldAlert, Wrench, Trash2 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Legend } from "recharts";
 import { AddDeviceButton } from "@/components/add-device-modal";
-import { useDevices, DEVICE_TYPE_LABELS } from "@/lib/devices";
+import { useDevices, DEVICE_TYPE_LABELS, type DeviceType } from "@/lib/devices";
 import { useSession } from "@/hooks/use-session";
 import { CREDENTIALS } from "@/lib/auth";
 import { getActiveServices } from "@/lib/account";
@@ -31,14 +31,16 @@ const eventsWeek = [
   { day: "Dom", motion: 142, intrusion: 1, access: 380 },
 ];
 
-const activities = [
-  { time: "há 2min", text: "Detecção por IA — objeto abandonado · Câmera Lobby 03 · Torre Matriz", level: "warning" as const },
-  { time: "há 8min", text: "Acesso biométrico autorizado — J. Almeida · Sala de Servidores B", level: "success" as const },
-  { time: "há 21min", text: "Manutenção agendada — Câmera 14 (perímetro DC-2) amanhã 09:00", level: "info" as const },
-  { time: "há 34min", text: "Tentativa de acesso não autorizado bloqueada — Portão 4 · Galpão SP", level: "destructive" as const },
-  { time: "há 1h", text: "Check-in de visitantes — 12 prestadores registrados na Planta 2", level: "info" as const },
-  { time: "há 2h", text: "Varredura de perímetro concluída — 0 anomalias em 4,8 km de cerca", level: "success" as const },
-];
+type RiskLevel = "baixo" | "médio" | "alto";
+
+type LiveEvent = {
+  time: string;
+  text: string;
+  level: "success" | "warning" | "destructive" | "info";
+  risk: RiskLevel;
+};
+
+const activities: LiveEvent[] = [];
 
 const facilities = [
   { name: "Torre Matriz — São Paulo", cameras: "128/128", health: "operational" },
@@ -51,37 +53,67 @@ const facilities = [
 function Dashboard() {
   const { devices, removeDevice, updateStatus } = useDevices();
   const { firstName, session } = useSession();
-  const [liveEvents, setLiveEvents] = useState<typeof activities>([]);
+  const [liveEvents, setLiveEvents] = useState<LiveEvent[]>([]);
   const hasDevices = devices.length > 0;
   const isDemoAccount = session?.email?.trim().toLowerCase() === CREDENTIALS.corporate.email;
   const hasActiveService = isDemoAccount || getActiveServices().length > 0;
   const [selectedDevice, setSelectedDevice] = useState<SecurityDevice | null>(null);
 
   useEffect(() => {
-    if (!hasDevices || isDemoAccount) {
+    if (!hasDevices) {
       setLiveEvents([]);
       return;
     }
 
     const timers: number[] = [];
-    function addRandomEvent(device: SecurityDevice) {
-      const normal = Math.random() < 0.75;
-      const event = device.type === "camera"
-        ? normal ? { text: "Movimento detectado", level: "info" as const } : { text: "Pessoa detectada em área monitorada", level: "warning" as const }
-        : device.type === "biometric"
-          ? normal ? { text: "Acesso autorizado", level: "success" as const } : { text: "Tentativa de acesso bloqueada", level: "destructive" as const }
-          : device.type === "alarm"
-            ? normal ? { text: "Sistema de alarme em funcionamento normal", level: "success" as const } : { text: "Alerta de segurança acionado", level: "destructive" as const }
-            : device.type === "automation"
-              ? normal ? { text: "Automação executada", level: "info" as const } : { text: "Falha de comunicação", level: "warning" as const }
-              : normal ? { text: "Temperatura dentro do padrão", level: "success" as const } : { text: "Temperatura elevada detectada", level: "warning" as const };
 
-      if (event.text === "Falha de comunicação" || event.text === "Alerta de segurança acionado") updateStatus(device.id, "offline");
-      if (event.text === "Acesso autorizado" || event.text === "Sistema de alarme em funcionamento normal") updateStatus(device.id, "online");
-      setLiveEvents((current) => [
-        { ...event, text: `${event.text} — ${device.name} · ${device.location}`, time: "agora", },
-        ...current,
-      ].slice(0, 6));
+    function addRandomEvent(device: SecurityDevice) {
+      const riskRoll = Math.random();
+      const risk: RiskLevel = riskRoll < 0.55 ? "baixo" : riskRoll < 0.85 ? "médio" : "alto";
+
+      const templates: Record<DeviceType, Record<RiskLevel, { text: string; level: LiveEvent["level"] }>> = {
+        camera: {
+          baixo: { text: "IA reconheceu movimento normal em área monitorada", level: "info" },
+          médio: { text: "IA identificou fluxo incomum em área monitorada", level: "warning" },
+          alto: { text: "IA detectou intrusão em área restrita", level: "destructive" },
+        },
+        biometric: {
+          baixo: { text: "IA validou acesso autorizado com baixa anomalia", level: "success" },
+          médio: { text: "IA alertou para acesso fora do padrão", level: "warning" },
+          alto: { text: "IA flagou tentativa não autorizada de acesso", level: "destructive" },
+        },
+        alarm: {
+          baixo: { text: "IA confirmou sistema de alarme estável", level: "success" },
+          médio: { text: "IA registrou falha temporária de sensor", level: "warning" },
+          alto: { text: "IA detectou disparo crítico do sistema de alarme", level: "destructive" },
+        },
+        automation: {
+          baixo: { text: "IA confirmou automação executada com sucesso", level: "info" },
+          médio: { text: "IA apontou atraso de rotina automatizada", level: "warning" },
+          alto: { text: "IA identificou falha crítica de automação", level: "destructive" },
+        },
+        sensor: {
+          baixo: { text: "IA confirmou leitura ambiental dentro do limite", level: "success" },
+          médio: { text: "IA sinalizou variável ambiental anormal", level: "warning" },
+          alto: { text: "IA detectou risco ambiental elevado", level: "destructive" },
+        },
+      };
+
+      const template = templates[device.type][risk];
+      const event = {
+        ...template,
+        text: `${template.text} — ${device.name} · ${device.location}`,
+        time: "agora",
+        risk,
+      } satisfies LiveEvent;
+
+      if (risk === "alto") {
+        updateStatus(device.id, "offline");
+      } else if (risk === "baixo") {
+        updateStatus(device.id, "online");
+      }
+
+      setLiveEvents((current) => [event, ...current].slice(0, 6));
     }
 
     devices.forEach((device) => {
@@ -92,8 +124,12 @@ function Dashboard() {
       }, 15000 + Math.floor(Math.random() * 45000));
       timers.push(timer);
     });
-    return () => timers.forEach((timer) => { window.clearTimeout(timer); window.clearInterval(timer); });
-  }, [devices, hasDevices, isDemoAccount]);
+
+    return () => timers.forEach((timer) => {
+      window.clearTimeout(timer);
+      window.clearInterval(timer);
+    });
+  }, [devices, hasDevices]);
 
   const currentActivities = [...liveEvents, ...activities].slice(0, 6);
   if (!hasActiveService) {
@@ -129,7 +165,7 @@ function Dashboard() {
         <KpiCard label="Câmeras Ativas" value={isDemoAccount ? "848 / 856" : `${devices.filter((device) => device.type === "camera" && device.status === "online").length} / ${devices.filter((device) => device.type === "camera").length}`} delta={isDemoAccount ? "99,1% online" : "dispositivos cadastrados"} deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
         <KpiCard label="Dispositivos Online" value={isDemoAccount ? "2.184" : String(devices.filter((device) => device.status === "online").length)} delta={isDemoAccount ? "+18 esta semana" : `${devices.length} no inventário`} deltaPositive icon={<Activity className="h-5 w-5" />} accent="cyan" />
         <KpiCard label="Eventos de Acesso (Hoje)" value={isDemoAccount ? "3.612" : String(liveEvents.length)} delta={isDemoAccount ? "entradas + saídas" : "eventos simulados"} icon={<Fingerprint className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Incidentes (24h)" value={isDemoAccount ? "7" : String(liveEvents.filter((event) => event.level === "warning" || event.level === "destructive").length)} delta={isDemoAccount ? "2 em aberto" : "alertas ativos"} icon={<AlertTriangle className="h-5 w-5" />} accent="warning" />
+        <KpiCard label="Incidentes (24h)" value={isDemoAccount ? "7" : String(liveEvents.filter((event) => event.risk === "médio" || event.risk === "alto").length)} delta={isDemoAccount ? "2 em aberto" : "alertas ativos"} icon={<AlertTriangle className="h-5 w-5" />} accent="warning" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -269,7 +305,16 @@ function Dashboard() {
                 }`} />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm">{a.text}</div>
-                  <div className="mt-0.5 text-[11px] text-muted-foreground">{a.time}</div>
+                  <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px]">
+                    <span className="text-muted-foreground">{a.time}</span>
+                    <span className={`rounded-full border px-1.5 py-0.5 font-semibold ${
+                      a.risk === "baixo" ? "border-success/30 bg-success/10 text-success" :
+                      a.risk === "médio" ? "border-warning/30 bg-warning/10 text-warning" :
+                      "border-destructive/30 bg-destructive/10 text-destructive"
+                    }`}>
+                      {a.risk === "baixo" ? "Risco baixo" : a.risk === "médio" ? "Risco médio" : "Risco alto"}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}

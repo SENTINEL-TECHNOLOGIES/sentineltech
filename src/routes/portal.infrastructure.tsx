@@ -20,84 +20,29 @@ function Infra() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Instalações</h1>
-        <p className="text-sm text-muted-foreground">Sites, locais monitorados e ativos de segurança gerenciados em todo o parque.</p>
+        <p className="text-sm text-muted-foreground">Este menu foi zerado. Para popular os locais e indicadores, edite o array `sites` desta rota.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Instalações Monitoradas" value="46" icon={<Building className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Total de Câmeras" value="856" icon={<Camera className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Pontos de Acesso" value="384" icon={<Fingerprint className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Carga Média" value="57%" icon={<Activity className="h-5 w-5" />} accent="warning" />
-      </div>
+      <Card className="border-dashed">
+        <div className="flex flex-col gap-4 p-6">
+          <Badge variant="outline">Área vazia</Badge>
+          <div>
+            <h2 className="text-xl font-bold">Nenhum item cadastrado neste menu</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Use `sites` para inserir instalações, regiões, câmeras e indicadores de carga e saúde.</p>
+          </div>
 
-      <Card>
-        <CardHeader title="Sites e regiões" description="Saúde e capacidade nas instalações gerenciadas" />
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
-              <tr><th className="px-5 py-3 font-medium">Local</th><th className="px-5 py-3 font-medium">Região</th><th className="px-5 py-3 font-medium">Câmeras</th><th className="px-5 py-3 font-medium">Portas</th><th className="px-5 py-3 font-medium">Carga</th><th className="px-5 py-3 font-medium">Status</th></tr>
-            </thead>
-            <tbody>
-              {sites.map((s) => (
-                <tr key={s.name} className="border-t border-border hover:bg-accent/30">
-                  <td className="px-5 py-3 font-medium">{s.name}</td>
-                  <td className="px-5 py-3 font-mono text-xs text-muted-foreground">{s.region}</td>
-                  <td className="px-5 py-3 font-mono">{s.cameras}</td>
-                  <td className="px-5 py-3 font-mono">{s.doors}</td>
-                  <td className="px-5 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-1.5 w-32 overflow-hidden rounded-full bg-secondary">
-                        <div className={`h-full rounded-full ${s.load > 75 ? "bg-warning" : "bg-gradient-to-r from-primary to-cyan"}`} style={{ width: `${s.load}%` }} />
-                      </div>
-                      <span className="font-mono text-xs">{s.load}%</span>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3">{s.status === "saudável" ? <Badge variant="success">● Saudável</Badge> : <Badge variant="warning">● Degradado</Badge>}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+              <span className="font-semibold text-foreground">1. `sites`</span>
+              <p className="mt-1 text-muted-foreground">Adicione cada local monitorado com nome, região, câmeras, portas e status.</p>
+            </div>
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+              <span className="font-semibold text-foreground">2. Carga e capacidade</span>
+              <p className="mt-1 text-muted-foreground">Defina os indicadores de uso para exibir saúde, capacidade e previsões do site.</p>
+            </div>
+          </div>
         </div>
       </Card>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader title="Instalações mais ativas" />
-          <div className="space-y-3 p-5">
-            {[
-              { id: "HQ-SP", t: "Torre Matriz São Paulo", v: 92 },
-              { id: "PLT-MTY", t: "Planta Monterrey", v: 78 },
-              { id: "DC2-FRA", t: "Data Center Frankfurt", v: 71 },
-              { id: "WHS-SG", t: "Galpão Singapura", v: 64 },
-            ].map((d) => (
-              <div key={d.id} className="flex items-center gap-3 rounded-lg border border-border bg-secondary/30 p-3">
-                <MapPin className="h-4 w-4 text-cyan" />
-                <div className="min-w-0 flex-1">
-                  <div className="truncate font-mono text-sm">{d.id}</div>
-                  <div className="text-[11px] text-muted-foreground">{d.t}</div>
-                </div>
-                <span className="font-mono text-sm">{d.v}%</span>
-              </div>
-            ))}
-          </div>
-        </Card>
-        <Card>
-          <CardHeader title="Previsão de capacidade" description="Projeção de 30 dias" />
-          <div className="space-y-4 p-5">
-            {[
-              { label: "Armazenamento de câmeras", val: 68, hint: "Pool NVR" },
-              { label: "Controladoras de acesso", val: 74, hint: "Nº de portas" },
-              { label: "Banda de rede", val: 42, hint: "Uplinks de site" },
-              { label: "Fila de operadores", val: 55, hint: "Capacidade da central" },
-            ].map((r) => (
-              <div key={r.label}>
-                <div className="flex justify-between text-xs"><span className="font-medium">{r.label}</span><span className="text-muted-foreground">{r.hint} · <span className="font-mono text-foreground">{r.val}%</span></span></div>
-                <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-gradient-to-r from-primary to-cyan" style={{ width: `${r.val}%` }} /></div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      </div>
     </div>
   );
 }

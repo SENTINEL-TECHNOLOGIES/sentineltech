@@ -41,112 +41,31 @@ function AICCTV() {
       <div>
         <Badge variant="info">Vigilância com IA</Badge>
         <h1 className="mt-3 text-2xl font-bold">Inteligência de CFTV</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Detecções de objetos, pessoas, veículos, face e comportamento em todas as câmeras.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Este menu foi zerado. Para reconstituí-lo, edite os arrays do arquivo atual.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Câmeras com IA" value="612 / 618" delta="99,0%" deltaPositive icon={<Camera className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Eventos de IA (24h)" value="3.395" delta="+8% vs média" icon={<Brain className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Alertas alta prioridade" value="22" delta="3 em aberto" icon={<Eye className="h-5 w-5" />} accent="warning" />
-        <KpiCard label="Confiança Média" value="96,4%" delta="todos os módulos" deltaPositive icon={<Scan className="h-5 w-5" />} accent="success" />
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {modules.map((m) => (
-          <Card key={m.name} className="p-5">
-            <div className="flex items-start justify-between">
-              <div className="grid h-11 w-11 place-items-center rounded-xl border border-border bg-gradient-to-br from-primary/20 to-cyan/10 text-cyan">{m.icon}</div>
-              <Badge variant="success">Ativo</Badge>
-            </div>
-            <div className="mt-4 text-sm font-semibold">{m.name}</div>
-            <div className="mt-2 flex items-baseline gap-3">
-              <span className="font-mono text-2xl font-bold">{m.events}</span>
-              <span className="text-[11px] text-muted-foreground">eventos 24h</span>
-            </div>
-            <div className="mt-3 flex items-center justify-between text-[11px] text-muted-foreground">
-              <span>Acurácia do modelo</span>
-              <span className="font-mono text-cyan">{m.accuracy}</span>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader title="Detecções — últimas 24h" description="Pessoas · Veículos · Objetos" action={<Badge variant="info">Ao vivo</Badge>} />
-          <div className="h-72 p-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={detections}>
-                <defs>
-                  <linearGradient id="ap" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="oklch(0.62 0.21 258)" stopOpacity={0.6} /><stop offset="100%" stopColor="oklch(0.62 0.21 258)" stopOpacity={0} /></linearGradient>
-                  <linearGradient id="av" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="oklch(0.78 0.13 210)" stopOpacity={0.6} /><stop offset="100%" stopColor="oklch(0.78 0.13 210)" stopOpacity={0} /></linearGradient>
-                  <linearGradient id="ao" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="oklch(0.72 0.17 160)" stopOpacity={0.6} /><stop offset="100%" stopColor="oklch(0.72 0.17 160)" stopOpacity={0} /></linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.32 0.06 265 / 0.4)" />
-                <XAxis dataKey="h" stroke="oklch(0.7 0.03 255)" fontSize={11} tickLine={false} axisLine={false} interval={2} />
-                <YAxis stroke="oklch(0.7 0.03 255)" fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip contentStyle={{ background: "oklch(0.21 0.07 268)", border: "1px solid oklch(0.32 0.06 265)", borderRadius: 8, fontSize: 12 }} />
-                <Area type="monotone" dataKey="pessoas" stroke="oklch(0.62 0.21 258)" fill="url(#ap)" strokeWidth={2} />
-                <Area type="monotone" dataKey="veiculos" name="veículos" stroke="oklch(0.78 0.13 210)" fill="url(#av)" strokeWidth={2} />
-                <Area type="monotone" dataKey="objetos" stroke="oklch(0.72 0.17 160)" fill="url(#ao)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
+      <Card className="border-dashed">
+        <div className="flex flex-col gap-4 p-6">
+          <Badge variant="outline">Área vazia</Badge>
+          <div>
+            <h2 className="text-xl font-bold">Nenhum item cadastrado neste menu</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Use as constantes do arquivo para adicionar módulos, eventos e gráficos do CFTV com IA.</p>
           </div>
-        </Card>
 
-        <Card>
-          <CardHeader title="Vigilância de áreas restritas" description="Alertas comportamentais e de fronteira" />
-          <div className="space-y-3 p-5">
-            {[
-              { area: "Sala de Servidores B", violations: 0, status: "ok" },
-              { area: "Andar Executivo", violations: 1, status: "warn" },
-              { area: "Armazém Químico", violations: 0, status: "ok" },
-              { area: "Corredor do Cofre", violations: 0, status: "ok" },
-              { area: "Planta Portão 4", violations: 4, status: "alert" },
-            ].map((r) => (
-              <div key={r.area} className="flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-3">
-                <div className="text-sm font-medium">{r.area}</div>
-                <Badge variant={r.status === "alert" ? "destructive" : r.status === "warn" ? "warning" : "success"}>{r.violations} violações</Badge>
-              </div>
-            ))}
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+              <span className="font-semibold text-foreground">1. `modules`</span>
+              <p className="mt-1 text-muted-foreground">Adicione cada módulo de IA, como detecção de pessoas, veículos, objetos e reconhecimento facial.</p>
+            </div>
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+              <span className="font-semibold text-foreground">2. `detections`</span>
+              <p className="mt-1 text-muted-foreground">Insira os pontos do gráfico das últimas 24 horas para popular o painel.</p>
+            </div>
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm md:col-span-2">
+              <span className="font-semibold text-foreground">3. `aiEvents`</span>
+              <p className="mt-1 text-muted-foreground">Preencha o histórico com hora, câmera, tipo de detecção, confiança e severidade para alimentar a tabela.</p>
+            </div>
           </div>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader title="Histórico de eventos gerados por IA" description="Detecções entre câmeras · última hora" action={<Badge variant="destructive">2 críticos</Badge>} />
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead className="bg-secondary/40 text-left text-muted-foreground">
-              <tr>
-                <th className="px-4 py-2 font-medium">HORA</th>
-                <th className="px-4 py-2 font-medium">CÂMERA</th>
-                <th className="px-4 py-2 font-medium">DETECÇÃO</th>
-                <th className="px-4 py-2 font-medium">CONFIANÇA</th>
-                <th className="px-4 py-2 font-medium">SEVERIDADE</th>
-              </tr>
-            </thead>
-            <tbody className="font-mono">
-              {aiEvents.map((e, i) => (
-                <tr key={i} className="border-t border-border hover:bg-accent/30">
-                  <td className="px-4 py-2.5 text-muted-foreground">{e.time}</td>
-                  <td className="px-4 py-2.5 text-cyan">{e.camera}</td>
-                  <td className="px-4 py-2.5">{e.type}</td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex items-center gap-2">
-                      <div className="h-1 w-20 overflow-hidden rounded-full bg-secondary">
-                        <div className="h-full rounded-full bg-gradient-to-r from-primary to-cyan" style={{ width: `${e.confidence}%` }} />
-                      </div>
-                      <span>{e.confidence}%</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <Badge variant={e.severity === "crítica" ? "destructive" : e.severity === "alta" ? "warning" : e.severity === "info" ? "info" : "outline"}>{e.severity.toUpperCase()}</Badge>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </Card>
     </div>

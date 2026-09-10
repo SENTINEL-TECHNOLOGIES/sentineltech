@@ -37,69 +37,33 @@ function Automation() {
       <div>
         <Badge variant="info">Automação Predial Inteligente</Badge>
         <h1 className="mt-3 text-2xl font-bold">Automação</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Iluminação, portas, portões, alarmes, energia e controles ambientais em todas as instalações.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Este menu foi zerado. Para popular a automação, edite os arrays do arquivo desta rota.</p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard label="Dispositivos Conectados" value="1.570" delta="todos subsistemas" deltaPositive icon={<Zap className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Automações Ativas" value="48" delta="14 agendamentos" icon={<Bell className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Energia Hoje" value="1,24 MWh" delta="-8% vs meta" deltaPositive icon={<Zap className="h-5 w-5" />} accent="success" />
-        <KpiCard label="Alertas Ambientais" value="1" delta="qualidade do ar matriz" icon={<Wind className="h-5 w-5" />} accent="warning" />
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        {groups.map((g) => (
-          <Card key={g.name} className="p-5">
-            <div className="flex items-center justify-between">
-              <div className="grid h-11 w-11 place-items-center rounded-xl border border-border bg-gradient-to-br from-primary/20 to-cyan/10 text-cyan">{g.icon}</div>
-              <Badge variant="success">Online</Badge>
-            </div>
-            <div className="mt-4 text-sm font-semibold">{g.name}</div>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-              <div><div className="text-muted-foreground">Dispositivos</div><div className="font-mono text-base font-bold">{g.devices}</div></div>
-              <div><div className="text-muted-foreground">Ativos</div><div className="font-mono text-base font-bold text-cyan">{g.on}</div></div>
-              <div><div className="text-muted-foreground">Agendamentos</div><div className="font-mono text-base font-bold">{g.schedules}</div></div>
-              <div><div className="text-muted-foreground">Energia</div><div className="font-mono text-base font-bold">{g.energy}</div></div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader title="Regras de automação" description="Gatilhos e ações orquestradas" action={<Badge variant="success">Todas armadas</Badge>} />
-          <div className="divide-y divide-border">
-            {automations.map((a) => (
-              <div key={a.name} className="grid grid-cols-1 gap-3 p-4 md:grid-cols-[1fr_auto] md:items-center">
-                <div>
-                  <div className="text-sm font-medium">{a.name}</div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-                    <span className="rounded bg-secondary/60 px-1.5 py-0.5 font-mono text-cyan">QUANDO</span>{a.trigger}
-                    <span className="rounded bg-secondary/60 px-1.5 py-0.5 font-mono text-cyan">FAZER</span>{a.action}
-                  </div>
-                </div>
-                <Badge variant="success">{a.state.toUpperCase()}</Badge>
-              </div>
-            ))}
+      <Card className="border-dashed">
+        <div className="flex flex-col gap-4 p-6">
+          <Badge variant="outline">Área vazia</Badge>
+          <div>
+            <h2 className="text-xl font-bold">Nenhum item cadastrado neste menu</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Use os arrays `sensors`, `groups` e `automations` para inserir dispositivos, agendamentos e regras.</p>
           </div>
-        </Card>
 
-        <Card>
-          <CardHeader title="Sensores ambientais" description="Telemetria em tempo real" />
-          <div className="divide-y divide-border">
-            {sensors.map((s) => (
-              <div key={s.name} className="flex items-center gap-3 p-4">
-                <div className={`grid h-8 w-8 place-items-center rounded-lg border border-border ${s.state === "warn" ? "text-warning" : "text-cyan"}`}>{s.icon}</div>
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-sm font-medium">{s.name}</div>
-                  <div className="font-mono text-xs text-muted-foreground">{s.value}</div>
-                </div>
-                {s.state === "warn" ? <Badge variant="warning">Atenção</Badge> : <Badge variant="success">OK</Badge>}
-              </div>
-            ))}
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+              <span className="font-semibold text-foreground">1. `sensors`</span>
+              <p className="mt-1 text-muted-foreground">Adicione sensores ambientais e seus valores de telemetria.</p>
+            </div>
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm">
+              <span className="font-semibold text-foreground">2. `groups`</span>
+              <p className="mt-1 text-muted-foreground">Defina blocos de automação, como iluminação, alarmes, energia e portões.</p>
+            </div>
+            <div className="rounded-lg border border-border bg-secondary/30 p-3 text-sm md:col-span-2">
+              <span className="font-semibold text-foreground">3. `automations`</span>
+              <p className="mt-1 text-muted-foreground">Cadastre gatilhos, ações e estados para as regras de automação do prédio.</p>
+            </div>
           </div>
-        </Card>
-      </div>
+        </div>
+      </Card>
     </div>
   );
 }

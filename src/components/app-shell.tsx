@@ -58,7 +58,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
 
   useEffect(() => { setSidebarOpen(false); setSearchOpen(false); setNotifOpen(false); setAccountOpen(false); }, [pathname]);
 
-  function handleLogout() { logout(); navigate({ to: "/" }); }
+  async function handleLogout() { await logout(); navigate({ to: "/" }); }
 
   const crumbs = pathname.split("/").filter(Boolean);
   const unread = notifs.filter((n) => !n.read).length;

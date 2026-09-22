@@ -1,8 +1,6 @@
-// Autenticação demo (somente frontend, persistida em localStorage)
 export type Role = "corporate" | "customer";
 
 const KEY = "sentinel_auth";
-const USERS_KEY = "sentinel_users";
 
 export const CREDENTIALS = {
   corporate: { email: "empresa@sentinel-demo.com", password: "Sentinel2026!" },
@@ -25,67 +23,61 @@ export function isEmailValid(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
-type StoredUser = { name: string; email: string; password: string; role: Role };
+export type Session = { role: Role; email: string; name?: string };
 
-function readUsers(): StoredUser[] {
-  if (typeof window === "undefined") return [];
-  try {
-    return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function writeUsers(users: StoredUser[]) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function persistSession(session: { role: Role; email: string; name: string }) {
+function persistSession(session: Session) {
+  if (typeof window === "undefined") return;
   localStorage.setItem(KEY, JSON.stringify({ ...session, ts: Date.now() }));
   window.dispatchEvent(new Event("sentinel-auth-change"));
 }
 
+async function authRequest<T>(path: string, body?: Record<string, unknown>): Promise<T> {
+  const response = await fetch(path, {
+    method: body ? "POST" : "GET",
+    headers: body ? { "content-type": "application/json" } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+    credentials: "include",
+  });
+  const data = await response.json() as T & { error?: string };
+  if (!response.ok) throw new Error(data.error || "Serviço de autenticação indisponível.");
+  return data;
+}
+
 /** Cadastro de novo usuário. */
-export function register(
+export async function register(
   name: string,
   email: string,
   password: string,
+  phone: string,
   role: Role = "corporate",
-): { ok: true } | { ok: false; error: string } {
+): Promise<{ ok: true } | { ok: false; error: string }> {
   const mail = email.trim().toLowerCase();
   if (name.trim().length < 2) return { ok: false, error: "Informe seu nome completo." };
   if (!isEmailValid(mail)) return { ok: false, error: "E-mail inválido." };
   if (!isPasswordValid(password)) return { ok: false, error: "A senha não atende aos requisitos de segurança." };
 
-  const users = readUsers();
-  if (users.some((u) => u.email === mail) || Object.values(CREDENTIALS).some((c) => c.email === mail)) {
-    return { ok: false, error: "Já existe uma conta com este e-mail." };
+  try {
+    const data = await authRequest<{ session: Session }>("/api/auth/register", { name: name.trim(), email: mail, password, phone, role });
+    persistSession(data.session);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "Não foi possível criar a conta." };
   }
-  users.push({ name: name.trim(), email: mail, password, role });
-  writeUsers(users);
-  persistSession({ role, email: mail, name: name.trim() });
-  return { ok: true };
 }
 
 /** Login por e-mail e senha (usuários cadastrados ou credenciais de demonstração). */
-export function login(email: string, password: string): { ok: true; role: Role } | { ok: false; error: string } {
+export async function login(email: string, password: string): Promise<{ ok: true; role: Role } | { ok: false; error: string }> {
   const mail = email.trim().toLowerCase();
   if (!isEmailValid(mail)) return { ok: false, error: "E-mail inválido." };
   if (!password) return { ok: false, error: "Informe sua senha." };
 
-  for (const [role, c] of Object.entries(CREDENTIALS) as [Role, { email: string; password: string }][]) {
-    if (mail === c.email && password === c.password) {
-      persistSession({ role, email: mail, name: role === "corporate" ? "Equipe Sentinel" : "Visitante" });
-      return { ok: true, role };
-    }
+  try {
+    const data = await authRequest<{ session: Session }>("/api/auth/login", { email: mail, password });
+    persistSession(data.session);
+    return { ok: true, role: data.session.role };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "E-mail ou senha inválidos." };
   }
-
-  const user = readUsers().find((u) => u.email === mail);
-  if (!user) return { ok: false, error: "Conta não encontrada. Verifique o e-mail ou cadastre-se." };
-  if (user.password !== password) return { ok: false, error: "Senha incorreta." };
-
-  persistSession({ role: user.role, email: user.email, name: user.name });
-  return { ok: true, role: user.role };
 }
 
 /** Recuperação de senha (simulada). */
@@ -95,14 +87,15 @@ export function requestPasswordReset(email: string): { ok: true } | { ok: false;
   return { ok: true };
 }
 
-export function logout() {
+export async function logout() {
   if (typeof window !== "undefined") {
+    try { await authRequest<{ ok: true }>("/api/auth/logout", {}); } catch { /* The local session must still be cleared. */ }
     localStorage.removeItem(KEY);
     window.dispatchEvent(new Event("sentinel-auth-change"));
   }
 }
 
-export function getSession(): { role: Role; email: string; name?: string } | null {
+export function getSession(): Session | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(KEY);

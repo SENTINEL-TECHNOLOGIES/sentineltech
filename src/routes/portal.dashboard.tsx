@@ -157,7 +157,6 @@ function Dashboard() {
             <Camera className="h-10 w-10 text-cyan" />
             <h2 className="mt-4 text-lg font-semibold">Sua operação ainda está vazia</h2>
             <p className="mt-2 max-w-md text-sm text-muted-foreground">Quando você cadastrar um dispositivo, os eventos e indicadores aparecerão aqui em tempo real.</p>
-            <AddDeviceButton className="mt-6" />
           </div>
         </Card>
       ) : <>

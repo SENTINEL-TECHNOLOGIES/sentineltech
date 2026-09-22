@@ -66,16 +66,19 @@ export function RegisterForm() {
     return null;
   }
   function continueStep() { setAttempted(true); const message = validate(); if (message) { setError(message); return; } setError(null); if (step < steps.length - 1) setStep((current) => current + 1); }
-  function finish() {
+  async function finish() {
     setAttempted(true);
     for (let index = 0; index < 4; index += 1) { const message = validate(index); if (message) { setError(message); setStep(index); return; } }
     setLoading(true);
-    setTimeout(() => { const result = register(form.fullName, form.email, form.password, "customer"); if (!result.ok) { setError(result.error); toast.error(result.error); setLoading(false); return; } saveAccountProfile(form); toast.success("Conta criada com sucesso."); navigate({ to: "/explore/services" }); }, 700);
+    const result = await register(form.fullName, form.email, form.password, form.phone, "customer");
+    if (!result.ok) { setError(result.error); toast.error(result.error); setLoading(false); return; }
+    saveAccountProfile(form);
+    toast.success("Conta criada com sucesso.");
+    navigate({ to: "/explore/services" });
   }
   const invalid = attempted ? validate() : null;
 
   return <AuthShell title="Criar conta de cliente" subtitle="Configure sua conta em poucos passos e escolha os serviços da Sentinel." footer={<><span>Já tem uma conta? </span><Link to="/login" className="font-semibold text-primary hover:underline">Entrar</Link></>}>
-    <div className="mt-6 flex items-center gap-2 rounded-lg border border-cyan/30 bg-cyan/10 px-3 py-2.5 text-xs text-cyan"><UserRound className="h-4 w-4 shrink-0" /><span>Cadastro de cliente com dados fictícios.</span></div>
     <div className="mt-6 grid grid-cols-5 gap-1.5" aria-label="Progresso do cadastro">{steps.map((label, index) => <button key={label} type="button" onClick={() => index <= step && setStep(index)} className={`min-w-0 text-center ${index <= step ? "text-primary" : "text-muted-foreground"}`}><span className={`mx-auto grid h-7 w-7 place-items-center rounded-full border text-xs font-semibold ${index <= step ? "border-primary bg-primary/15" : "border-border"}`}>{index < step ? <Check className="h-3.5 w-3.5" /> : index + 1}</span><span className="mt-1 hidden truncate text-[10px] sm:block">{label}</span></button>)}</div>
     <div className="mt-6 min-h-[300px]">
       {step === 0 && <section className="space-y-4"><Field label="Nome completo" required error={attempted && !form.fullName.trim() ? "Informe seu nome completo." : null}><input className={inputClass} value={form.fullName} onChange={(event) => update({ fullName: event.target.value, username: form.username || usernameSuggestion(event.target.value) })} placeholder="Ex.: Caio Gabriel" autoComplete="name" /></Field><Field label="Nome de usuário" required hint="Você poderá usar este nome para identificar sua conta." error={attempted && !form.username.trim() ? "Informe um nome de usuário." : null}><input className={inputClass} value={form.username} onChange={(event) => update({ username: event.target.value.replace(/\s/g, ".") })} placeholder="caio.gabriel" autoComplete="username" /></Field></section>}

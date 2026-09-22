@@ -17,7 +17,16 @@ function getKey() {
 }
 
 function read(): SecurityDevice[] {
-  return [];
+  if (typeof window === "undefined") return [];
+
+  try {
+    const stored = window.localStorage.getItem(getKey());
+    if (!stored) return [];
+    const devices: unknown = JSON.parse(stored);
+    return Array.isArray(devices) ? devices as SecurityDevice[] : [];
+  } catch {
+    return [];
+  }
 }
 
 function write(list: SecurityDevice[]) {

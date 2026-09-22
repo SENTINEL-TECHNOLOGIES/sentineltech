@@ -28,11 +28,10 @@ export function AddDeviceButton({ className = "" }: { className?: string }) {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/45 p-4"
-          style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-950/60 p-4 backdrop-blur-md"
           onClick={() => setOpen(false)}
         >
-          <div className="w-full max-w-md rounded-2xl border border-primary/40 bg-card/95 p-6 shadow-[0_30px_90px_-24px_rgba(14,165,233,0.55)] ring-1 ring-primary/20" onClick={(e) => e.stopPropagation()}>
+          <div className="relative z-10 w-full max-w-md rounded-2xl border border-primary/50 bg-card p-6 shadow-[0_30px_90px_-24px_rgba(14,165,233,0.7)] ring-1 ring-primary/30" onClick={(e) => e.stopPropagation()}>
             <div className="mb-4 flex items-start justify-between">
               <div>
                 <h2 className="text-lg font-bold">Novo Dispositivo de Segurança</h2>

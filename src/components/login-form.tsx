@@ -24,7 +24,7 @@ export function LoginForm({
   const emailValid = isEmailValid(email);
   const formValid = emailValid && password.length > 0;
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     if (!formValid) {
@@ -32,17 +32,15 @@ export function LoginForm({
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      const result = login(email, password);
-      if (result.ok) {
-        toast.success("Login realizado com sucesso!");
-        navigate({ to: redirectTo ?? (result.role === "corporate" ? "/portal/dashboard" : "/explore/home") });
-      } else {
-        setError(result.error);
-        toast.error(result.error);
-        setLoading(false);
-      }
-    }, 600);
+    const result = await login(email, password);
+    if (result.ok) {
+      toast.success("Login realizado com sucesso!");
+      navigate({ to: redirectTo ?? (result.role === "corporate" ? "/portal/dashboard" : "/explore/home") });
+    } else {
+      setError(result.error);
+      toast.error(result.error);
+      setLoading(false);
+    }
   }
 
   return (

@@ -11,7 +11,9 @@ export default defineConfig({
     preset: "vercel",
   },
   vite: {
-    base: process.env.VITE_BASE_PATH ?? (process.env.NODE_ENV === "production" ? "/sentineltech/" : "/"),
+    base: process.env.VERCEL === "1"
+      ? "/"
+      : process.env.VITE_BASE_PATH ?? (process.env.NODE_ENV === "production" ? "/sentineltech/" : "/"),
   },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).

@@ -7,6 +7,9 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  nitro: {
+    preset: "vercel",
+  },
   vite: {
     base: process.env.VITE_BASE_PATH ?? (process.env.NODE_ENV === "production" ? "/sentineltech/" : "/"),
   },

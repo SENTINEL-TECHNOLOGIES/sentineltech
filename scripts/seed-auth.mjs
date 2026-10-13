@@ -16,6 +16,15 @@ const users = [
   ["Equipe Sentinel", "empresa@sentinel-demo.com", "Sentinel2026!", "corporate"],
   ["Visitante", "cliente@sentinel-demo.com", "SentinelClient2026!", "customer"],
 ];
+const adminEmail = process.env.SENTINEL_ADMIN_EMAIL?.trim().toLowerCase();
+const adminPassword = process.env.SENTINEL_ADMIN_PASSWORD;
+
+if (adminEmail || adminPassword) {
+  if (!adminEmail || !adminPassword || adminPassword.length < 12) {
+    throw new Error("Defina SENTINEL_ADMIN_EMAIL e SENTINEL_ADMIN_PASSWORD (mínimo de 12 caracteres) para criar o administrador.");
+  }
+  users.push(["Admin Sentinel", adminEmail, adminPassword, "administrative"]);
+}
 
 try {
   for (const [name, email, password, role] of users) {

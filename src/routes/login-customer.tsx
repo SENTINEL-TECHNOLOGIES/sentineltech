@@ -13,7 +13,6 @@ function CustomerLogin() {
     <LoginForm
       title="Conheça a Sentinel"
       subtitle="Navegue por serviços, solicite propostas e agende uma consultoria."
-      redirectTo="/explore/home"
     />
   );
 }

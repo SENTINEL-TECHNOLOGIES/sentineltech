@@ -2,8 +2,9 @@ import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-route
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Bell, Search, ChevronRight, LogOut, HelpCircle, Menu, X, User, Settings as SettingsIcon, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { SentinelLogo } from "./sentinel-logo";
-import { getSession, logout, type Role } from "@/lib/auth";
+import { dashboardForRole, logout, type Role } from "@/lib/auth";
 import { useSession } from "@/hooks/use-session";
+import { canAccessPath } from "./role-navigation";
 
 export interface NavItem { to: string; label: string; icon: ReactNode; }
 
@@ -25,9 +26,13 @@ const INITIAL_NOTIFS: NotificationItem[] = [
   { id: "n4", title: "Novo visitante registrado · J. Almeida", time: "há 2 h", level: "info", read: true },
 ];
 
-export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: { role: Role | "portal"; items: NavItem[]; portalLabel: string; userLabel: string; userSubtitle: string }) {
+const CLIENT_NOTIFS: NotificationItem[] = [
+  { id: "c1", title: "Sua área do cliente está pronta", time: "agora", level: "info", read: false },
+];
+
+export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, children }: { role: Role; items: NavItem[]; portalLabel: string; userLabel: string; userSubtitle: string; children?: ReactNode }) {
   const navigate = useNavigate();
-  const { session } = useSession();
+  const { session, ready } = useSession();
   const displayName = session?.name?.trim() || userLabel;
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,15 +40,22 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [notifs, setNotifs] = useState<NotificationItem[]>(INITIAL_NOTIFS);
+  const [notifs, setNotifs] = useState<NotificationItem[]>(role === "customer" ? CLIENT_NOTIFS : INITIAL_NOTIFS);
   const searchRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
+  const canAccess = canAccessPath(role, pathname, items);
 
   useEffect(() => {
-    const s = getSession();
-    if (!s || (role !== "portal" && s.role !== role)) navigate({ to: role === "corporate" ? "/login-corporate" : "/login-customer" });
-  }, [role, navigate]);
+    setNotifs(role === "customer" ? CLIENT_NOTIFS : INITIAL_NOTIFS);
+  }, [role]);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (!session) navigate({ to: "/login" });
+    else if (session.role !== role) navigate({ to: dashboardForRole(session.role) });
+    else if (!canAccess) navigate({ to: dashboardForRole(role) });
+  }, [canAccess, navigate, ready, role, session]);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -193,7 +205,7 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
                     ))}
                   </div>
                   <div className="border-t border-border bg-secondary/30 px-4 py-2 text-center">
-                    <Link to="/portal/monitoring" className="text-xs font-semibold text-primary hover:underline">Abrir Centro de Comando →</Link>
+                    <Link to={role === "customer" ? "/portal/tickets" : "/portal/monitoring"} className="text-xs font-semibold text-primary hover:underline">{role === "customer" ? "Ver solicitações →" : "Abrir Centro de Comando →"}</Link>
                   </div>
                 </div>
               )}
@@ -217,11 +229,21 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
                     </div>
                   </div>
                   <div className="p-1">
-                    {[
-                      { to: "/portal/settings", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
-                      { to: "/portal/settings", icon: <SettingsIcon className="h-4 w-4" />, label: "Configurações" },
-                      { to: "/portal/billing", icon: <ShieldCheck className="h-4 w-4" />, label: "Plano e Financeiro" },
-                    ].map((opt) => (
+                    {(role === "customer"
+                      ? [
+                          { to: "/portal/settings", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
+                          { to: "/portal/billing", icon: <ShieldCheck className="h-4 w-4" />, label: "Planos e investimentos" },
+                        ]
+                      : role === "administrative"
+                        ? [
+                            { to: "/admin/profile", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
+                            { to: "/admin/settings", icon: <SettingsIcon className="h-4 w-4" />, label: "Configurações" },
+                          ]
+                        : [
+                            { to: "/portal/settings", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
+                            { to: "/portal/reports", icon: <ShieldCheck className="h-4 w-4" />, label: "Relatórios" },
+                          ]
+                    ).map((opt) => (
                       <Link key={opt.label} to={opt.to} className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent">
                         <span className="text-muted-foreground">{opt.icon}</span>
                         <span>{opt.label}</span>
@@ -239,7 +261,11 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle }: 
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-8"><Outlet /></main>
+        <main className="flex-1 p-4 md:p-8">
+          {!ready || !session || session.role !== role || !canAccess
+            ? <div className="min-h-40" aria-live="polite" />
+            : children ?? <Outlet />}
+        </main>
       </div>
     </div>
   );

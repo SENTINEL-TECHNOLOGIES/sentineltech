@@ -8,9 +8,11 @@ if (!databaseUrl) throw new Error("Defina DATABASE_URL antes de executar a migra
 
 const pool = new Pool({ connectionString: databaseUrl });
 try {
-  const migration = await readFile(new URL("../database/001_auth.sql", import.meta.url), "utf8");
-  await pool.query(migration);
-  console.log("Migration de autenticação aplicada.");
+  for (const file of ["001_auth.sql", "002_administrative_role.sql", "003_operational_data.sql"]) {
+    const migration = await readFile(new URL(`../database/${file}`, import.meta.url), "utf8");
+    await pool.query(migration);
+  }
+  console.log("Migrations do banco de dados aplicadas.");
 } finally {
   await pool.end();
 }

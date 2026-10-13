@@ -1,4 +1,4 @@
-export type Role = "corporate" | "customer";
+export type Role = "corporate" | "customer" | "administrative";
 
 const KEY = "sentinel_auth";
 
@@ -6,6 +6,12 @@ export const CREDENTIALS = {
   corporate: { email: "empresa@sentinel-demo.com", password: "Sentinel2026!" },
   customer: { email: "cliente@sentinel-demo.com", password: "SentinelClient2026!" },
 };
+
+export function dashboardForRole(role: Role) {
+  if (role === "administrative") return "/admin/dashboard";
+  if (role === "corporate") return "/corporativo/dashboard";
+  return "/cliente/dashboard";
+}
 
 export const PASSWORD_RULES = [
   { id: "len", label: "Pelo menos 8 caracteres", test: (v: string) => v.length >= 8 },
@@ -101,6 +107,15 @@ export function getSession(): Session | null {
     const raw = localStorage.getItem(KEY);
     if (!raw) return null;
     return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+export async function getVerifiedSession(): Promise<Session | null> {
+  try {
+    const data = await authRequest<{ session: Session | null }>("/api/auth/session");
+    return data.session;
   } catch {
     return null;
   }

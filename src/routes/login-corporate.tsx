@@ -13,7 +13,6 @@ function CorporateLogin() {
     <LoginForm
       title="Entrar no seu portal"
       subtitle="Acesse monitoramento, projetos e relatórios da sua operação."
-      redirectTo="/portal/dashboard"
     />
   );
 }

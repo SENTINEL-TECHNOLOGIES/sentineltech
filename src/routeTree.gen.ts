@@ -13,10 +13,21 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LoginAdminRouteImport } from './routes/login-admin'
 import { Route as LoginCorporateRouteImport } from './routes/login-corporate'
 import { Route as LoginCustomerRouteImport } from './routes/login-customer'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
+import { Route as AdminCompaniesRouteImport } from './routes/admin.companies'
+import { Route as AdminDashboardRouteImport } from './routes/admin.dashboard'
+import { Route as AdminDevicesRouteImport } from './routes/admin.devices'
+import { Route as AdminProfileRouteImport } from './routes/admin.profile'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as ClienteDashboardRouteImport } from './routes/cliente.dashboard'
+import { Route as CorporativoDashboardRouteImport } from './routes/corporativo.dashboard'
+import { Route as CorporativoUsersRouteImport } from './routes/corporativo.users'
 import { Route as ExploreAboutRouteImport } from './routes/explore.about'
 import { Route as ExploreCaseStudiesRouteImport } from './routes/explore.case-studies'
 import { Route as ExploreCheckoutRouteImport } from './routes/explore.checkout'
@@ -59,6 +70,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginAdminRoute = LoginAdminRouteImport.update({
+  id: '/login-admin',
+  path: '/login-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginCorporateRoute = LoginCorporateRouteImport.update({
   id: '/login-corporate',
   path: '/login-corporate',
@@ -77,6 +93,56 @@ const PortalRoute = PortalRouteImport.update({
 const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
   id: '/recuperar-senha',
   path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/admin/audit',
+  path: '/admin/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCompaniesRoute = AdminCompaniesRouteImport.update({
+  id: '/admin/companies',
+  path: '/admin/companies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDevicesRoute = AdminDevicesRouteImport.update({
+  id: '/admin/devices',
+  path: '/admin/devices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProfileRoute = AdminProfileRouteImport.update({
+  id: '/admin/profile',
+  path: '/admin/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClienteDashboardRoute = ClienteDashboardRouteImport.update({
+  id: '/cliente/dashboard',
+  path: '/cliente/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CorporativoDashboardRoute = CorporativoDashboardRouteImport.update({
+  id: '/corporativo/dashboard',
+  path: '/corporativo/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CorporativoUsersRoute = CorporativoUsersRouteImport.update({
+  id: '/corporativo/users',
+  path: '/corporativo/users',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExploreAboutRoute = ExploreAboutRouteImport.update({
@@ -190,10 +256,21 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/explore': typeof ExploreRouteWithChildren
   '/login': typeof LoginRoute
+  '/login-admin': typeof LoginAdminRoute
   '/login-corporate': typeof LoginCorporateRoute
   '/login-customer': typeof LoginCustomerRoute
   '/portal': typeof PortalRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/companies': typeof AdminCompaniesRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/devices': typeof AdminDevicesRoute
+  '/admin/profile': typeof AdminProfileRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/cliente/dashboard': typeof ClienteDashboardRoute
+  '/corporativo/dashboard': typeof CorporativoDashboardRoute
+  '/corporativo/users': typeof CorporativoUsersRoute
   '/explore/about': typeof ExploreAboutRoute
   '/explore/case-studies': typeof ExploreCaseStudiesRoute
   '/explore/checkout': typeof ExploreCheckoutRoute
@@ -221,10 +298,21 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/explore': typeof ExploreRouteWithChildren
   '/login': typeof LoginRoute
+  '/login-admin': typeof LoginAdminRoute
   '/login-corporate': typeof LoginCorporateRoute
   '/login-customer': typeof LoginCustomerRoute
   '/portal': typeof PortalRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/companies': typeof AdminCompaniesRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/devices': typeof AdminDevicesRoute
+  '/admin/profile': typeof AdminProfileRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/cliente/dashboard': typeof ClienteDashboardRoute
+  '/corporativo/dashboard': typeof CorporativoDashboardRoute
+  '/corporativo/users': typeof CorporativoUsersRoute
   '/explore/about': typeof ExploreAboutRoute
   '/explore/case-studies': typeof ExploreCaseStudiesRoute
   '/explore/checkout': typeof ExploreCheckoutRoute
@@ -253,10 +341,21 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/explore': typeof ExploreRouteWithChildren
   '/login': typeof LoginRoute
+  '/login-admin': typeof LoginAdminRoute
   '/login-corporate': typeof LoginCorporateRoute
   '/login-customer': typeof LoginCustomerRoute
   '/portal': typeof PortalRouteWithChildren
   '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/companies': typeof AdminCompaniesRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/devices': typeof AdminDevicesRoute
+  '/admin/profile': typeof AdminProfileRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
+  '/cliente/dashboard': typeof ClienteDashboardRoute
+  '/corporativo/dashboard': typeof CorporativoDashboardRoute
+  '/corporativo/users': typeof CorporativoUsersRoute
   '/explore/about': typeof ExploreAboutRoute
   '/explore/case-studies': typeof ExploreCaseStudiesRoute
   '/explore/checkout': typeof ExploreCheckoutRoute
@@ -286,10 +385,21 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/explore'
     | '/login'
+    | '/login-admin'
     | '/login-corporate'
     | '/login-customer'
     | '/portal'
     | '/recuperar-senha'
+    | '/admin/audit'
+    | '/admin/companies'
+    | '/admin/dashboard'
+    | '/admin/devices'
+    | '/admin/profile'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/cliente/dashboard'
+    | '/corporativo/dashboard'
+    | '/corporativo/users'
     | '/explore/about'
     | '/explore/case-studies'
     | '/explore/checkout'
@@ -317,10 +427,21 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/explore'
     | '/login'
+    | '/login-admin'
     | '/login-corporate'
     | '/login-customer'
     | '/portal'
     | '/recuperar-senha'
+    | '/admin/audit'
+    | '/admin/companies'
+    | '/admin/dashboard'
+    | '/admin/devices'
+    | '/admin/profile'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/cliente/dashboard'
+    | '/corporativo/dashboard'
+    | '/corporativo/users'
     | '/explore/about'
     | '/explore/case-studies'
     | '/explore/checkout'
@@ -348,10 +469,21 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/explore'
     | '/login'
+    | '/login-admin'
     | '/login-corporate'
     | '/login-customer'
     | '/portal'
     | '/recuperar-senha'
+    | '/admin/audit'
+    | '/admin/companies'
+    | '/admin/dashboard'
+    | '/admin/devices'
+    | '/admin/profile'
+    | '/admin/settings'
+    | '/admin/users'
+    | '/cliente/dashboard'
+    | '/corporativo/dashboard'
+    | '/corporativo/users'
     | '/explore/about'
     | '/explore/case-studies'
     | '/explore/checkout'
@@ -380,10 +512,21 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   ExploreRoute: typeof ExploreRouteWithChildren
   LoginRoute: typeof LoginRoute
+  LoginAdminRoute: typeof LoginAdminRoute
   LoginCorporateRoute: typeof LoginCorporateRoute
   LoginCustomerRoute: typeof LoginCustomerRoute
   PortalRoute: typeof PortalRouteWithChildren
   RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminCompaniesRoute: typeof AdminCompaniesRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminDevicesRoute: typeof AdminDevicesRoute
+  AdminProfileRoute: typeof AdminProfileRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  ClienteDashboardRoute: typeof ClienteDashboardRoute
+  CorporativoDashboardRoute: typeof CorporativoDashboardRoute
+  CorporativoUsersRoute: typeof CorporativoUsersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -416,6 +559,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login-admin': {
+      id: '/login-admin'
+      path: '/login-admin'
+      fullPath: '/login-admin'
+      preLoaderRoute: typeof LoginAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login-corporate': {
       id: '/login-corporate'
       path: '/login-corporate'
@@ -442,6 +592,76 @@ declare module '@tanstack/react-router' {
       path: '/recuperar-senha'
       fullPath: '/recuperar-senha'
       preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/admin/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/companies': {
+      id: '/admin/companies'
+      path: '/admin/companies'
+      fullPath: '/admin/companies'
+      preLoaderRoute: typeof AdminCompaniesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/devices': {
+      id: '/admin/devices'
+      path: '/admin/devices'
+      fullPath: '/admin/devices'
+      preLoaderRoute: typeof AdminDevicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/profile': {
+      id: '/admin/profile'
+      path: '/admin/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cliente/dashboard': {
+      id: '/cliente/dashboard'
+      path: '/cliente/dashboard'
+      fullPath: '/cliente/dashboard'
+      preLoaderRoute: typeof ClienteDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/corporativo/dashboard': {
+      id: '/corporativo/dashboard'
+      path: '/corporativo/dashboard'
+      fullPath: '/corporativo/dashboard'
+      preLoaderRoute: typeof CorporativoDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/corporativo/users': {
+      id: '/corporativo/users'
+      path: '/corporativo/users'
+      fullPath: '/corporativo/users'
+      preLoaderRoute: typeof CorporativoUsersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explore/about': {
@@ -659,10 +879,21 @@ const rootRouteChildren: RootRouteChildren = {
   CadastroRoute: CadastroRoute,
   ExploreRoute: ExploreRouteWithChildren,
   LoginRoute: LoginRoute,
+  LoginAdminRoute: LoginAdminRoute,
   LoginCorporateRoute: LoginCorporateRoute,
   LoginCustomerRoute: LoginCustomerRoute,
   PortalRoute: PortalRouteWithChildren,
   RecuperarSenhaRoute: RecuperarSenhaRoute,
+  AdminAuditRoute: AdminAuditRoute,
+  AdminCompaniesRoute: AdminCompaniesRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminDevicesRoute: AdminDevicesRoute,
+  AdminProfileRoute: AdminProfileRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  ClienteDashboardRoute: ClienteDashboardRoute,
+  CorporativoDashboardRoute: CorporativoDashboardRoute,
+  CorporativoUsersRoute: CorporativoUsersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

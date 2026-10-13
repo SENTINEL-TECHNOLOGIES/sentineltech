@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS auth_users (
   email TEXT NOT NULL UNIQUE,
   phone TEXT,
   password_hash TEXT NOT NULL,
-  role TEXT NOT NULL CHECK (role IN ('corporate', 'customer')),
+  role TEXT NOT NULL CHECK (role IN ('corporate', 'customer', 'administrative')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

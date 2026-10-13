@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Card, CardHeader, Badge } from "@/components/ui-bits";
 import { Download, FileBarChart } from "lucide-react";
+import { useSession } from "@/hooks/use-session";
 
 export const Route = createFileRoute("/portal/reports")({
   head: () => ({ meta: [{ title: "Relatórios — Sentinel" }] }),
@@ -15,17 +16,23 @@ const reports = [
   { id: "RPT-SOC-04", title: "Resumo da Central — 1º Trimestre", type: "Operações", date: "10 Abr 2026", size: "2,3 MB" },
 ];
 
+const clientReports: typeof reports = [];
+
+const corporateReports = reports.filter((report) => report.type !== "Auditoria");
+
 function Reports() {
+  const { session } = useSession();
+  const visibleReports = session?.role === "customer" ? clientReports : session?.role === "corporate" ? corporateReports : reports;
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Relatórios</h1>
-        <p className="text-sm text-muted-foreground">Compliance, SLA, postura de segurança e relatórios operacionais.</p>
+        <p className="text-sm text-muted-foreground">{session?.role === "customer" ? "Acesse somente materiais liberados para sua conta." : session?.role === "administrative" ? "Relatórios demonstrativos globais da plataforma." : "Relatórios operacionais do ambiente corporativo."}</p>
       </div>
       <Card>
-        <CardHeader title="Relatórios disponíveis" action={<Badge variant="info">PDF / CSV</Badge>} />
+        <CardHeader title="Relatórios disponíveis" action={<Badge variant="info">{session?.role === "customer" ? "Área do Cliente" : "PDF / CSV"}</Badge>} />
         <div className="divide-y divide-border">
-          {reports.map((r) => (
+          {visibleReports.map((r) => (
             <div key={r.id} className="flex items-center gap-4 p-4 hover:bg-accent/30">
               <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary"><FileBarChart className="h-5 w-5" /></div>
               <div className="min-w-0 flex-1">
@@ -39,6 +46,7 @@ function Reports() {
               </button>
             </div>
           ))}
+          {visibleReports.length === 0 && <div className="p-6 text-sm text-muted-foreground">Nenhum relatório foi liberado para esta conta.</div>}
         </div>
       </Card>
     </div>

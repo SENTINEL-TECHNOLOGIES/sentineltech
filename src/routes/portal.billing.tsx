@@ -1,70 +1,57 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Card, CardHeader, KpiCard, Badge } from "@/components/ui-bits";
-import { CreditCard, Download, FileText } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, CreditCard, Package } from "lucide-react";
+import { getActiveServices, SERVICE_CATALOG, type ActiveService } from "@/lib/account";
 
 export const Route = createFileRoute("/portal/billing")({
   head: () => ({ meta: [{ title: "Financeiro — Sentinel" }] }),
   component: Billing,
 });
 
-const invoices = [
-  { id: "NF-2026-006", date: "01 Jun 2026", amount: "R$ 92.420,00", status: "Pago" },
-  { id: "NF-2026-005", date: "01 Mai 2026", amount: "R$ 92.420,00", status: "Pago" },
-  { id: "NF-2026-004", date: "01 Abr 2026", amount: "R$ 89.450,00", status: "Pago" },
-  { id: "NF-2026-003", date: "01 Mar 2026", amount: "R$ 89.450,00", status: "Pago" },
-];
-
 function Billing() {
+  const [activeServices, setActiveServices] = useState<ActiveService[]>([]);
+  useEffect(() => {
+    const sync = () => setActiveServices(getActiveServices());
+    sync();
+    window.addEventListener("sentinel-account-change", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("sentinel-account-change", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const services = SERVICE_CATALOG.filter((service) => activeServices.some((active) => active.serviceId === service.id));
+  const monthlyInvestment = services.reduce((sum, service) => sum + (service.period === "mês" ? service.price : 0), 0);
+
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Financeiro &amp; Contratos</h1>
+      <div><h1 className="text-2xl font-bold">Planos e Investimentos</h1><p className="text-sm text-muted-foreground">Serviços e valores associados à sua conta.</p></div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <KpiCard label="Gasto Mensal" value="R$ 92.420" icon={<CreditCard className="h-5 w-5" />} accent="primary" />
-        <KpiCard label="Contrato Anual" value="R$ 1.109.040" icon={<FileText className="h-5 w-5" />} accent="cyan" />
-        <KpiCard label="Próxima Renovação" value="31 Dez 2026" icon={<FileText className="h-5 w-5" />} accent="success" />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <KpiCard label="Serviços ativos" value={String(services.length)} delta="nesta conta" deltaPositive icon={<Package className="h-5 w-5" />} accent="primary" />
+        <KpiCard label="Investimento mensal" value={`R$ ${monthlyInvestment.toLocaleString("pt-BR")}`} delta="estimativa pelos serviços ativos" icon={<CreditCard className="h-5 w-5" />} accent="cyan" />
       </div>
 
       <Card>
-        <CardHeader title="Contrato ativo" description="Plano Professional — multi-ano" action={<Badge variant="success">Ativo</Badge>} />
-        <div className="grid gap-4 p-5 md:grid-cols-3">
-          {[
-            { l: "Plano", v: "Professional" },
-            { l: "Vigência", v: "Jan 2026 → Dez 2026" },
-            { l: "Endpoints", v: "412 / 500" },
-            { l: "Cobertura da Central", v: "24 / 7" },
-            { l: "SLA", v: "Resposta em 30 min" },
-            { l: "Gerente de Conta", v: "K. Park" },
-          ].map((r) => (
-            <div key={r.l} className="rounded-lg border border-border bg-secondary/30 p-4">
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{r.l}</div>
-              <div className="mt-1 font-medium">{r.v}</div>
+        <CardHeader title="Serviços contratados" description="Valores demonstrativos do catálogo Sentinel" action={<Badge variant="info">Valores de referência</Badge>} />
+        {services.length ? <div className="divide-y divide-border">
+          {services.map((service) => (
+            <div key={service.id} className="flex flex-wrap items-center gap-3 p-5">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary"><BadgeDollarSign className="h-5 w-5" /></div>
+              <div className="min-w-0 flex-1"><div className="font-medium">{service.name}</div><div className="text-xs text-muted-foreground">{service.description}</div></div>
+              <div className="text-right"><div className="font-mono font-semibold">R$ {service.price.toLocaleString("pt-BR")}</div><div className="text-xs text-muted-foreground">/{service.period}</div></div>
+              <Badge variant="success">Ativo</Badge>
             </div>
           ))}
+        </div> : <div className="p-6 text-sm text-muted-foreground">Você ainda não possui serviços ativos nesta conta.</div>}
+        <div className="border-t border-border p-4">
+          <Link to="/explore/services" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">Explorar serviços disponíveis <ArrowRight className="h-4 w-4" /></Link>
         </div>
       </Card>
 
-      <Card>
-        <CardHeader title="Notas fiscais" />
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-secondary/40 text-left text-xs uppercase text-muted-foreground">
-              <tr><th className="px-5 py-3 font-medium">Nota</th><th className="px-5 py-3 font-medium">Data</th><th className="px-5 py-3 font-medium">Valor</th><th className="px-5 py-3 font-medium">Status</th><th /></tr>
-            </thead>
-            <tbody>
-              {invoices.map((i) => (
-                <tr key={i.id} className="border-t border-border hover:bg-accent/30">
-                  <td className="px-5 py-3 font-mono text-cyan">{i.id}</td>
-                  <td className="px-5 py-3 text-muted-foreground">{i.date}</td>
-                  <td className="px-5 py-3 font-mono">{i.amount}</td>
-                  <td className="px-5 py-3"><Badge variant="success">{i.status}</Badge></td>
-                  <td className="px-5 py-3 text-right"><button className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"><Download className="h-3.5 w-3.5" /> PDF</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+      <p className="text-xs text-muted-foreground">Preços e contratações são demonstrativos e armazenados nesta sessão local; não há cobrança nem contrato conectado.</p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Shield, Rocket, Lock, ArrowRight, Users, Activity, Clock, Award } from "lucide-react";
+import { Shield, Rocket, Lock, ArrowRight, Users, Activity, Clock, Award, Settings } from "lucide-react";
 import { SentinelLogo } from "@/components/sentinel-logo";
 
 export const Route = createFileRoute("/")({
@@ -28,23 +28,31 @@ function Entry() {
           </h1>
         </div>
 
-        <div className="mt-14 grid w-full max-w-5xl gap-6 md:grid-cols-2">
+        <div className="mt-14 grid w-full max-w-6xl gap-6 md:grid-cols-2 xl:grid-cols-3">
           <AccessCard
             badge={<span className="rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success"><Lock className="mr-1 inline h-3 w-3" /> Acesso Seguro</span>}
             icon={<Shield className="h-7 w-7 text-cyan" />}
-            title="Cliente Corporativo"
-            description="Câmeras ao vivo, registros de acesso, instalações monitoradas e operações de segurança em todo o seu parque."
-            ctaText="Acessar Portal Corporativo"
-            ctaTo="/login"
+            title="Acesso Corporativo"
+            description="Centro de comando, CFTV com IA e dispositivos do ambiente autorizado da sua empresa."
+            ctaText="Entrar na operação"
+            ctaTo="/login-corporate"
             primary
           />
           <AccessCard
             badge={<span className="rounded-full border border-warning/40 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-warning">• Sem cadastro</span>}
             icon={<Rocket className="h-7 w-7 text-primary" />}
-            title="Novo Cliente"
-            description="Conheça nossos serviços de CFTV com IA, biometria, automação e monitoramento remoto."
-            ctaText="Explorar Soluções"
-            ctaTo="/explore/home"
+            title="Acesso do Cliente"
+            description="Acompanhe serviços contratados, propostas, investimentos e solicitações da sua conta."
+            ctaText="Entrar na área do cliente"
+            ctaTo="/login-customer"
+          />
+          <AccessCard
+            badge={<span className="rounded-full border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary"><Lock className="mr-1 inline h-3 w-3" /> Equipe Sentinel</span>}
+            icon={<Settings className="h-7 w-7 text-primary" />}
+            title="Acesso Administrativo"
+            description="Gestão global da plataforma, empresas e configurações internas da Sentinel."
+            ctaText="Entrar na administração"
+            ctaTo="/login-admin"
           />
         </div>
 

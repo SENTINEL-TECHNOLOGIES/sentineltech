@@ -2,6 +2,8 @@ import { getSession } from "@/lib/auth";
 
 export type AccountProfile = {
   fullName: string;
+  companyName?: string;
+  taxId?: string;
   username: string;
   email: string;
   phone: string;

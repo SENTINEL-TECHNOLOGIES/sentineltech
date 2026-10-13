@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { Building2, UserRound, ArrowRight } from "lucide-react";
+import { Building2, UserRound, ArrowRight, ShieldCheck } from "lucide-react";
 import { AuthShell } from "@/components/auth-shell";
 
 export const Route = createFileRoute("/login")({
@@ -50,6 +50,24 @@ function LoginChoice() {
           </div>
 
           <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-cyan" />
+        </Link>
+
+        <Link
+          to="/login-admin"
+          className="group flex items-center gap-4 rounded-xl border border-border bg-secondary/30 p-4 transition hover:border-primary/60 hover:bg-primary/5"
+        >
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <ShieldCheck className="h-5 w-5" />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <div className="font-semibold">Acesso Administrativo</div>
+            <div className="mt-0.5 text-xs text-muted-foreground">
+              Administração interna da plataforma Sentinel.
+            </div>
+          </div>
+
+          <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
         </Link>
       </div>
 

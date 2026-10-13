@@ -2,17 +2,21 @@ import { useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { login, CREDENTIALS, isEmailValid } from "@/lib/auth";
+import { login, CREDENTIALS, dashboardForRole, isEmailValid, type Role } from "@/lib/auth";
 import { AuthShell, Field, inputClass } from "./auth-shell";
 
 export function LoginForm({
   title = "Entrar na sua conta",
   subtitle = "Acesse o portal de monitoramento da Sentinel Technologies.",
   redirectTo,
+  demoRole = "corporate",
+  showDemoCredentials = true,
 }: {
   title?: string;
   subtitle?: string;
   redirectTo?: string;
+  demoRole?: Exclude<Role, "administrative">;
+  showDemoCredentials?: boolean;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +39,7 @@ export function LoginForm({
     const result = await login(email, password);
     if (result.ok) {
       toast.success("Login realizado com sucesso!");
-      navigate({ to: redirectTo ?? (result.role === "corporate" ? "/portal/dashboard" : "/explore/home") });
+      navigate({ to: redirectTo ?? dashboardForRole(result.role) });
     } else {
       setError(result.error);
       toast.error(result.error);
@@ -109,19 +113,19 @@ export function LoginForm({
         </button>
       </form>
 
-      <div className="mt-6 rounded-lg border border-border/50 bg-secondary/40 p-3 text-xs">
+      {showDemoCredentials ? <div className="mt-6 rounded-lg border border-border/50 bg-secondary/40 p-3 text-xs">
         <div className="font-semibold text-muted-foreground">Credenciais de demonstração</div>
         <button
           type="button"
           onClick={() => {
-            setEmail(CREDENTIALS.corporate.email);
-            setPassword(CREDENTIALS.corporate.password);
+            setEmail(CREDENTIALS[demoRole].email);
+            setPassword(CREDENTIALS[demoRole].password);
           }}
           className="mt-1 block text-left font-mono text-[11px] text-primary hover:underline"
         >
-          {CREDENTIALS.corporate.email} / {CREDENTIALS.corporate.password}
+          {CREDENTIALS[demoRole].email} / {CREDENTIALS[demoRole].password}
         </button>
-      </div>
+      </div> : null}
     </AuthShell>
   );
 }

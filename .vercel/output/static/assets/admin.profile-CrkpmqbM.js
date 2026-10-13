@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./role-shell-CVWiESXb.js";import{t as n}from"./account-settings-D3K7fAU7.js";var r=e(),i=()=>(0,r.jsx)(t,{role:`administrative`,children:(0,r.jsx)(n,{})});export{i as component};

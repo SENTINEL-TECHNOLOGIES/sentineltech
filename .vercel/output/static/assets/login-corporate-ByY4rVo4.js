@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./login-form-DixApwia.js";var n=e();function r(){return(0,n.jsx)(t,{title:`Entrar no seu portal`,subtitle:`Acesse monitoramento, projetos e relatórios da sua operação.`})}export{r as component};

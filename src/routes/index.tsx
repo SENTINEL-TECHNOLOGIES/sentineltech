@@ -69,11 +69,11 @@ function Entry() {
 
 function AccessCard({ badge, icon, title, description, ctaText, ctaTo, primary }: { badge: React.ReactNode; icon: React.ReactNode; title: string; description: string; ctaText: string; ctaTo: string; primary?: boolean }) {
   return (
-    <div className="group relative rounded-2xl border border-border bg-card/60 p-8 backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-card/80 hover:shadow-2xl hover:shadow-primary/10">
+    <div className="group relative flex h-full flex-col rounded-2xl border border-border bg-card/60 p-8 backdrop-blur-sm transition-all hover:border-primary/60 hover:bg-card/80 hover:shadow-2xl hover:shadow-primary/10">
       <div className="absolute right-6 top-6">{badge}</div>
       <div className="grid h-14 w-14 place-items-center rounded-xl border border-border bg-secondary/50">{icon}</div>
       <h2 className="mt-8 text-2xl font-bold">{title}</h2>
-      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
       <Link to={ctaTo} className={`mt-8 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${primary ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90" : "border border-primary/50 text-primary hover:bg-primary/10"}`}>
         {ctaText} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
       </Link>

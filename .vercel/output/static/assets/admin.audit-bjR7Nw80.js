@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./admin-module-D6-9trMs.js";var n=e(),r=()=>(0,n.jsx)(t,{title:`Logs e Auditoria`,description:`Histórico de acessos, alterações de configuração e eventos administrativos.`});export{r as component};

@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./admin-module-D6-9trMs.js";var n=e(),r=()=>(0,n.jsx)(t,{title:`Câmeras e Dispositivos`,description:`Inventário global, configuração e associação de equipamentos a empresas.`});export{r as component};

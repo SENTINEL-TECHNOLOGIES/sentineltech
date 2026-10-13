@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./admin-module-D6-9trMs.js";var n=e(),r=()=>(0,n.jsx)(t,{title:`Empresas`,description:`Cadastro de empresas, contratos e ambientes vinculados.`});export{r as component};

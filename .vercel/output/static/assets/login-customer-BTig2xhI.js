@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-Cx0BB4qO.js";import{t}from"./login-form-DixApwia.js";var n=e();function r(){return(0,n.jsx)(t,{title:`Conheça a Sentinel`,subtitle:`Navegue por serviços, solicite propostas e agende uma consultoria.`})}export{r as component};

@@ -10,6 +10,7 @@ import {
   FileBarChart,
   FileClock,
   LayoutDashboard,
+  KeyRound,
   Package,
   Radio,
   Settings,
@@ -63,9 +64,16 @@ export const ROLE_NAVIGATION: Record<Role, NavigationProfile> = {
       { to: "/portal/settings", label: "Perfil", icon: icon(UserRound) },
     ],
     allowedPaths: [
-      "/portal/monitoring", "/portal/ai-cctv", "/portal/remote", "/portal/infrastructure",
-      "/portal/reports", "/portal/tickets", "/portal/projects", "/portal/biometric",
-      "/portal/automation", "/portal/settings",
+      "/portal/monitoring",
+      "/portal/ai-cctv",
+      "/portal/remote",
+      "/portal/infrastructure",
+      "/portal/reports",
+      "/portal/tickets",
+      "/portal/projects",
+      "/portal/biometric",
+      "/portal/automation",
+      "/portal/settings",
     ],
   },
   administrative: {
@@ -74,7 +82,7 @@ export const ROLE_NAVIGATION: Record<Role, NavigationProfile> = {
     items: [
       { to: "/admin/dashboard", label: "Dashboard Administrativo", icon: icon(LayoutDashboard) },
       { to: "/admin/companies", label: "Empresas", icon: icon(Building2) },
-      { to: "/admin/users", label: "Usuários", icon: icon(Users) },
+      { to: "/admin/users", label: "Gestão de Acessos", icon: icon(KeyRound) },
       { to: "/admin/devices", label: "Câmeras e Dispositivos", icon: icon(Camera) },
       { to: "/portal/ai-cctv", label: "CFTV com IA", icon: icon(Camera) },
       { to: "/portal/monitoring", label: "Centro de Comando", icon: icon(Radio) },
@@ -88,7 +96,10 @@ export const ROLE_NAVIGATION: Record<Role, NavigationProfile> = {
 };
 
 export function canAccessPath(role: Role, pathname: string, items: NavItem[]): boolean {
-  return items.some((item) => item.to === pathname) || ROLE_NAVIGATION[role].allowedPaths.includes(pathname);
+  return (
+    items.some((item) => item.to === pathname) ||
+    ROLE_NAVIGATION[role].allowedPaths.includes(pathname)
+  );
 }
 
 export type NavigationItem = NavItem & { icon: ReactNode };

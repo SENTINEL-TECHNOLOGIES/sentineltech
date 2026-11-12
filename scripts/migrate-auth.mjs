@@ -8,7 +8,11 @@ if (!databaseUrl) throw new Error("Defina DATABASE_URL antes de executar a migra
 
 const pool = new Pool({ connectionString: databaseUrl });
 try {
-  for (const file of ["001_auth.sql", "002_administrative_role.sql", "003_operational_data.sql"]) {
+  const files =
+    process.argv[2] === "access"
+      ? ["004_access_management.sql"]
+      : ["001_auth.sql", "002_administrative_role.sql", "003_operational_data.sql", "004_access_management.sql"];
+  for (const file of files) {
     const migration = await readFile(new URL(`../database/${file}`, import.meta.url), "utf8");
     await pool.query(migration);
   }

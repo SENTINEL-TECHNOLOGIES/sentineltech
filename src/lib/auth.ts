@@ -5,9 +5,9 @@ export type Role = "corporate" | "customer" | "administrative";
 const KEY = "sentinel_auth";
 
 export const CREDENTIALS = {
-  corporate: { email: "empresa@sentinel-demo.com", password: "Sentinel2026!" },
-  customer: { email: "cliente@sentinel-demo.com", password: "SentinelClient2026!" },
-  administrative: { email: "admin@sentinel-demo.com", password: "SentinelAdmin2026!" },
+  corporate: { email: "empresa@sentinel-demo.com" },
+  customer: { email: "cliente@sentinel-demo.com" },
+  administrative: { email: "admin@sentinel-demo.com" },
 };
 
 export function dashboardForRole(role: Role) {
@@ -32,7 +32,22 @@ export function isEmailValid(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
-export type Session = { role: Role; email: string; name?: string };
+export type AccessRole = "superadmin" | "admin" | "collaborator";
+export type Permission = {
+  module: string;
+  action: "view" | "create" | "edit" | "delete" | "administer";
+};
+export type Session = {
+  id?: string;
+  role: Role;
+  email: string;
+  name?: string;
+  username?: string | null;
+  accessRole?: AccessRole | null;
+  permissions?: Permission[];
+  mfaEnabled?: boolean;
+  mfaVerified?: boolean;
+};
 
 function persistSession(session: Session) {
   if (typeof window === "undefined") return;
@@ -89,7 +104,10 @@ export async function register(
 export async function login(
   email: string,
   password: string,
-): Promise<{ ok: true; role: Role } | { ok: false; error: string }> {
+  code?: string,
+): Promise<
+  { ok: true; role: Role; accessRole?: AccessRole | null } | { ok: false; error: string }
+> {
   const mail = email.trim().toLowerCase();
   if (!isEmailValid(mail)) return { ok: false, error: "E-mail inválido." };
   if (!password) return { ok: false, error: "Informe sua senha." };
@@ -98,9 +116,10 @@ export async function login(
     const data = await authRequest<{ session: Session }>("/api/auth/login", {
       email: mail,
       password,
+      code,
     });
     persistSession(data.session);
-    return { ok: true, role: data.session.role };
+    return { ok: true, role: data.session.role, accessRole: data.session.accessRole };
   } catch (error) {
     return {
       ok: false,

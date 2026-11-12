@@ -1,36 +1,110 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Bell, Search, ChevronRight, LogOut, HelpCircle, Menu, X, User, Settings as SettingsIcon, ShieldCheck, CheckCircle2 } from "lucide-react";
+import {
+  Bell,
+  Search,
+  ChevronRight,
+  LogOut,
+  HelpCircle,
+  Menu,
+  X,
+  User,
+  Settings as SettingsIcon,
+  ShieldCheck,
+  CheckCircle2,
+} from "lucide-react";
 import { SentinelLogo } from "./sentinel-logo";
 import { dashboardForRole, logout, type Role } from "@/lib/auth";
 import { useSession } from "@/hooks/use-session";
 import { canAccessPath } from "./role-navigation";
 
-export interface NavItem { to: string; label: string; icon: ReactNode; }
+export interface NavItem {
+  to: string;
+  label: string;
+  icon: ReactNode;
+}
 
 const CRUMB_TRANSLATIONS: Record<string, string> = {
-  portal: "Portal", explore: "Descoberta", dashboard: "Operações", monitoring: "Centro de Comando",
-  "ai-cctv": "CFTV com IA", biometric: "Controle de Acesso", automation: "Automação",
-  remote: "Monitoramento Remoto", infrastructure: "Instalações", projects: "Projetos",
-  reports: "Relatórios", tickets: "Chamados", billing: "Financeiro", settings: "Configurações",
-  home: "Início", services: "Serviços", "case-studies": "Cases", proposal: "Proposta",
-  meeting: "Reunião", contact: "Contato",
+  portal: "Portal",
+  explore: "Descoberta",
+  dashboard: "Operações",
+  monitoring: "Centro de Comando",
+  "ai-cctv": "CFTV com IA",
+  biometric: "Controle de Acesso",
+  automation: "Automação",
+  remote: "Monitoramento Remoto",
+  infrastructure: "Instalações",
+  projects: "Projetos",
+  reports: "Relatórios",
+  tickets: "Chamados",
+  billing: "Financeiro",
+  settings: "Configurações",
+  home: "Início",
+  services: "Serviços",
+  "case-studies": "Cases",
+  proposal: "Proposta",
+  meeting: "Reunião",
+  contact: "Contato",
 };
 
-interface NotificationItem { id: string; title: string; time: string; level: "info" | "warning" | "destructive" | "success"; read: boolean; }
+interface NotificationItem {
+  id: string;
+  title: string;
+  time: string;
+  level: "info" | "warning" | "destructive" | "success";
+  read: boolean;
+}
 
 const INITIAL_NOTIFS: NotificationItem[] = [
-  { id: "n1", title: "Tentativa de acesso bloqueada · Portão 4 Galpão SP", time: "há 4 min", level: "destructive", read: false },
-  { id: "n2", title: "Câmera Lobby 03 detectou objeto abandonado", time: "há 12 min", level: "warning", read: false },
-  { id: "n3", title: "Manutenção concluída · Leitor BR-02", time: "há 1 h", level: "success", read: false },
-  { id: "n4", title: "Novo visitante registrado · J. Almeida", time: "há 2 h", level: "info", read: true },
+  {
+    id: "n1",
+    title: "Tentativa de acesso bloqueada · Portão 4 Galpão SP",
+    time: "há 4 min",
+    level: "destructive",
+    read: false,
+  },
+  {
+    id: "n2",
+    title: "Câmera Lobby 03 detectou objeto abandonado",
+    time: "há 12 min",
+    level: "warning",
+    read: false,
+  },
+  {
+    id: "n3",
+    title: "Manutenção concluída · Leitor BR-02",
+    time: "há 1 h",
+    level: "success",
+    read: false,
+  },
+  {
+    id: "n4",
+    title: "Novo visitante registrado · J. Almeida",
+    time: "há 2 h",
+    level: "info",
+    read: true,
+  },
 ];
 
 const CLIENT_NOTIFS: NotificationItem[] = [
   { id: "c1", title: "Sua área do cliente está pronta", time: "agora", level: "info", read: false },
 ];
 
-export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, children }: { role: Role; items: NavItem[]; portalLabel: string; userLabel: string; userSubtitle: string; children?: ReactNode }) {
+export function AppShell({
+  role,
+  items,
+  portalLabel,
+  userLabel,
+  userSubtitle,
+  children,
+}: {
+  role: Role;
+  items: NavItem[];
+  portalLabel: string;
+  userLabel: string;
+  userSubtitle: string;
+  children?: ReactNode;
+}) {
   const navigate = useNavigate();
   const { session, ready } = useSession();
   const displayName = session?.name?.trim() || userLabel;
@@ -40,22 +114,106 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
-  const [notifs, setNotifs] = useState<NotificationItem[]>(role === "customer" ? CLIENT_NOTIFS : INITIAL_NOTIFS);
+  const [notifs, setNotifs] = useState<NotificationItem[]>(
+    role === "customer" ? CLIENT_NOTIFS : INITIAL_NOTIFS,
+  );
   const searchRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
-  const canAccess = canAccessPath(role, pathname, items);
+  const visibleItems = useMemo(() => {
+    if (role !== "administrative") return items;
+    if (!session?.accessRole) return [];
+    if (!session.mfaVerified)
+      return items.filter((item) => item.to === "/admin/users" || item.to === "/admin/profile");
+    if (session.accessRole === "superadmin") return items;
+    const routePermissions: Record<string, Array<[string, string]>> = {
+      "/admin/dashboard": [["access", "view"]],
+      "/admin/companies": [["operations", "view"]],
+      "/admin/users": [["access", "view"]],
+      "/admin/devices": [["installations", "view"]],
+      "/portal/ai-cctv": [["ai-cctv", "view"]],
+      "/portal/monitoring": [
+        ["command-center", "view"],
+        ["remote-monitoring", "view"],
+      ],
+      "/portal/reports": [["reports", "view"]],
+      "/admin/audit": [],
+      "/admin/settings": [["settings", "administer"]],
+      "/admin/profile": [],
+    };
+    const grantedPermissions = session.permissions ?? [];
+    return items.filter((item) => {
+      if (item.to === "/admin/profile") return true;
+      if (item.to === "/admin/users")
+        return grantedPermissions.some(
+          (permission) =>
+            permission.module === "access" && ["view", "administer"].includes(permission.action),
+        );
+      const required = routePermissions[item.to] ?? [];
+      return required.some(([module, action]) =>
+        grantedPermissions.some(
+          (permission) =>
+            permission.module === module && [action, "administer"].includes(permission.action),
+        ),
+      );
+    });
+  }, [items, role, session]);
+  const canAccess =
+    role === "administrative"
+      ? pathname === "/admin/users" || visibleItems.some((item) => item.to === pathname)
+      : canAccessPath(role, pathname, visibleItems);
 
   useEffect(() => {
     setNotifs(role === "customer" ? CLIENT_NOTIFS : INITIAL_NOTIFS);
   }, [role]);
 
   useEffect(() => {
+    if (!session) return;
+    let active = true;
+    fetch("/api/access/invites", { credentials: "include" })
+      .then(async (response) =>
+        response.ok ? (response.json() as Promise<{ invites: Array<{ id: string }> }>) : null,
+      )
+      .then((result) => {
+        if (!active || !result) return;
+        const invitationNotifs: NotificationItem[] = result.invites.length
+          ? [
+              {
+                id: "access-invites",
+                title: `Você tem ${result.invites.length} convite(s) de acesso pendente(s).`,
+                time: "agora",
+                level: "info",
+                read: false,
+              },
+            ]
+          : [];
+        setNotifs((current) => [
+          ...current.filter((item) => item.id !== "access-invites"),
+          ...invitationNotifs,
+        ]);
+      })
+      .catch((error) => console.error("Could not load access invitation notification", error));
+    return () => {
+      active = false;
+    };
+  }, [session]);
+
+  useEffect(() => {
     if (!ready) return;
     if (!session) navigate({ to: "/login" });
-    else if (session.role !== role) navigate({ to: dashboardForRole(session.role) });
-    else if (!canAccess) navigate({ to: dashboardForRole(role) });
-  }, [canAccess, navigate, ready, role, session]);
+    else if (session.role !== role && !(role === "administrative" && session.accessRole))
+      navigate({ to: dashboardForRole(session.role) });
+    else if (role === "administrative" && !session.accessRole) navigate({ to: "/" });
+    else if (
+      role === "administrative" &&
+      !session.mfaVerified &&
+      pathname !== "/admin/users" &&
+      pathname !== "/admin/profile"
+    )
+      navigate({ to: "/admin/users" });
+    else if (!canAccess)
+      navigate({ to: role === "administrative" ? "/admin/users" : dashboardForRole(role) });
+  }, [canAccess, navigate, pathname, ready, role, session]);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -68,46 +226,85 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
-  useEffect(() => { setSidebarOpen(false); setSearchOpen(false); setNotifOpen(false); setAccountOpen(false); }, [pathname]);
+  useEffect(() => {
+    setSidebarOpen(false);
+    setSearchOpen(false);
+    setNotifOpen(false);
+    setAccountOpen(false);
+  }, [pathname]);
 
-  async function handleLogout() { await logout(); navigate({ to: "/" }); }
+  async function handleLogout() {
+    await logout();
+    navigate({ to: "/" });
+  }
 
   const crumbs = pathname.split("/").filter(Boolean);
   const unread = notifs.filter((n) => !n.read).length;
 
   const searchResults = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return items.slice(0, 6);
-    return items.filter((i) => i.label.toLowerCase().includes(q) || i.to.toLowerCase().includes(q));
-  }, [query, items]);
+    if (!q) return visibleItems.slice(0, 6);
+    return visibleItems.filter(
+      (i) => i.label.toLowerCase().includes(q) || i.to.toLowerCase().includes(q),
+    );
+  }, [query, visibleItems]);
 
   function selectResult(to: string) {
-    setQuery(""); setSearchOpen(false);
+    setQuery("");
+    setSearchOpen(false);
     navigate({ to });
   }
 
-  function markAllRead() { setNotifs((ns) => ns.map((n) => ({ ...n, read: true }))); }
-  function clearOne(id: string) { setNotifs((ns) => ns.filter((n) => n.id !== id)); }
+  function markAllRead() {
+    setNotifs((ns) => ns.map((n) => ({ ...n, read: true })));
+  }
+  function clearOne(id: string) {
+    setNotifs((ns) => ns.filter((n) => n.id !== id));
+  }
 
   return (
     <div className="flex min-h-screen bg-background">
-      {sidebarOpen && <div className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-background/70 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
 
-      <aside className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      >
         <div className="relative flex h-20 shrink-0 items-center justify-center border-b border-sidebar-border px-5">
           <SentinelLogo size="lg" variant="mark" onBackground="dark" />
-          <button className="absolute right-4 lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
+          <button
+            className="absolute right-4 lg:hidden text-muted-foreground"
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Fechar menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         <nav className="sidebar-scroll flex-1 overflow-y-auto p-3">
           <div className="flex flex-col gap-1">
-            {items.map((it) => {
+            {visibleItems.map((it) => {
               const active = pathname === it.to;
               return (
-                <Link key={it.to} to={it.to} onClick={() => setSidebarOpen(false)} className={`group flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${active ? "bg-primary/15 text-foreground shadow-inner shadow-primary/10 ring-1 ring-primary/30" : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-foreground"}`}>
-                  <span className={`flex w-5 shrink-0 items-center justify-center ${active ? "text-primary" : "text-muted-foreground group-hover:text-cyan"}`}>{it.icon}</span>
+                <Link
+                  key={it.to}
+                  to={it.to}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`group flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${active ? "bg-primary/15 text-foreground shadow-inner shadow-primary/10 ring-1 ring-primary/30" : "text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-foreground"}`}
+                >
+                  <span
+                    className={`flex w-5 shrink-0 items-center justify-center ${active ? "text-primary" : "text-muted-foreground group-hover:text-cyan"}`}
+                  >
+                    {it.icon}
+                  </span>
                   <span className="font-medium">{it.label}</span>
-                  {active && <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />}
+                  {active && (
+                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />
+                  )}
                 </Link>
               );
             })}
@@ -123,7 +320,11 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
               <div className="truncate text-sm font-semibold">{displayName}</div>
               <div className="truncate text-[11px] text-muted-foreground">{userSubtitle}</div>
             </div>
-            <button onClick={handleLogout} className="text-muted-foreground hover:text-destructive" title="Sair">
+            <button
+              onClick={handleLogout}
+              className="text-muted-foreground hover:text-destructive"
+              title="Sair"
+            >
               <LogOut className="h-4 w-4" />
             </button>
           </div>
@@ -132,13 +333,23 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-md md:px-6">
-          <button className="lg:hidden text-muted-foreground" onClick={() => setSidebarOpen(true)} aria-label="Abrir menu"><Menu className="h-5 w-5" /></button>
+          <button
+            className="lg:hidden text-muted-foreground"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Abrir menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
           <nav className="hidden items-center gap-1.5 text-sm text-muted-foreground md:flex">
-            <Link to="/" className="hover:text-foreground">Início</Link>
+            <Link to="/" className="hover:text-foreground">
+              Início
+            </Link>
             {crumbs.slice(1).map((c, i) => (
               <span key={i} className="flex items-center gap-1.5">
                 <ChevronRight className="h-3.5 w-3.5" />
-                <span className={i === crumbs.length - 2 ? "text-foreground font-medium" : ""}>{CRUMB_TRANSLATIONS[c] ?? c.replace("-", " ")}</span>
+                <span className={i === crumbs.length - 2 ? "text-foreground font-medium" : ""}>
+                  {CRUMB_TRANSLATIONS[c] ?? c.replace("-", " ")}
+                </span>
               </span>
             ))}
           </nav>
@@ -148,7 +359,10 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={query}
-                onChange={(e) => { setQuery(e.target.value); setSearchOpen(true); }}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setSearchOpen(true);
+                }}
                 onFocus={() => setSearchOpen(true)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && searchResults[0]) selectResult(searchResults[0].to);
@@ -163,9 +377,17 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
                     {query ? `Resultados (${searchResults.length})` : "Navegação rápida"}
                   </div>
                   <div className="max-h-80 overflow-y-auto">
-                    {searchResults.length === 0 && <div className="p-4 text-sm text-muted-foreground">Nenhum resultado encontrado.</div>}
+                    {searchResults.length === 0 && (
+                      <div className="p-4 text-sm text-muted-foreground">
+                        Nenhum resultado encontrado.
+                      </div>
+                    )}
                     {searchResults.map((r) => (
-                      <button key={r.to} onClick={() => selectResult(r.to)} className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm hover:bg-accent">
+                      <button
+                        key={r.to}
+                        onClick={() => selectResult(r.to)}
+                        className="flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm hover:bg-accent"
+                      >
                         <span className="text-primary">{r.icon}</span>
                         <span className="flex-1">{r.label}</span>
                         <span className="text-[10px] text-muted-foreground">{r.to}</span>
@@ -178,9 +400,20 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
 
             {/* Notifications */}
             <div ref={notifRef} className="relative">
-              <button onClick={() => { setNotifOpen((v) => !v); setAccountOpen(false); }} className="relative grid h-9 w-9 place-items-center rounded-lg border border-border bg-card hover:bg-accent" title="Notificações">
+              <button
+                onClick={() => {
+                  setNotifOpen((v) => !v);
+                  setAccountOpen(false);
+                }}
+                className="relative grid h-9 w-9 place-items-center rounded-lg border border-border bg-card hover:bg-accent"
+                title="Notificações"
+              >
                 <Bell className="h-4 w-4" />
-                {unread > 0 && <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">{unread}</span>}
+                {unread > 0 && (
+                  <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">
+                    {unread}
+                  </span>
+                )}
               </button>
               {notifOpen && (
                 <div className="absolute right-0 top-full mt-2 w-96 overflow-hidden rounded-lg border border-border bg-card shadow-2xl">
@@ -189,69 +422,155 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
                       <div className="text-sm font-semibold">Notificações</div>
                       <div className="text-[11px] text-muted-foreground">{unread} não lidas</div>
                     </div>
-                    <button onClick={markAllRead} className="text-[11px] font-semibold text-primary hover:underline">Marcar todas como lidas</button>
+                    <button
+                      onClick={markAllRead}
+                      className="text-[11px] font-semibold text-primary hover:underline"
+                    >
+                      Marcar todas como lidas
+                    </button>
                   </div>
                   <div className="max-h-96 overflow-y-auto divide-y divide-border">
-                    {notifs.length === 0 && <div className="p-6 text-center text-sm text-muted-foreground">Sem notificações.</div>}
+                    {notifs.length === 0 && (
+                      <div className="p-6 text-center text-sm text-muted-foreground">
+                        Sem notificações.
+                      </div>
+                    )}
                     {notifs.map((n) => (
-                      <div key={n.id} className={`flex items-start gap-3 p-4 ${n.read ? "opacity-60" : ""}`}>
-                        <div className={`mt-1 h-2 w-2 shrink-0 rounded-full ${n.level === "destructive" ? "bg-destructive" : n.level === "warning" ? "bg-warning" : n.level === "success" ? "bg-success" : "bg-primary"}`} />
+                      <div
+                        key={n.id}
+                        className={`flex items-start gap-3 p-4 ${n.read ? "opacity-60" : ""}`}
+                      >
+                        <div
+                          className={`mt-1 h-2 w-2 shrink-0 rounded-full ${n.level === "destructive" ? "bg-destructive" : n.level === "warning" ? "bg-warning" : n.level === "success" ? "bg-success" : "bg-primary"}`}
+                        />
                         <div className="min-w-0 flex-1">
-                          <div className="text-sm">{n.title}</div>
+                          {n.id === "access-invites" ? (
+                            <Link
+                              to={role === "administrative" ? "/admin/profile" : "/portal/settings"}
+                              onClick={() => setNotifOpen(false)}
+                              className="text-sm text-primary hover:underline"
+                            >
+                              {n.title} Ver em Meus Convites
+                            </Link>
+                          ) : (
+                            <div className="text-sm">{n.title}</div>
+                          )}
                           <div className="mt-0.5 text-[11px] text-muted-foreground">{n.time}</div>
                         </div>
-                        <button onClick={() => clearOne(n.id)} className="text-muted-foreground hover:text-foreground" title="Descartar"><X className="h-3.5 w-3.5" /></button>
+                        <button
+                          onClick={() => clearOne(n.id)}
+                          className="text-muted-foreground hover:text-foreground"
+                          title="Descartar"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
                       </div>
                     ))}
                   </div>
                   <div className="border-t border-border bg-secondary/30 px-4 py-2 text-center">
-                    <Link to={role === "customer" ? "/portal/tickets" : "/portal/monitoring"} className="text-xs font-semibold text-primary hover:underline">{role === "customer" ? "Ver solicitações →" : "Abrir Centro de Comando →"}</Link>
+                    <Link
+                      to={role === "customer" ? "/portal/tickets" : "/portal/monitoring"}
+                      className="text-xs font-semibold text-primary hover:underline"
+                    >
+                      {role === "customer" ? "Ver solicitações →" : "Abrir Centro de Comando →"}
+                    </Link>
                   </div>
                 </div>
               )}
             </div>
 
-            <button onClick={() => navigate({ to: "/explore/contact" })} className="hidden sm:grid h-9 w-9 place-items-center rounded-lg border border-border bg-card hover:bg-accent" title="Ajuda" aria-label="Abrir ajuda e contato"><HelpCircle className="h-4 w-4" /></button>
+            <button
+              onClick={() => navigate({ to: "/explore/contact" })}
+              className="hidden sm:grid h-9 w-9 place-items-center rounded-lg border border-border bg-card hover:bg-accent"
+              title="Ajuda"
+              aria-label="Abrir ajuda e contato"
+            >
+              <HelpCircle className="h-4 w-4" />
+            </button>
 
             {/* Account */}
             <div ref={accountRef} className="relative">
-              <button onClick={() => { setAccountOpen((v) => !v); setNotifOpen(false); }} className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-xs font-bold text-primary-foreground ring-2 ring-transparent transition hover:ring-primary/40" title="Minha conta">
+              <button
+                onClick={() => {
+                  setAccountOpen((v) => !v);
+                  setNotifOpen(false);
+                }}
+                className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-xs font-bold text-primary-foreground ring-2 ring-transparent transition hover:ring-primary/40"
+                title="Minha conta"
+              >
                 {displayName.slice(0, 2).toUpperCase()}
               </button>
               {accountOpen && (
                 <div className="absolute right-0 top-full mt-2 w-72 overflow-hidden rounded-lg border border-border bg-card shadow-2xl">
                   <div className="flex items-center gap-3 border-b border-border p-4">
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-sm font-bold text-primary-foreground">{displayName.slice(0, 2).toUpperCase()}</div>
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-primary to-cyan text-sm font-bold text-primary-foreground">
+                      {displayName.slice(0, 2).toUpperCase()}
+                    </div>
                     <div className="min-w-0">
                       <div className="truncate text-sm font-semibold">{displayName}</div>
-                      <div className="truncate text-[11px] text-muted-foreground">{userSubtitle}</div>
-                      <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-success"><CheckCircle2 className="h-3 w-3" /> Sessão verificada</div>
+                      <div className="truncate text-[11px] text-muted-foreground">
+                        {userSubtitle}
+                      </div>
+                      <div className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-success">
+                        <CheckCircle2 className="h-3 w-3" /> Sessão verificada
+                      </div>
                     </div>
                   </div>
                   <div className="p-1">
                     {(role === "customer"
                       ? [
-                          { to: "/portal/settings", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
-                          { to: "/portal/billing", icon: <ShieldCheck className="h-4 w-4" />, label: "Planos e investimentos" },
+                          {
+                            to: "/portal/settings",
+                            icon: <User className="h-4 w-4" />,
+                            label: "Meu perfil",
+                          },
+                          {
+                            to: "/portal/billing",
+                            icon: <ShieldCheck className="h-4 w-4" />,
+                            label: "Planos e investimentos",
+                          },
                         ]
                       : role === "administrative"
                         ? [
-                            { to: "/admin/profile", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
-                            { to: "/admin/settings", icon: <SettingsIcon className="h-4 w-4" />, label: "Configurações" },
+                            {
+                              to: "/admin/profile",
+                              icon: <User className="h-4 w-4" />,
+                              label: "Meu perfil",
+                            },
+                            {
+                              to: "/admin/settings",
+                              icon: <SettingsIcon className="h-4 w-4" />,
+                              label: "Configurações",
+                            },
                           ]
                         : [
-                            { to: "/portal/settings", icon: <User className="h-4 w-4" />, label: "Meu perfil" },
-                            { to: "/portal/reports", icon: <ShieldCheck className="h-4 w-4" />, label: "Relatórios" },
+                            {
+                              to: "/portal/settings",
+                              icon: <User className="h-4 w-4" />,
+                              label: "Meu perfil",
+                            },
+                            {
+                              to: "/portal/reports",
+                              icon: <ShieldCheck className="h-4 w-4" />,
+                              label: "Relatórios",
+                            },
                           ]
                     ).map((opt) => (
-                      <Link key={opt.label} to={opt.to} className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent">
+                      <Link
+                        key={opt.label}
+                        to={opt.to}
+                        className="flex items-center gap-3 rounded-md px-3 py-2 text-sm hover:bg-accent"
+                      >
                         <span className="text-muted-foreground">{opt.icon}</span>
                         <span>{opt.label}</span>
                       </Link>
                     ))}
                   </div>
                   <div className="border-t border-border p-1">
-                    <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10">
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-destructive hover:bg-destructive/10"
+                    >
                       <LogOut className="h-4 w-4" /> Sair da conta
                     </button>
                   </div>
@@ -262,9 +581,11 @@ export function AppShell({ role, items, portalLabel, userLabel, userSubtitle, ch
         </header>
 
         <main className="flex-1 p-4 md:p-8">
-          {!ready || !session || session.role !== role || !canAccess
-            ? <div className="min-h-40" aria-live="polite" />
-            : children ?? <Outlet />}
+          {!ready || !session || session.role !== role || !canAccess ? (
+            <div className="min-h-40" aria-live="polite" />
+          ) : (
+            (children ?? <Outlet />)
+          )}
         </main>
       </div>
     </div>

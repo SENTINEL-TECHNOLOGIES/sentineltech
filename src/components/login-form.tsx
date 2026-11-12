@@ -2,24 +2,22 @@ import { useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { login, CREDENTIALS, dashboardForRole, isEmailValid, type Role } from "@/lib/auth";
+import { login, dashboardForRole, isEmailValid } from "@/lib/auth";
 import { AuthShell, Field, inputClass } from "./auth-shell";
 
 export function LoginForm({
   title = "Entrar na sua conta",
   subtitle = "Acesse o portal de monitoramento da Sentinel Technologies.",
   redirectTo,
-  demoRole = "corporate",
-  showDemoCredentials = true,
 }: {
   title?: string;
   subtitle?: string;
   redirectTo?: string;
-  demoRole?: Role;
-  showDemoCredentials?: boolean;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
+  const [showMfa, setShowMfa] = useState(false);
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,11 +34,14 @@ export function LoginForm({
       return;
     }
     setLoading(true);
-    const result = await login(email, password);
+    const result = await login(email, password, code || undefined);
     if (result.ok) {
       toast.success("Login realizado com sucesso!");
-      navigate({ to: redirectTo ?? dashboardForRole(result.role) });
+      navigate({
+        to: redirectTo ?? (result.accessRole ? "/admin/users" : dashboardForRole(result.role)),
+      });
     } else {
+      if (result.error.toLowerCase().includes("dois fatores")) setShowMfa(true);
       setError(result.error);
       toast.error(result.error);
       setLoading(false);
@@ -72,6 +73,20 @@ export function LoginForm({
             className={inputClass}
           />
         </Field>
+
+        {showMfa ? (
+          <Field label="Código de autenticação">
+            <input
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              placeholder="000000"
+              maxLength={6}
+              className={inputClass}
+            />
+          </Field>
+        ) : null}
 
         <Field label="Senha">
           <div className="relative">
@@ -114,22 +129,6 @@ export function LoginForm({
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null} Entrar
         </button>
       </form>
-
-      {showDemoCredentials ? (
-        <div className="mt-6 rounded-lg border border-border/50 bg-secondary/40 p-3 text-xs">
-          <div className="font-semibold text-muted-foreground">Credenciais de demonstração</div>
-          <button
-            type="button"
-            onClick={() => {
-              setEmail(CREDENTIALS[demoRole].email);
-              setPassword(CREDENTIALS[demoRole].password);
-            }}
-            className="mt-1 block text-left font-mono text-[11px] text-primary hover:underline"
-          >
-            {CREDENTIALS[demoRole].email} / {CREDENTIALS[demoRole].password}
-          </button>
-        </div>
-      ) : null}
     </AuthShell>
   );
 }

@@ -3,6 +3,7 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { handleAuthRequest } from "./lib/auth.server";
+import { handleAccessRequest } from "./lib/access.server";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -43,6 +44,8 @@ export default {
     try {
       const authResponse = await handleAuthRequest(request);
       if (authResponse) return authResponse;
+      const accessResponse = await handleAccessRequest(request);
+      if (accessResponse) return accessResponse;
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

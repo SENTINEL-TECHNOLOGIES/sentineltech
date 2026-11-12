@@ -16,3 +16,4 @@ try {
 } finally {
   await pool.end();
 }
+// oi

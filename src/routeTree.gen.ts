@@ -35,6 +35,7 @@ import { Route as ExploreContactRouteImport } from './routes/explore.contact'
 import { Route as ExploreHomeRouteImport } from './routes/explore.home'
 import { Route as ExploreIndustriesRouteImport } from './routes/explore.industries'
 import { Route as ExploreMeetingRouteImport } from './routes/explore.meeting'
+import { Route as ExplorePrivacyRouteImport } from './routes/explore.privacy'
 import { Route as ExploreProposalRouteImport } from './routes/explore.proposal'
 import { Route as ExploreServicesRouteImport } from './routes/explore.services'
 import { Route as PortalAiCctvRouteImport } from './routes/portal.ai-cctv'
@@ -180,6 +181,11 @@ const ExploreMeetingRoute = ExploreMeetingRouteImport.update({
   path: '/meeting',
   getParentRoute: () => ExploreRoute,
 } as any)
+const ExplorePrivacyRoute = ExplorePrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => ExploreRoute,
+} as any)
 const ExploreProposalRoute = ExploreProposalRouteImport.update({
   id: '/proposal',
   path: '/proposal',
@@ -278,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/explore/home': typeof ExploreHomeRoute
   '/explore/industries': typeof ExploreIndustriesRoute
   '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/privacy': typeof ExplorePrivacyRoute
   '/explore/proposal': typeof ExploreProposalRoute
   '/explore/services': typeof ExploreServicesRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
@@ -320,6 +327,7 @@ export interface FileRoutesByTo {
   '/explore/home': typeof ExploreHomeRoute
   '/explore/industries': typeof ExploreIndustriesRoute
   '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/privacy': typeof ExplorePrivacyRoute
   '/explore/proposal': typeof ExploreProposalRoute
   '/explore/services': typeof ExploreServicesRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
@@ -363,6 +371,7 @@ export interface FileRoutesById {
   '/explore/home': typeof ExploreHomeRoute
   '/explore/industries': typeof ExploreIndustriesRoute
   '/explore/meeting': typeof ExploreMeetingRoute
+  '/explore/privacy': typeof ExplorePrivacyRoute
   '/explore/proposal': typeof ExploreProposalRoute
   '/explore/services': typeof ExploreServicesRoute
   '/portal/ai-cctv': typeof PortalAiCctvRoute
@@ -407,6 +416,7 @@ export interface FileRouteTypes {
     | '/explore/home'
     | '/explore/industries'
     | '/explore/meeting'
+    | '/explore/privacy'
     | '/explore/proposal'
     | '/explore/services'
     | '/portal/ai-cctv'
@@ -449,6 +459,7 @@ export interface FileRouteTypes {
     | '/explore/home'
     | '/explore/industries'
     | '/explore/meeting'
+    | '/explore/privacy'
     | '/explore/proposal'
     | '/explore/services'
     | '/portal/ai-cctv'
@@ -491,6 +502,7 @@ export interface FileRouteTypes {
     | '/explore/home'
     | '/explore/industries'
     | '/explore/meeting'
+    | '/explore/privacy'
     | '/explore/proposal'
     | '/explore/services'
     | '/portal/ai-cctv'
@@ -713,6 +725,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreMeetingRouteImport
       parentRoute: typeof ExploreRoute
     }
+    '/explore/privacy': {
+      id: '/explore/privacy'
+      path: '/privacy'
+      fullPath: '/explore/privacy'
+      preLoaderRoute: typeof ExplorePrivacyRouteImport
+      parentRoute: typeof ExploreRoute
+    }
     '/explore/proposal': {
       id: '/explore/proposal'
       path: '/proposal'
@@ -822,6 +841,7 @@ interface ExploreRouteChildren {
   ExploreHomeRoute: typeof ExploreHomeRoute
   ExploreIndustriesRoute: typeof ExploreIndustriesRoute
   ExploreMeetingRoute: typeof ExploreMeetingRoute
+  ExplorePrivacyRoute: typeof ExplorePrivacyRoute
   ExploreProposalRoute: typeof ExploreProposalRoute
   ExploreServicesRoute: typeof ExploreServicesRoute
 }
@@ -834,6 +854,7 @@ const ExploreRouteChildren: ExploreRouteChildren = {
   ExploreHomeRoute: ExploreHomeRoute,
   ExploreIndustriesRoute: ExploreIndustriesRoute,
   ExploreMeetingRoute: ExploreMeetingRoute,
+  ExplorePrivacyRoute: ExplorePrivacyRoute,
   ExploreProposalRoute: ExploreProposalRoute,
   ExploreServicesRoute: ExploreServicesRoute,
 }

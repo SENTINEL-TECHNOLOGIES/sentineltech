@@ -11,7 +11,7 @@ function AdministrativeLogin() {
     <LoginForm
       title="Administração Sentinel"
       subtitle="Acesse a gestão interna da plataforma Sentinel Technologies."
-      showDemoCredentials={false}
+      demoRole="administrative"
     />
   );
 }

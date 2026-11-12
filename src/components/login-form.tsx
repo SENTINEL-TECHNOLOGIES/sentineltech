@@ -15,7 +15,7 @@ export function LoginForm({
   title?: string;
   subtitle?: string;
   redirectTo?: string;
-  demoRole?: Exclude<Role, "administrative">;
+  demoRole?: Role;
   showDemoCredentials?: boolean;
 }) {
   const [email, setEmail] = useState("");
@@ -101,7 +101,9 @@ export function LoginForm({
         </div>
 
         {error ? (
-          <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{error}</div>
+          <div className="rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
+            {error}
+          </div>
         ) : null}
 
         <button
@@ -113,19 +115,21 @@ export function LoginForm({
         </button>
       </form>
 
-      {showDemoCredentials ? <div className="mt-6 rounded-lg border border-border/50 bg-secondary/40 p-3 text-xs">
-        <div className="font-semibold text-muted-foreground">Credenciais de demonstração</div>
-        <button
-          type="button"
-          onClick={() => {
-            setEmail(CREDENTIALS[demoRole].email);
-            setPassword(CREDENTIALS[demoRole].password);
-          }}
-          className="mt-1 block text-left font-mono text-[11px] text-primary hover:underline"
-        >
-          {CREDENTIALS[demoRole].email} / {CREDENTIALS[demoRole].password}
-        </button>
-      </div> : null}
+      {showDemoCredentials ? (
+        <div className="mt-6 rounded-lg border border-border/50 bg-secondary/40 p-3 text-xs">
+          <div className="font-semibold text-muted-foreground">Credenciais de demonstração</div>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail(CREDENTIALS[demoRole].email);
+              setPassword(CREDENTIALS[demoRole].password);
+            }}
+            className="mt-1 block text-left font-mono text-[11px] text-primary hover:underline"
+          >
+            {CREDENTIALS[demoRole].email} / {CREDENTIALS[demoRole].password}
+          </button>
+        </div>
+      ) : null}
     </AuthShell>
   );
 }
